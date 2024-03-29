@@ -1,5 +1,6 @@
-.next
-next-env.d.ts
 node_modules
-package-lock.json
-public
+.DS_Store
+dist
+dist-ssr
+*.local
+node_modules/*

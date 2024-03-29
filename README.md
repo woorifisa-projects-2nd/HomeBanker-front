@@ -1,41 +1,8 @@
-### 실행 방법
+# React + Vite
 
-```
-npm install
-```
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-```
-npm run dev
-```
+Currently, two official plugins are available:
 
-
-
-### 폴더 기본 구조
-.
-├── .next
-├── node_modules
-├── public
-│   ├── fonts
-│   └── images
-├── src
-│   ├── app
-│   │   ├── board
-│   │   │   └── page.jsx
-│   │   ├── login
-│   │   │   └── page.jsx
-│   │   ├── mypage
-│   │   │   └── page.jsx
-│   │   ├── layout.tsx
-│   │   └── page.tsx
-│   ├── components
-│   ├── hooks
-│   ├── styles
-│   └── utils
-├── .eslint.json
-├── .prettierrc.js
-├── .gitignore
-├── next.config.mjs
-├── package.json
-├── package-lock.json
-├── jsconfig.json
-└── README.md
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
