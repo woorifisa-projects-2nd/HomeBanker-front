@@ -1,5 +1,4 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Header from "./components/Header";
 const pages = import.meta.glob("./pages/**/*.jsx", { eager: true });
 
 const routes = [];
@@ -30,11 +29,10 @@ const router = createBrowserRouter(
 )
 
 function App() {
+
+
   return (
-    <>
-      <Header />
-      <RouterProvider router={router} />
-    </>
+    <RouterProvider router={router} />
   )
 }
 
