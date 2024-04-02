@@ -1,3 +1,4 @@
+import 'regenerator-runtime'
 import { useQuery } from '@tanstack/react-query'
 import { api } from '../../api/api';
 import React, { useEffect, useState } from 'react';
@@ -12,21 +13,36 @@ import {
   Spinner,
   Switch,
   Button,
-  useToast
+  useToast,
+  useDisclosure,
+  Textarea,
+  Tooltip,
+  Box,
+  Circle,
+  Flex
 } from '@chakra-ui/react'
 import Pagination from '../../components/Pagination';
+import CustomModal from '../../components/Modal';
+import Mic from "../../assets/icon/mic.svg?react"
+import useSpeechToText from '../../hook/useSpeechToText';
 
 const PAGINATION_SIZE = 5;
 
 export default function Board() {
   const toast = useToast()
-  const [boards, setboards] = useState([])
+  const { isOpen, onOpen, onClose } = useDisclosure()
+  const { transcript, listening, quitSpeechToText, toggleListening, resetTranscript } = useSpeechToText();
+
+  const [boards, setBoards] = useState([])
   const [pagination, setPagination] = useState({
     totalItems: 0,
     itemCountPerPage: 0,
     pageCount: 0,
     currentPage: 0
   })
+
+
+
 
   // 상담게시글 리스트 조회
   const { data, isLoading, refetch: refetchBoards } = useQuery({
@@ -64,9 +80,35 @@ export default function Board() {
     )
   }
 
+
+
+  // 문의 작성 API
+  const createBoard = () => {
+    api.post(`/api/board`, {
+      "content": transcript
+    }).then(() => {
+      toast({
+        position: 'top',
+        title: '문의가 등록되었습니다',
+        status: 'success',
+        duration: 1000,
+        isClosable: true,
+      })
+      onClose();
+      quitSpeechToText();
+    }
+    )
+  }
+
+  // 문의 작성 모달 종료
+  const onModalClose = () => {
+    quitSpeechToText()
+    onClose();
+  }
+
   useEffect(() => {
     if (data) {
-      setboards(data.data.boardItems);
+      setBoards(data.data.boardItems);
       setPagination({
         totalItems: data.data.pagination.totalElements,
         itemCountPerPage: PAGINATION_SIZE,
@@ -87,6 +129,8 @@ export default function Board() {
         <Spinner />
         :
         <>
+          <Button onClick={onOpen}>문의 작성</Button>
+
           {boards &&
             <TableContainer>
               <Table variant='simple'>
@@ -107,11 +151,11 @@ export default function Board() {
                 <Tbody>
                   {boards.map(item => {
                     return <Tr key={item.boardId}>
-                      <Td noOfLines={1}>{item.content}</Td>
+                      <Td>{item.content}</Td>
                       <Td>{item.createdAt}</Td>
-                      <Td >{item.replyYN}</Td>
-                      <Td >{item.customerName}</Td>
-                      <Td >{item.updatedAt}</Td>
+                      <Td>{item.replyYN}</Td>
+                      <Td>{item.customerName}</Td>
+                      <Td>{item.updatedAt}</Td>
                       <Td>
                         <Button
                           bgColor={item.replyYN === "Y" ? "gray" : "blue"}
@@ -143,6 +187,26 @@ export default function Board() {
               currentPage={pagination.currentPage}
             />}
         </>}
+
+      <CustomModal
+        title={"문의 작성"}
+        isOpen={isOpen} onClose={onModalClose} size={"xl"} successMessage={"작성 완료"} successAction={createBoard}>
+        <Button onClick={resetTranscript}>초기화</Button>
+        <Flex direction="column" minHeight={500} justifyContent="center" alignItems="bottom">
+          <Textarea focus="none" value={transcript} border="none" onChange={() => { }} ></Textarea >
+
+          {/* 음성인식 버튼 */}
+          <Flex width="size='68px">
+            <Tooltip label={listening ? "음성 인식 중지하기" : '음성 인식하기'} fontSize='md' color="white">
+              <Box margin="auto" justifyContent="center" alignItems="center" onClick={toggleListening}>
+                <Circle cursor="pointer" size='68px' bg={listening ? "green" : '#D9D9D9'} opacity="100%">
+                  <Mic width="35" height="35" fill={listening ? "white" : "black"} />
+                </Circle>
+              </Box>
+            </Tooltip>
+          </Flex>
+        </Flex>
+      </CustomModal>
     </>
   )
 }
