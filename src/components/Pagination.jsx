@@ -19,7 +19,7 @@ export default function Pagination({ pagination, setPagination }) {
         <HStack>
           {[...Array(pageCount)].map((a, i) => (
             <Fragment key={i}>
-              {currentPage + i <= totalPages && (
+              {currentPage < totalPages && (
                 <Button onClick={() =>
                   setPagination({ ...pagination, currentPage: i })
                 } bgColor={currentPage === i ? "blue400" : "white"}>{i + 1}</Button>

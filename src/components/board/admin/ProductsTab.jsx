@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { Fragment, useEffect, useState } from 'react'
 import {
   Spinner,
   Table,
@@ -10,12 +10,20 @@ import {
   TableContainer,
   Switch,
   useToast,
+  Select
 } from '@chakra-ui/react'
 import { useProductsQuery } from '../../../api/counsel/api'
 import { BOARD_PAGINATION_SIZE } from '../../../constants/index';
 import Pagination from '../../Pagination';
 import { api } from '../../../api/api';
 
+
+const PRODUCT_TYPE = {
+  전체: "all",
+  카드: "card",
+  예적금: "deposit",
+  대출: "loan"
+}
 export default function ProductsTab() {
   const toast = useToast();
   const [products, setProducts] = useState([])
@@ -25,7 +33,9 @@ export default function ProductsTab() {
     pageCount: 0,
     currentPage: 0
   })
-  const [productsData, isLoading, refetchProducts] = useProductsQuery("all", pagination.currentPage, BOARD_PAGINATION_SIZE)
+  const [selectedCategory, setSelectedCategory] = useState('all');
+
+  const [productsData, isLoading, refetchProducts] = useProductsQuery(selectedCategory, pagination.currentPage, BOARD_PAGINATION_SIZE)
 
   // 상품 노출 변경
   const changeDisplay = (productId, isShown) => {
@@ -59,8 +69,7 @@ export default function ProductsTab() {
 
   useEffect(() => {
     refetchProducts()
-  }, [pagination.currentPage])
-
+  }, [pagination.currentPage, selectedCategory])
 
   return (
     <>
@@ -69,13 +78,24 @@ export default function ProductsTab() {
           <Spinner />
           :
           <>
+            <Select onChange={e => {
+              setSelectedCategory(e.target.value)
+            }} width={"150px"} variant='outline' placeholder='전체'>
+              {Object.entries(PRODUCT_TYPE).map(item =>
+                <Fragment key={item[1]}>
+                  <option value={item[1]}>{item[0]}</option>
+                </Fragment>
+              )}
+
+            </Select>
+
             {products &&
               <TableContainer>
                 <Table variant='simple'>
                   {/* 테이블 헤더 */}
                   <Thead>
                     <Tr>
-                      <Th>상품 코드</Th>
+                      <Th>상품 분류</Th>
                       <Th>상품 이름</Th>
                       <Th>상품 금리</Th>
                       <Th>상품 설명</Th>

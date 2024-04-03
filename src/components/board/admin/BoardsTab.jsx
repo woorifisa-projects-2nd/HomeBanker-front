@@ -43,7 +43,6 @@ export default function BoardsTab({ displayChangeStatus = true }) {
 
   // 상담 삭제 API
   const deleteBoard = (boardId) => {
-    console.log('->', boardId)
     api.delete(`/api/banker/board/${boardId}`).then(() => {
       refetchBoards()
       toast({
@@ -72,6 +71,7 @@ export default function BoardsTab({ displayChangeStatus = true }) {
   useEffect(() => {
     refetchBoards()
   }, [pagination.currentPage])
+
   return (
     <>
       {
