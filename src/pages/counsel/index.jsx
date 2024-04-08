@@ -16,7 +16,7 @@ export default function Counsel() {
   const [mySessionId, setMySessionId] = useState(DEFAULT_SESSION_ID)
   const [myUserName, setMyUserName] = useState(`Participant${Math.floor(Math.random() * 100)}`)
   const [session, setSession] = useState(undefined);
-  const [localUser, setLocalUser] = useState(undefined);
+  const [publisher, setPublisher] = useState(undefined);
   const [subscribers, setSubscribers] = useState([]);
 
   const deleteSubscriber = useCallback((streamManager) => {
@@ -67,7 +67,7 @@ export default function Counsel() {
     setSubscribers([]);
     setMySessionId(DEFAULT_SESSION_ID);
     setMyUserName('Participant' + Math.floor(Math.random() * 100));
-    setLocalUser(undefined);
+    setPublisher(undefined);
   }, [session]);
 
   /**
@@ -106,8 +106,8 @@ export default function Counsel() {
           let publisher = await OV.current.initPublisherAsync(undefined, {
             audioSource: undefined,
             videoSource: undefined,
-            publishAudio: localUser.audioActive,
-            publishVideo: localUser.videoActive,
+            publishAudio: true,
+            publishVideo: true,
             resolution: '640x480',
             frameRate: 30,
             insertMode: 'APPEND',
@@ -115,7 +115,7 @@ export default function Counsel() {
 
           session.publish(publisher);
 
-          setLocalUser(publisher);
+          setPublisher(publisher);
         } catch (error) {
           console.log('There was an error connecting to the session:', error.code, error.message);
         }
@@ -136,17 +136,13 @@ export default function Counsel() {
 
   return (
     <Stack>
-      {session === undefined ? <>
-        <Stack alignItems="center">
-          <Text>웃는 얼굴로 고객을 맞아주세요</Text>
-          <Button size="lg" onClick={joinSession}>화상 상담 시작</Button>
-        </Stack>
-      </>
-        : <>
+      {session !== undefined ?
+        <>
           <Button onClick={leaveSession} >나가기</Button>
 
-          {localUser === undefined ? null
-            : <UserVideoComponent streamManager={localUser} />}
+          {publisher !== undefined ?
+            (<Stack >
+              <UserVideoComponent streamManager={publisher} /></Stack>) : null}
           <>
             {subscribers.map((sub, i) => (
               <Fragment key={sub.id}>
@@ -155,7 +151,13 @@ export default function Counsel() {
               </Fragment>
             ))}
           </>
-        </>}
+        </> :
+
+        <Stack alignItems="center">
+          <Text>웃는 얼굴로 고객을 맞아주세요</Text>
+          <Button size="lg" onClick={joinSession}>화상 상담 시작</Button>
+        </Stack>
+      }
     </Stack>
   )
 }
