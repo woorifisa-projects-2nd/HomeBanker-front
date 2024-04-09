@@ -156,6 +156,14 @@ export default function Counsel() {
           <>
           {publisher !== undefined ? <ChatComponent user={publisher} /> : null}
           </>
+          <>
+          <h1>음성인식 자막</h1>
+          <textarea className="transcript" value={transcript} onChange={() => {}} />
+          <button onClick={toggleListening}>
+          {listening ? '음성인식 중지' : '음성인식 시작'}
+          </button>
+    
+          </>
         </> :
 
         <Stack alignItems="center">
