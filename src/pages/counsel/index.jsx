@@ -7,6 +7,7 @@ import {
 } from '@chakra-ui/react'
 import UserVideoComponent from '../../components/UserVideoComponent';
 import { api } from '../../api/api';
+import ChatComponent from '../../components/Chat';
 
 const DEFAULT_SESSION_ID = 'SessionA'
 
@@ -108,7 +109,7 @@ export default function Counsel() {
             videoSource: undefined,
             publishAudio: true,
             publishVideo: true,
-            resolution: '640x480',
+            resolution: '1920x1080',
             frameRate: 30,
             insertMode: 'APPEND',
           });
@@ -150,6 +151,10 @@ export default function Counsel() {
                 <UserVideoComponent streamManager={sub} />
               </Fragment>
             ))}
+          </>
+
+          <>
+          {publisher !== undefined ? <ChatComponent user={publisher} /> : null}
           </>
         </> :
 

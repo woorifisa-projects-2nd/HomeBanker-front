@@ -10,6 +10,6 @@ export default function OpenViduVideoComponent({ streamManager }) {
   }, [streamManager]);
 
   return (
-    <video autoPlay={true} ref={videoRef} />
+    <video autoPlay={true} ref={videoRef} width="1000"/>
   )
 }

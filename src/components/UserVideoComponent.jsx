@@ -1,8 +1,13 @@
-import React from 'react'
+import {React, useState} from 'react'
 import OpenViduVideoComponent from './OpenViduVideoComponent';
 import { Text } from '@chakra-ui/react'
+import ChatComponent from './Chat';
+
 
 export default function UserVideoComponent({ streamManager }) {
+
+  const [chatDisplay,setChatDisplay] = useState('chat'); 
+
   const getNicknameTag = () => {
     // Gets the nickName of the user
     return JSON.parse(streamManager.stream.connection.data).clientData;
@@ -12,8 +17,8 @@ export default function UserVideoComponent({ streamManager }) {
     <>
       {streamManager !== undefined ? <>
         <OpenViduVideoComponent streamManager={streamManager} />
-        <Text>{getNicknameTag()}</Text>
-      </>
+          <Text>{getNicknameTag}</Text>
+        </>
         : null
       }</>
   )
