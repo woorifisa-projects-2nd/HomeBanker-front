@@ -8,11 +8,13 @@ import {
 import UserVideoComponent from '../../components/UserVideoComponent';
 import { api } from '../../api/api';
 import ChatComponent from '../../components/Chat';
+import useSpeechToText from '../../hook/useSpeechToText';
 
 const DEFAULT_SESSION_ID = 'SessionA'
 
 export default function Counsel() {
   const OV = useRef(new OpenVidu());
+  const { transcript, listening, toggleListening } = useSpeechToText();
 
   const [mySessionId, setMySessionId] = useState(DEFAULT_SESSION_ID)
   const [myUserName, setMyUserName] = useState(`Participant${Math.floor(Math.random() * 100)}`)
