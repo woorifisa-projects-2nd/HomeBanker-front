@@ -1,96 +1,76 @@
-import { ChevronDownIcon } from '@chakra-ui/icons';
+import 'regenerator-runtime'
+import { api } from '../../api/api';
+import React from 'react';
 import {
-  Tabs, TabList, TabPanels, Tab, TabPanel, Box, Flex,
-  Menu,
-  MenuButton,
-  MenuList,
-  MenuItem,
   Button,
-  MenuItemOption,
-  MenuGroup,
-  MenuOptionGroup,
-  MenuDivider,
+  useToast,
+  useDisclosure,
+  Textarea,
+  Tooltip,
+  Box,
+  Circle,
+  Flex,
+  Text
 } from '@chakra-ui/react'
+import CustomModal from '../../components/Modal';
+import Mic from "../../assets/icon/mic.svg?react"
+import useSpeechToText from '../../hook/useSpeechToText';
+import BoardsTab from '../../components/board/admin/BoardsTab';
 
 export default function Board() {
+  const toast = useToast()
+  const { isOpen, onOpen, onClose } = useDisclosure()
+  const { transcript, listening, quitSpeechToText, toggleListening, resetTranscript } = useSpeechToText();
+
+  // 문의 작성 API
+  const createBoard = () => {
+    api.post(`/api/board`, {
+      "content": transcript
+    }).then(() => {
+      toast({
+        position: 'top',
+        title: '문의가 등록되었습니다',
+        status: 'success',
+        duration: 1000,
+        isClosable: true,
+      })
+      onClose();
+      quitSpeechToText();
+    }
+    )
+  }
+
+  // 문의 작성 모달 종료
+  const onModalClose = () => {
+    quitSpeechToText()
+    onClose();
+  }
+
   return (
-    <Box borderWidth="1px" borderRadius="lg" overflow="hidden">
-      <Tabs variant="soft-rounded" colorScheme="green">
-        <TabList>
-          <Tab>고객상담 게시판 관리</Tab>
-          <Tab>서비스 관리</Tab>
-        </TabList>
-        <TabPanels>
-          <TabPanel>
-            <Flex justifyContent="space-around">
-              <Flex flexDirection="column">
-                <span>등록일</span>
-                <span>2024-03-29</span>
-                <span>2024-03-30</span>
-              </Flex>
-              <Flex flexDirection="column">
-                <span>답변여부</span>
-                <span>X</span>
-                <span>X</span>
-              </Flex>
-              <Flex flexDirection="column">
-                <span>내용(앞에서 10글자만)</span>
-                <span>안녕하세요, 고객님. 제가 장기간 궁금해하시던 내용에 대해서 설명드리겠습니다.</span>
-                <span>질문이 있어서 남깁니다.</span>
-              </Flex>
-              <Flex flexDirection="column">
-                <span>고객이름</span>
-                <span>홍길동</span>
-                <span>둘리</span>
-              </Flex>
-            </Flex>
-          </TabPanel>
-          <TabPanel>
-            <Flex justifyContent="space-around">
-              <Flex flexDirection="column">
-                <Menu>
-                  <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
-                    Actions
-                  </MenuButton>
-                  <MenuList>
-                    <MenuItem>전체</MenuItem>
-                    <MenuItem>카드</MenuItem>
-                    <MenuItem>예/적금</MenuItem>
-                    <MenuItem>대출</MenuItem>
-                  </MenuList>
-                </Menu>
-                <span>카드</span>
-                <span>등록일</span>
-              </Flex>
-              <Flex flexDirection="column">
-                <span>등록일</span>
-                <span>2024-03-29</span>
-                <span>2024-03-30</span>
-              </Flex>
-              <Flex flexDirection="column">
-                <span>상품이름</span>
-                <span>나라사랑카드</span>
-                <span>전세자금대출</span>
-              </Flex>
-              <Flex flexDirection="column">
-                <span>상품설명(앞에서 10글자만)</span>
-                <span>안녕하세요, 고객님. 제가 장기간 궁금해하시던 내용에 대해서 설명드리겠습니다.</span>
-                <span>질문이 있어서 남깁니다.</span>
-              </Flex>
-              <Flex flexDirection="column">
-                <span>금리</span>
-                <span>홍길동</span>
-                <span>둘리</span>
-              </Flex>
-              <Flex flexDirection="column">
-                <span>노출여부</span>
-                <span>홍길동</span>
-                <span>둘리</span>
-              </Flex>
-            </Flex>
-          </TabPanel>
-        </TabPanels>
-      </Tabs>
-    </Box>
-  );
+    <>
+      <Text>유저 상담게시판</Text>
+      <Button onClick={onOpen}>문의 작성</Button>
+      <BoardsTab displayChangeStatus={false} />
+
+      <CustomModal
+        title={"문의 작성"}
+        isOpen={isOpen} onClose={onModalClose} size={"xl"} successMessage={"작성 완료"} successAction={createBoard}>
+        <Button onClick={resetTranscript}>초기화</Button>
+        <Flex direction="column" minHeight={500} justifyContent="center" alignItems="bottom">
+          <Textarea focus="none" value={transcript} border="none" onChange={() => { }} ></Textarea >
+
+          {/* 음성인식 버튼 */}
+          <Flex width="size='68px">
+            <Tooltip label={listening ? "음성 인식 중지하기" : '음성 인식하기'} fontSize='md' color="white">
+              <Box margin="auto" justifyContent="center" alignItems="center" onClick={toggleListening}>
+                <Circle cursor="pointer" size='68px' bg={listening ? "green" : '#D9D9D9'} opacity="100%">
+                  <Mic width="35" height="35" fill={listening ? "white" : "black"} />
+                </Circle>
+              </Box>
+            </Tooltip>
+          </Flex>
+        </Flex>
+      </CustomModal>
+    </>
+  )
 }
