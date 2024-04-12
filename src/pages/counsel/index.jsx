@@ -3,12 +3,16 @@ import { OpenVidu } from 'openvidu-browser';
 import {
   Text,
   Button,
-  Stack
+  Stack,
+  Box,
+  Flex
 } from '@chakra-ui/react'
 import UserVideoComponent from '../../components/UserVideoComponent';
 import { api } from '../../api/api';
 import ChatComponent from '../../components/Chat';
 import useSpeechToText from '../../hook/useSpeechToText';
+import Header from '../../components/Header';
+import './counsel.css';
 
 const DEFAULT_SESSION_ID = 'SessionA'
 
@@ -63,7 +67,6 @@ export default function Counsel() {
     if (session) {
       session.disconnect();
     }
-
     // Reset all states and OpenVidu object
     OV.current = new OpenVidu();
     setSession(undefined);
@@ -138,34 +141,37 @@ export default function Counsel() {
   }, [leaveSession])
 
   return (
-    <Stack>
+    <>
       {session !== undefined ?
         <>
-          <Button onClick={leaveSession} >나가기</Button>
-
-          {publisher !== undefined ?
-            (<Stack >
-              <UserVideoComponent streamManager={publisher} /></Stack>) : null}
-          <>
-            {subscribers.map((sub, i) => (
-              <Fragment key={sub.id}>
-                <Text>{sub.id}</Text>
-                <UserVideoComponent streamManager={sub} />
-              </Fragment>
-            ))}
-          </>
-
-          <>
-          {publisher !== undefined ? <ChatComponent user={publisher} /> : null}
-          </>
-          <>
-          <h1>음성인식 자막</h1>
-          <textarea className="transcript" value={transcript} onChange={() => {}} />
-          <button onClick={toggleListening}>
-          {listening ? '음성인식 중지' : '음성인식 시작'}
-          </button>
-    
-          </>
+          <Header/>
+          <Box width="100%">
+            <div id="leaveCounsel" style={{position:'absolute', right:'400px', zIndex:'5'}}>
+                <Button onClick={leaveSession} >나가기</Button>
+            </div>
+            <Flex justify='center'>
+              <div>
+                <Box 
+                  id="videos" 
+                  style={{width:'1000px', height:'562.5px'}}>
+                  {publisher !== undefined ?
+                    (<UserVideoComponent streamManager={publisher} role='me'/>) : null} 
+                    {/* null대신 빈 화면을 보여줘야할듯 */}
+                    {subscribers.map((sub, i) => ( 
+                    <Fragment key={sub.id}>
+                      <UserVideoComponent streamManager={sub} role='other'/>
+                    </Fragment>
+                    ))}
+                </Box>
+                <div id="subtitle" >
+                  <h1>음성인식 자막</h1>
+                  <textarea className="transcript" value={transcript} onChange={() => {}} />
+                  <button onClick={toggleListening}> {listening ? '음성인식 중지' : '음성인식 시작'} </button>
+                </div>
+              </div>
+              {publisher !== undefined ? <ChatComponent user={publisher} /> : null}
+            </Flex>
+          </Box>
         </> :
 
         <Stack alignItems="center">
@@ -173,6 +179,6 @@ export default function Counsel() {
           <Button size="lg" onClick={joinSession}>화상 상담 시작</Button>
         </Stack>
       }
-    </Stack>
+    </>
   )
 }

@@ -1,5 +1,6 @@
 import React, { Component, useEffect } from 'react';
 import {useState } from 'react'
+import './Chat.css';
 
 export default function ChatComponent ({user}) {
     const [messageList, setMessageList] = useState([]);
@@ -7,7 +8,6 @@ export default function ChatComponent ({user}) {
     const nickname = JSON.parse(user.stream.connection.data).clientData;
     
     const chatScroll = React.createRef();
-
     
     user.stream.session.on('signal:chat', (event) => {
     const data = JSON.parse(event.data);
@@ -58,11 +58,11 @@ export default function ChatComponent ({user}) {
     }
 
         return (
-            <div id="chatContainer">
+            <div id="chatContainer" style={{height:'auto'}}>
+                <span>채팅창</span>
                 <div id="chatComponent" >
-                    <div id="chatToolbar">
-                        <span>{user.stream.session.sessionId} - CHAT</span>
-                    </div>
+                    
+                    
                     {/* <div className="message-wrap" ref={this.chatScroll}>
                 
                         {messageList.map((data, i) => (
