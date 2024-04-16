@@ -2,20 +2,22 @@ import React from "react";
 import { Button, Stack, Flex } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from 'jwt-decode';
-
+import {Cookies} from 'react-cookie'; 
+import{api} from '../api/api';
 export default function Index() {
   const navigate = useNavigate();
 
-  const handleBoardClick = () => {
+  const handleBoardClick = async () => {
+
     const token = document.cookie.split("=")[1];
 
     if (token) {
       const user = jwtDecode(token);
 
-      if (user.role === "ROLE_ADMIN") {
-        navigate("/board");
+      if (user.role === "ROLE_ADMIN" || user.role === "ROLE_BANKER") {
+        navigate("/board/admin");
       } else {
-        alert("권한이 없습니다.");
+        navigate("/board");
       }
     } else {
       alert("로그인이 필요한 기능입니다.");

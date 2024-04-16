@@ -8,6 +8,7 @@ import {
   Button,
   useColorModeValue,
 } from "@chakra-ui/react";
+import { api } from '../../api/api';
 
 export default function Login() {
   const formBackground = useColorModeValue("gray.100", "gray.700");
@@ -30,8 +31,8 @@ export default function Login() {
       formData.append("loginId", id);
       formData.append("loginPw", password);
 
-      const response = await axios.post(
-        "http://localhost:8080/login",
+      const response = await api.post(
+        "/login",
         formData,
         {
           headers: {
@@ -41,20 +42,17 @@ export default function Login() {
       );
 
       const token = response.headers.authorization.split(" ")[1];
-      console.log(response.headers);
 
       if (token) {
         const expirationDate = new Date();
 
         expirationDate.setDate(expirationDate.getDate() + 1); // 1일 후 만료
         document.cookie = `token=${token}; expires=${expirationDate.toUTCString()}; path=/`;
-        axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-
-        console.log("로그인 성공!", `${document.cookie}`);
+        
         navigate("/");
       }
     } catch (error) {
-      console.error("로그인 실패!", error);
+      alert("아이디나 비밀번호가 틀렸습니다. 다시 시도해 주세요.");
     }
   };
 
