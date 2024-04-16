@@ -9,6 +9,16 @@ import {
   Button
 } from '@chakra-ui/react'
 import React from 'react'
+/**
+ * 인자값으로 넘겨줄 수 있는 항목
+ * @param {boolean} isOpen
+ * @param {boolean} onClose
+ * @param {JSX.Element} children
+ * @param {number} size
+ * @param {string} title
+ * @param {string} successMessage
+ * @param {function} successAction
+ */
 
 export default function CustomModal({ isOpen, onClose, children, size, title, successMessage, successAction }) {
   return (

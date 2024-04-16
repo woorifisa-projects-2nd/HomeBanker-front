@@ -9,6 +9,7 @@ import UserVideoComponent from '../../components/UserVideoComponent';
 import { api } from '../../api/api';
 import ChatComponent from '../../components/Chat';
 import useSpeechToText from '../../hook/useSpeechToText';
+import CheckIdentification from '../../components/CheckIdentification';
 
 const DEFAULT_SESSION_ID = 'SessionA'
 
@@ -114,6 +115,7 @@ export default function Counsel() {
             resolution: '1920x1080',
             frameRate: 30,
             insertMode: 'APPEND',
+            mirror: false,
           });
 
           session.publish(publisher);
@@ -156,15 +158,19 @@ export default function Counsel() {
           </>
 
           <>
-          {publisher !== undefined ? <ChatComponent user={publisher} /> : null}
+            {publisher !== undefined ? <ChatComponent user={publisher} /> : null}
           </>
+
+          {/* 신분증 OCR 테스트용 임시 주석 */}
+          {/* <CheckIdentification streamManager={publisher} /> */}
+
           <>
-          <h1>음성인식 자막</h1>
-          <textarea className="transcript" value={transcript} onChange={() => {}} />
-          <button onClick={toggleListening}>
-          {listening ? '음성인식 중지' : '음성인식 시작'}
-          </button>
-    
+            <h1>음성인식 자막</h1>
+            <textarea className="transcript" value={transcript} onChange={() => { }} />
+            <button onClick={toggleListening}>
+              {listening ? '음성인식 중지' : '음성인식 시작'}
+            </button>
+
           </>
         </> :
 

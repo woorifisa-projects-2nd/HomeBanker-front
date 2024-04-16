@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react'
 
-export default function OpenViduVideoComponent({ streamManager }) {
+export default function OpenViduVideoComponent({ streamManager, size }) {
   const videoRef = useRef();
 
   useEffect(() => {
@@ -10,6 +10,6 @@ export default function OpenViduVideoComponent({ streamManager }) {
   }, [streamManager]);
 
   return (
-    <video autoPlay={true} ref={videoRef} width="1000"/>
+    <video autoPlay={true} ref={videoRef} width={size ?? "1000"} />
   )
 }
