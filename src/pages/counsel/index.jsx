@@ -30,6 +30,8 @@ export default function Counsel() {
   const [publisher, setPublisher] = useState(undefined);
   const [subscribers, setSubscribers] = useState([]);
   const navigate = useNavigate();
+  const [videoStatus, setVideoStatus] = useState(true);
+  const [audioStatus, setAudioStatus] = useState(true);
 
 
   if (publisher !== undefined) {
@@ -179,21 +181,42 @@ export default function Counsel() {
 
   const camStatusChanged = () => {
     publisher.publishVideo(!publisher.stream.videoActive);
+    setVideoStatus(publisher.stream.videoActive);
   }
 
 const micStatusChanged = () => {
   publisher.publishAudio(!publisher.stream.audioActive);
+  setAudioStatus(publisher.stream.audioActive);
   }
 
   return (
     <>
-      {session !== undefined ?
+      {session !== undefined  && publisher !== undefined?
         <>
           <Header/>
-          <Box width="100%">
-            <div id="leaveCounsel" style={{position:'absolute', right:'400px', zIndex:'5'}}>
+          <Box width="100%" height="100%">
+            {/* <div id="leaveCounsel" style={{position:'absolute', right:'400px', zIndex:'5'}}> */}
+            <Flex>
+              {videoStatus === true ?
+                <Button onClick={camStatusChanged}>
+                  카메라 끄기 
+                <IoVideocamOff/>
+                </Button> :
+                <Button onClick={camStatusChanged}>
+                  카메라 켜기 
+                <IoVideocam/>
+                </Button> } 
+
+                {audioStatus === true ?
+                <Button onClick={micStatusChanged}>
+                  마이크 끄기 <IoMdMicOff/>
+                </Button>  :
+                <Button onClick={micStatusChanged}>
+                마이크 켜기 <IoMdMic/>
+              </Button>  }
+
                 <Button onClick={leaveSession} >나가기</Button>
-            </div>
+            </Flex>
             <Flex justify='center'>
               <div>
                 <Box 
@@ -216,15 +239,7 @@ const micStatusChanged = () => {
               </div>
               {publisher !== undefined ? <ChatComponent user={publisher} /> : null}
             </Flex>
-          </Box>
-          <h1>${mySessionId}</h1>
-          <Button onClick={camStatusChanged}>
-            카메라끄기
-            <IoVideocamOff/>
-          </Button>
-          <Button onClick={micStatusChanged}>
-            마이크 끄기<IoMdMicOff/>
-          </Button>       
+          </Box>  
 
         </> :
 
