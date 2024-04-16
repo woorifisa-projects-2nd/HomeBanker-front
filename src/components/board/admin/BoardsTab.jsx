@@ -26,7 +26,7 @@ export default function BoardsTab({ displayChangeStatus = true }) {
     currentPage: 0
   })
   const [boardsData, isLoading, refetchBoards] = useBoardsQuery(BOARD_PAGINATION_SIZE, pagination.currentPage)
-
+  console.log(boardsData);
   // 상담 처리 완료 API
   const changeBoardStatus = (boardId) => {
     api.put(`/api/banker/board/${boardId}`).then(() => {

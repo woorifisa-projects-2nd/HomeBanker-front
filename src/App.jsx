@@ -1,4 +1,5 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+
 const pages = import.meta.glob("./pages/**/*.jsx", { eager: true });
 
 const routes = [];

@@ -28,7 +28,6 @@ export default function Board() {
           </TabPanel>
         </TabPanels>
       </Tabs>
-
     </>
   )
 }
