@@ -1,11 +1,13 @@
-import React from "react";
+import React, {useState} from "react";
 import { Button, Stack, Flex } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from 'jwt-decode';
 import {Cookies} from 'react-cookie'; 
 import{api} from '../api/api';
+import Header from "../components/Header";
 export default function Index() {
   const navigate = useNavigate();
+  const [isLoggedIn, setLogin] = useState(document.cookie.includes("token"));
 
   const handleBoardClick = async () => {
 
@@ -19,8 +21,10 @@ export default function Index() {
       } else {
         navigate("/board");
       }
+      
     } else {
       alert("로그인이 필요한 기능입니다.");
+      setLogin(false);
       navigate("/login");
     }
   };
@@ -36,10 +40,11 @@ export default function Index() {
   };
 
   // 쿠키에 토큰이 있는지 확인하여 로그인 상태를 판별
-  const isLoggedIn = document.cookie.includes("token");
+  
 
   return (
     <>
+      <Header isLoggedIn={isLoggedIn}></Header>
       <Flex direction="column" alignItems="center">
         <h2>원하시는 업무를 선택해주세요.</h2>
         <Stack spacing={8} direction="row" align="center" margin="30px">
