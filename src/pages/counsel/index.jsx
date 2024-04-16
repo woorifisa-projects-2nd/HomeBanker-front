@@ -14,6 +14,9 @@ import useSpeechToText from '../../hook/useSpeechToText';
 import Header from '../../components/Header';
 import './counsel.css';
 import { useNavigate } from "react-router-dom";
+import { event } from 'jquery';
+import { IoMdMic, IoMdMicOff} from "react-icons/io";
+import { IoVideocamOff, IoVideocam } from "react-icons/io5"
 
 const SESSION_ID_LIST = ['Session1', 'Session2', 'Session3', 'Session4', 'Session5', 'Session6', 'Session7', 'Session8', 'Session9', 'Session10']
 
@@ -174,6 +177,14 @@ export default function Counsel() {
     };
   }, [leaveSession])
 
+  const camStatusChanged = () => {
+    publisher.publishVideo(!publisher.stream.videoActive);
+  }
+
+const micStatusChanged = () => {
+  publisher.publishAudio(!publisher.stream.audioActive);
+  }
+
   return (
     <>
       {session !== undefined ?
@@ -207,6 +218,14 @@ export default function Counsel() {
             </Flex>
           </Box>
           <h1>${mySessionId}</h1>
+          <Button onClick={camStatusChanged}>
+            카메라끄기
+            <IoVideocamOff/>
+          </Button>
+          <Button onClick={micStatusChanged}>
+            마이크 끄기<IoMdMicOff/>
+          </Button>       
+
         </> :
 
         <Stack alignItems="center">

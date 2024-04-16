@@ -1,27 +1,25 @@
-import React, { Component, useEffect } from 'react';
+import React, { useRef, useEffect } from 'react';
 import {useState } from 'react'
 import './Chat.css';
+import {Flex, Button, Stack, Spacer} from '@chakra-ui/react'
 
 export default function ChatComponent ({user}) {
     const [messageList, setMessageList] = useState([]);
     const [message, setMessage] = useState();
     const nickname = JSON.parse(user.stream.connection.data).clientData;
-    
-    const chatScroll = React.createRef();
+
+    const chatScroll = useRef();
+    const inputRef = useRef();
     
     user.stream.session.on('signal:chat', (event) => {
     const data = JSON.parse(event.data);
-    const newMessage = { streamId: data.streamId, nickname: data.nickname, message: data.message };
-    // const document = window.document;
-    // setTimeout(() => {
-    //     const userImg = document.getElementById('userImg-' + (messageList.length - 1));
-    //     const video = document.getElementById('video-' + data.streamId);
-    //     const avatar = userImg.getContext('2d');
-    //     avatar.drawImage(video, 200, 120, 285, 285, 0, 0, 60, 60);
-    // }, 50);
-    //scrollToBottom();
-    if(data.nickname !== nickname)
-        setMessageList([...messageList, newMessage]);
+    
+    if(data.message !=='' && data.message!==' ' && data.message!==null) {
+        const newMessage = { streamId: data.streamId, nickname: data.nickname, message: data.message };
+
+        if(data.nickname !== nickname)
+            setMessageList([...messageList, newMessage]);
+        }
     });
 
     const handleChange = (event) => {
@@ -43,72 +41,47 @@ export default function ChatComponent ({user}) {
                     data: JSON.stringify(data),
                     type: 'chat',
                 });
+                setMessageList([...messageList, {message:message, nickname: nickname, streamId :user.stream.streamId}]);
+                setMessage('');
             }
         }
-        setMessageList([...messageList, {message:message, nickname: nickname, streamId :user.stream.streamId}]);
     }
 
 
     const scrollToBottom= ()=> {
-        setTimeout(() => {
-            try {
-                this.chatScroll.current.scrollTop = this.chatScroll.current.scrollHeight;
-            } catch (err) {}
-        }, 20);
+        chatScroll.current?.scrollIntoView({ behavior: 'smooth' });
     }
 
+    useEffect (() => {
+        scrollToBottom();;
+    },[messageList]);
+
         return (
-            <div id="chatContainer" style={{height:'auto'}}>
-                <span>채팅창</span>
-                <div id="chatComponent" >
+            <div id="chatContainer" style={{height:'auto', width: '-webkit-fill-available'}}>
+                <div id="chatComponent" style={{margin:"30px", backgroundColor:"skyblue", padding:"20px"}}>
+                    <div style={{width:"auto", height:"500px", overflowY:"auto" , paddingBottom:"30px"}}>
                     
-                    
-                    {/* <div className="message-wrap" ref={this.chatScroll}>
-                
-                        {messageList.map((data, i) => (
-                            <div
-                                key={i}
-                                id="remoteUsers"
-                                className={
-                                    'message' + (data.connectionId !== user.getConnectionId() ? ' left' : ' right')
-                                }
-                            >
-                                <canvas id={'userImg-' + i} width="60" height="60" className="user-img" />
-                                <div className="msg-detail">
-                                    <div className="msg-info">
-                                        <p> {data.nickname}</p>
-                                    </div>
-                                    <div className="msg-content">
-                                        <span className="triangle" />
-                                        <p className="text">{data.message}</p>
-                                    </div>
-                                </div>
-                            </div>
-                        ))}
-                    </div> */}
-
-                    <div>
                     {Array.from(messageList).map((m, index) => (
-                        <div key={index}>{m.nickname} : {m.message}</div>
+                        <div  ref={chatScroll} key={index}>{m.nickname} : {m.message}</div>
                     ))}
+                    
                     </div>
-
-
-                    <div id="messageInput">
-                        메세지를 입력하세요
+                    <Flex >
                         <input
+                            ref={inputRef}
                             placeholder="Send a messge"
                             id="chatInput"
                             value={message}
                             onChange={handleChange}
                             onKeyPress={handlePressKey}
                         />
+                        <Spacer />
                         <h2 title="Send message">
-                            <button id="sendButton" onClick={sendMessage}>
+                            <Button id="sendButton" onClick={sendMessage}>
                                 보내기
-                            </button>
+                            </Button>
                         </h2>
-                    </div>
+                    </Flex>
                 </div>
             </div>
         );
