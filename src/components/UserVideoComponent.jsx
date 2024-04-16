@@ -4,7 +4,7 @@ import { Text } from '@chakra-ui/react'
 import ChatComponent from './Chat';
 
 
-export default function UserVideoComponent({ streamManager }) {
+export default function UserVideoComponent({ streamManager, role }) {
 
   const [chatDisplay,setChatDisplay] = useState('chat'); 
 
@@ -16,8 +16,7 @@ export default function UserVideoComponent({ streamManager }) {
   return (
     <>
       {streamManager !== undefined ? <>
-        <OpenViduVideoComponent streamManager={streamManager} />
-          <Text>{getNicknameTag}</Text>
+        <OpenViduVideoComponent streamManager={streamManager} role={role} />
         </>
         : null
       }</>
