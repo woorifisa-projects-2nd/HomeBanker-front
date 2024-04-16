@@ -3,24 +3,59 @@ import { OpenVidu } from 'openvidu-browser';
 import {
   Text,
   Button,
-  Stack
+  Stack,
+  Box,
+  Flex
 } from '@chakra-ui/react'
 import UserVideoComponent from '../../components/UserVideoComponent';
 import { api } from '../../api/api';
 import ChatComponent from '../../components/Chat';
 import useSpeechToText from '../../hook/useSpeechToText';
+import Header from '../../components/Header';
+import './counsel.css';
+import { useNavigate } from "react-router-dom";
 
-const DEFAULT_SESSION_ID = 'SessionA'
+const SESSION_ID_LIST = ['Session1', 'Session2', 'Session3', 'Session4', 'Session5', 'Session6', 'Session7', 'Session8', 'Session9', 'Session10']
 
 export default function Counsel() {
   const OV = useRef(new OpenVidu());
   const { transcript, listening, toggleListening } = useSpeechToText();
 
-  const [mySessionId, setMySessionId] = useState(DEFAULT_SESSION_ID)
+  const [mySessionId, setMySessionId] = useState(SESSION_ID_LIST[0]);
   const [myUserName, setMyUserName] = useState(`Participant${Math.floor(Math.random() * 100)}`)
   const [session, setSession] = useState(undefined);
   const [publisher, setPublisher] = useState(undefined);
   const [subscribers, setSubscribers] = useState([]);
+  const navigate = useNavigate();
+
+
+  if (publisher !== undefined) {
+    session.on('signal:destroy', (event) => {
+      session.unpublish(publisher);
+      navigate('/')
+   })}
+  
+
+  const destroySession = () => {
+    api.post(`api/sessions/${mySessionId}/destroy`, {}, {
+      headers: { 'Content-Type': 'application/json' },
+    }); 
+
+    session.unpublish(publisher);
+
+    const signalOptions = {
+      type: 'destroy', 
+      data : JSON.stringify("destroy"),
+    };
+
+    session.signal(signalOptions)
+      .then(() => {
+        console.log('Signal sent');
+      })
+      .catch(error => {
+        console.error(error);
+      })
+  }
 
   const deleteSubscriber = useCallback((streamManager) => {
     setSubscribers((prevSubscribers) => {
@@ -54,33 +89,35 @@ export default function Counsel() {
     });
 
     setSession(mySession);
-  }, []);
+  }, [mySessionId]);
 
   /**
    * 세션 나가기
    */
   const leaveSession = useCallback(() => {
+    destroySession();
+
     if (session) {
       session.disconnect();
     }
-
-    // Reset all states and OpenVidu object
-    OV.current = new OpenVidu();
-    setSession(undefined);
-    setSubscribers([]);
-    setMySessionId(DEFAULT_SESSION_ID);
-    setMyUserName('Participant' + Math.floor(Math.random() * 100));
-    setPublisher(undefined);
+    navigate('/');
   }, [session]);
 
   /**
    * 세션 생성
    */
-  const createSession = async (sessionId) => {
-    const response = await api.post('api/sessions', { customSessionId: sessionId }, {
-      headers: { 'Content-Type': 'application/json', },
-    });
-    return response.data; // The sessionId
+  const createSession = async () => {
+    let response;
+    for (let i = 0; i < SESSION_ID_LIST.length; i++) {
+      response = await api.post('api/sessions', { customSessionId: SESSION_ID_LIST[i] }, {
+        headers: { 'Content-Type': 'application/json' },
+      });
+      if (response.data !== 'full') {
+        setMySessionId(SESSION_ID_LIST[i]);
+        break;
+      }
+    }
+    return response.data;
   };
 
   /**
@@ -94,7 +131,7 @@ export default function Counsel() {
   };
 
   const getToken = useCallback(async () => {
-    return createSession(mySessionId).then(sessionId =>
+    return createSession().then(sessionId =>
       createToken(sessionId),
     );
   }, [mySessionId]);
@@ -112,7 +149,7 @@ export default function Counsel() {
             publishAudio: true,
             publishVideo: true,
             resolution: '1920x1080',
-            frameRate: 30,
+            frameRate: 60,
             insertMode: 'APPEND',
           });
 
@@ -138,34 +175,38 @@ export default function Counsel() {
   }, [leaveSession])
 
   return (
-    <Stack>
+    <>
       {session !== undefined ?
         <>
-          <Button onClick={leaveSession} >나가기</Button>
-
-          {publisher !== undefined ?
-            (<Stack >
-              <UserVideoComponent streamManager={publisher} /></Stack>) : null}
-          <>
-            {subscribers.map((sub, i) => (
-              <Fragment key={sub.id}>
-                <Text>{sub.id}</Text>
-                <UserVideoComponent streamManager={sub} />
-              </Fragment>
-            ))}
-          </>
-
-          <>
-          {publisher !== undefined ? <ChatComponent user={publisher} /> : null}
-          </>
-          <>
-          <h1>음성인식 자막</h1>
-          <textarea className="transcript" value={transcript} onChange={() => {}} />
-          <button onClick={toggleListening}>
-          {listening ? '음성인식 중지' : '음성인식 시작'}
-          </button>
-    
-          </>
+          <Header/>
+          <Box width="100%">
+            <div id="leaveCounsel" style={{position:'absolute', right:'400px', zIndex:'5'}}>
+                <Button onClick={leaveSession} >나가기</Button>
+            </div>
+            <Flex justify='center'>
+              <div>
+                <Box 
+                  id="videos" 
+                  style={{width:'1000px', height:'562.5px'}}>
+                  {publisher !== undefined ?
+                    (<UserVideoComponent streamManager={publisher} role='me'/>) : null}
+                      {subscribers.length === 0 ? <div style={{backgroundColor:'grey', width:'1000px', height:'562.5px'}}></div> :
+                        subscribers.map((sub, i) => ( 
+                          <Fragment key={sub.id}>
+                            <UserVideoComponent streamManager={sub} role='other'/>
+                          </Fragment>
+                    ))}
+                </Box>
+                <div id="subtitle" >
+                  <h1>음성인식 자막</h1>
+                  <textarea className="transcript" value={transcript} onChange={() => {}} />
+                  <button onClick={toggleListening}> {listening ? '음성인식 중지' : '음성인식 시작'} </button>
+                </div>
+              </div>
+              {publisher !== undefined ? <ChatComponent user={publisher} /> : null}
+            </Flex>
+          </Box>
+          <h1>${mySessionId}</h1>
         </> :
 
         <Stack alignItems="center">
@@ -173,6 +214,6 @@ export default function Counsel() {
           <Button size="lg" onClick={joinSession}>화상 상담 시작</Button>
         </Stack>
       }
-    </Stack>
+    </>
   )
 }
