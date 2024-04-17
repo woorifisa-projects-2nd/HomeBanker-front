@@ -15,6 +15,7 @@ import CheckIdentification from '../../components/CheckIdentification';
 import Header from '../../components/Header';
 import './counsel.css';
 import { useNavigate } from "react-router-dom";
+import CounselToolbar from '../../components/CounselToolbar';
 
 const SESSION_ID_LIST = ['Session1', 'Session2', 'Session3', 'Session4', 'Session5', 'Session6', 'Session7', 'Session8', 'Session9', 'Session10']
 
@@ -27,6 +28,7 @@ export default function Counsel() {
   const [session, setSession] = useState(undefined);
   const [publisher, setPublisher] = useState(undefined);
   const [subscribers, setSubscribers] = useState([]);
+  const [isIdentifyUser, setIdentifyUser] = useState(false);
   const navigate = useNavigate();
 
 
@@ -187,8 +189,6 @@ export default function Counsel() {
               <Button onClick={leaveSession} >나가기</Button>
             </div>
             <Flex justify='center'>
-              {/* 신분증 OCR 테스트용 임시 주석 */}
-              {/* <CheckIdentification streamManager={publisher} /> */}
               <div>
                 <Box
                   id="videos"
@@ -212,6 +212,9 @@ export default function Counsel() {
             </Flex>
           </Box>
           <h1>${mySessionId}</h1>
+          <CounselToolbar isIdentifyUser={isIdentifyUser} />
+          {/* 임시 주석 : 상담사가 버튼을 누르면 고객에게 보여줄 화면 */}
+          {/* <CheckIdentification streamManager={publisher} /> */}
         </> :
 
         <Stack alignItems="center">

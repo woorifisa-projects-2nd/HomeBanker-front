@@ -3,12 +3,13 @@ import CustomModal from './Modal'
 import { Button, useDisclosure } from '@chakra-ui/react'
 import { Stack, Box, Text } from '@chakra-ui/react';
 import OpenViduVideoComponent from './OpenViduVideoComponent';
-import html2canvas from "html2canvas";
-import Axios from 'axios';
 import { v4 as uuidV4 } from 'uuid';
+import html2canvas from 'html2canvas';
 
 const NAVER_INVOKE_URL = import.meta.env.VITE_NAVER_INVOKE_URL
 const NAVER_OCR_SECRET_KEY = import.meta.env.VITE_NAVER_OCR_SECRET_KEY
+import Axios from 'axios';
+import { personalNumberFormatter } from '../util/counsel';
 
 export default function CheckIdentification({ streamManager }) {
   const videoRef = useRef(null);
@@ -17,7 +18,7 @@ export default function CheckIdentification({ streamManager }) {
   const onCapture = () => {
     if (videoRef.current) {
       html2canvas(videoRef.current).then((canvas) => {
-        onSaveAsFile(canvas.toDataURL("image/jpg"))
+        checkOCR(canvas.toDataURL("image/jpg"))
       })
     }
   }
@@ -26,7 +27,8 @@ export default function CheckIdentification({ streamManager }) {
     return dataString.replace(/^data:image\/png;base64,/, "");
   }, [])
 
-  const onSaveAsFile = (uri) => {
+  // 신분증 OCR api
+  const checkOCR = (uri) => {
     const uriData = removeDataPrefix(uri)
     const message = {
       images: [
@@ -50,14 +52,25 @@ export default function CheckIdentification({ streamManager }) {
       }
     }).then(res => {
       if (res.status === 200) {
-        // 추출완료후 res에 담긴 데이터 선별하여
-        // 서버 요청
-        onClose();
+        const personalNumber = personalNumberFormatter(res.data.images[0].idCard.result.ic.personalNum[0].formatted.value)
+        const name = res.data.images[0].idCard.result.ic.name[0].formatted.value
+        indentifyUser(personalNumber, name)
       }
     }).catch(e => {
       console.error('실패', e)
       alert("캡처에 실패했습니다.")
     })
+  }
+
+  // 서버에 금융결제원 api 확인 요청
+  // TODO: 리팩토링 필요
+  const indentifyUser = (personalNumber, name) => {
+    api.post('/api/banker/video/identify', {
+      identity: personalNumber,
+      userName: name
+    }).then(r => {
+      onClose();
+    }).catch()
   }
 
   return (
