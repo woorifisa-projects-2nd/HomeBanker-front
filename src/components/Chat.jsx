@@ -1,7 +1,8 @@
 import React, { useRef, useEffect } from 'react';
 import {useState } from 'react'
-import './Chat.css';
-import {Flex, Button, Stack, Spacer} from '@chakra-ui/react'
+import {Flex, Button, Stack, Spacer, Input, Box} from '@chakra-ui/react'
+import ChatMessage from './ChatMessage';
+import { IoMdChatbubbles } from "react-icons/io";
 
 export default function ChatComponent ({user}) {
     const [messageList, setMessageList] = useState([]);
@@ -47,6 +48,12 @@ export default function ChatComponent ({user}) {
         }
     }
 
+    const findMessageSender = (sender) => {
+        console.log(`sender : ${sender}`);
+        console.log(`nickname: ${nickname}`);
+        return sender === nickname ? 'me' : 'other';
+    }
+
 
     const scrollToBottom= ()=> {
         chatScroll.current?.scrollIntoView({ behavior: 'smooth' });
@@ -57,32 +64,43 @@ export default function ChatComponent ({user}) {
     },[messageList]);
 
         return (
-            <div id="chatContainer" style={{height:'auto', width: '-webkit-fill-available'}}>
-                <div id="chatComponent" style={{margin:"30px", backgroundColor:"skyblue", padding:"20px"}}>
+            <div id="chatContainer" style={{height:'auto', width: '100%', backgroundColor:'#0083CA'}}>
+                <Flex direction='column'>
+                <div style={{marginTop: '10px',marginBottom: '10px',marginLeft: '30px',padding: '5px'}}>
+                    <Flex>
+                    <IoMdChatbubbles style={{display:'inline'}} size='2rem'/>
+                    <div style={{marginLeft:'10px'}}>채팅방</div>
+                    </Flex>
+                </div>
+                <div id="chatComponent" style={{marginLeft:"30px",marginRight:"30px",marginBottom:"30px", backgroundColor:'white', padding:"20px", borderRadius:"20px"}}>
                     <div style={{width:"auto", height:"500px", overflowY:"auto" , paddingBottom:"30px"}}>
                     
+                    <Flex direction='column'>
+                    <Stack>
                     {Array.from(messageList).map((m, index) => (
-                        <div  ref={chatScroll} key={index}>{m.nickname} : {m.message}</div>
+                        <ChatMessage ref={chatScroll} key={index} message={m.message} sender={findMessageSender(m.nickname)}/>
                     ))}
+                    </Stack>
+                    </Flex>
                     
                     </div>
                     <Flex >
-                        <input
+                        <Input
+                            width='75%'
+                            focusBorderColor='#0067AC'
+                            placeholder='채팅 메세지를 입력해보세요'
                             ref={inputRef}
-                            placeholder="Send a messge"
-                            id="chatInput"
                             value={message}
                             onChange={handleChange}
                             onKeyPress={handlePressKey}
-                        />
-                        <Spacer />
-                        <h2 title="Send message">
-                            <Button id="sendButton" onClick={sendMessage}>
+                            />
+                        <Spacer/>
+                        <Button id="sendButton" onClick={sendMessage}>
                                 보내기
-                            </Button>
-                        </h2>
+                        </Button>
                     </Flex>
                 </div>
+                </Flex>
             </div>
         );
 }
