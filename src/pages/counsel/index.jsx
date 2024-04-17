@@ -14,6 +14,9 @@ import useSpeechToText from '../../hook/useSpeechToText';
 import Header from '../../components/Header';
 import './counsel.css';
 import { useNavigate } from "react-router-dom";
+import { event } from 'jquery';
+import { IoMdMic, IoMdMicOff} from "react-icons/io";
+import { IoVideocamOff, IoVideocam } from "react-icons/io5"
 
 const SESSION_ID_LIST = ['Session1', 'Session2', 'Session3', 'Session4', 'Session5', 'Session6', 'Session7', 'Session8', 'Session9', 'Session10']
 
@@ -27,6 +30,8 @@ export default function Counsel() {
   const [publisher, setPublisher] = useState(undefined);
   const [subscribers, setSubscribers] = useState([]);
   const navigate = useNavigate();
+  const [videoStatus, setVideoStatus] = useState(true);
+  const [audioStatus, setAudioStatus] = useState(true);
 
 
   if (publisher !== undefined) {
@@ -174,15 +179,44 @@ export default function Counsel() {
     };
   }, [leaveSession])
 
+  const camStatusChanged = () => {
+    publisher.publishVideo(!publisher.stream.videoActive);
+    setVideoStatus(publisher.stream.videoActive);
+  }
+
+const micStatusChanged = () => {
+  publisher.publishAudio(!publisher.stream.audioActive);
+  setAudioStatus(publisher.stream.audioActive);
+  }
+
   return (
     <>
-      {session !== undefined ?
+      {session !== undefined  && publisher !== undefined?
         <>
           <Header/>
-          <Box width="100%">
-            <div id="leaveCounsel" style={{position:'absolute', right:'400px', zIndex:'5'}}>
+          <Box width="100%" height="100%">
+            {/* <div id="leaveCounsel" style={{position:'absolute', right:'400px', zIndex:'5'}}> */}
+            <Flex>
+              {videoStatus === true ?
+                <Button onClick={camStatusChanged}>
+                  카메라 끄기 
+                <IoVideocamOff/>
+                </Button> :
+                <Button onClick={camStatusChanged}>
+                  카메라 켜기 
+                <IoVideocam/>
+                </Button> } 
+
+                {audioStatus === true ?
+                <Button onClick={micStatusChanged}>
+                  마이크 끄기 <IoMdMicOff/>
+                </Button>  :
+                <Button onClick={micStatusChanged}>
+                마이크 켜기 <IoMdMic/>
+              </Button>  }
+
                 <Button onClick={leaveSession} >나가기</Button>
-            </div>
+            </Flex>
             <Flex justify='center'>
               <div>
                 <Box 
@@ -205,8 +239,8 @@ export default function Counsel() {
               </div>
               {publisher !== undefined ? <ChatComponent user={publisher} /> : null}
             </Flex>
-          </Box>
-          <h1>${mySessionId}</h1>
+          </Box>  
+
         </> :
 
         <Stack alignItems="center">

@@ -1,0 +1,21 @@
+@font-face {
+    font-family: "WooridaumB";
+    font-style: normal;
+    font-weight: 500;
+    src: url("./WooridaumB.woff") format("woff");
+  }
+  
+  @font-face {
+    font-family: "WooridaumL";
+    font-style: normal;
+    font-weight: 100;
+    src: url("./WooridaumL.woff") format("woff");
+  }
+  
+  @font-face {
+    font-family: "WooridaumR";
+    font-style: normal;
+    font-weight: normal;
+    src: url("./WooridaumR.woff") format("woff");
+  }
+  

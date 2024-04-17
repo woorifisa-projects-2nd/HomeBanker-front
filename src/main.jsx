@@ -8,6 +8,7 @@ import {
   QueryClientProvider,
 } from '@tanstack/react-query'
 import colors from './style/theme.js'
+import "./style/fonts/font.css";
 
 const theme = extendTheme({ colors })
 
