@@ -191,9 +191,9 @@ const micStatusChanged = () => {
 
   return (
     <>
+      <Header/>
       {session !== undefined  && publisher !== undefined?
         <>
-          <Header/>
           <Box width="100%" height="100%">
             {/* <div id="leaveCounsel" style={{position:'absolute', right:'400px', zIndex:'5'}}> */}
             <Flex>
