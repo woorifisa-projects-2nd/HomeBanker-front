@@ -11,7 +11,7 @@ const NAVER_OCR_SECRET_KEY = import.meta.env.VITE_NAVER_OCR_SECRET_KEY
 import Axios from 'axios';
 import { personalNumberFormatter } from '../util/counsel';
 
-export default function CheckIdentification({ streamManager }) {
+export default function CheckIdentification({ streamManager, setIdentifyUser }) {
   const videoRef = useRef(null);
   const { isOpen, onOpen, onClose } = useDisclosure()
 
@@ -69,6 +69,7 @@ export default function CheckIdentification({ streamManager }) {
       identity: personalNumber,
       userName: name
     }).then(r => {
+      setIdentifyUser(true)
       onClose();
     }).catch()
   }

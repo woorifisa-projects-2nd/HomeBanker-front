@@ -19,6 +19,7 @@ import CounselToolbar from '../../components/CounselToolbar';
 import { event } from 'jquery';
 import { IoMdMic, IoMdMicOff } from "react-icons/io";
 import { IoVideocamOff, IoVideocam } from "react-icons/io5"
+import useCheckRole from '../../hook/useCheckRole';
 
 const SESSION_ID_LIST = ['Session1', 'Session2', 'Session3', 'Session4', 'Session5', 'Session6', 'Session7', 'Session8', 'Session9', 'Session10']
 
@@ -31,7 +32,7 @@ export default function Counsel() {
   const [session, setSession] = useState(undefined);
   const [publisher, setPublisher] = useState(undefined);
   const [subscribers, setSubscribers] = useState([]);
-  const [isIdentifyUser, setIdentifyUser] = useState(false);
+
   const navigate = useNavigate();
   const [videoStatus, setVideoStatus] = useState(true);
   const [audioStatus, setAudioStatus] = useState(true);
@@ -246,7 +247,7 @@ export default function Counsel() {
             </Flex>
           </Box>
           <h1>${mySessionId}</h1>
-          <CounselToolbar publisher={publisher} isIdentifyUser={isIdentifyUser} />
+          <CounselToolbar publisher={publisher} />
         </> :
 
         <Stack alignItems="center">
