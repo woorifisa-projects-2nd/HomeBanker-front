@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react'
+import React, { Fragment, useEffect, useState } from 'react';
 import {
   Spinner,
   Table,
@@ -24,7 +24,7 @@ const PRODUCT_TYPE = {
   예적금: "deposit",
   대출: "loan"
 }
-export default function ProductsTab() {
+export default function ProductsTab( { selectedProduct, setSelectedProduct, isDisplayed = true } ) {
   const toast = useToast();
   const [products, setProducts] = useState([])
   const [pagination, setPagination] = useState({
@@ -71,21 +71,25 @@ export default function ProductsTab() {
     refetchProducts()
   }, [pagination.currentPage, selectedCategory])
 
+  const handleProductClick = (product) => {
+    if (isDisplayed == false) { setSelectedProduct(product); }
+  }
+
   return (
     <>
       {
-        isLoading ?
+        isLoading ? 
           <Spinner />
           :
           <>
             <Select onChange={e => {
-              setSelectedCategory(e.target.value)
-            }} width={"150px"} variant='outline' placeholder='전체'>
-              {Object.entries(PRODUCT_TYPE).map(item =>
-                <Fragment key={item[1]}>
-                  <option value={item[1]}>{item[0]}</option>
-                </Fragment>
-              )}
+                setSelectedCategory(e.target.value)
+              }} width={"150px"} variant='outline'>
+                {Object.entries(PRODUCT_TYPE).map(item =>
+                  <Fragment key={item[1]}>
+                    <option value={item[1]}>{item[0]}</option>
+                  </Fragment>
+                )}
 
             </Select>
 
@@ -99,7 +103,7 @@ export default function ProductsTab() {
                       <Th>상품 이름</Th>
                       <Th>상품 금리</Th>
                       <Th>상품 설명</Th>
-                      <Th>상품 노출</Th>
+                      { isDisplayed && <Th>상품 노출</Th> }
                     </Tr>
                   </Thead>
 
@@ -107,14 +111,23 @@ export default function ProductsTab() {
                   <Tbody>
                     {products.map(item => {
                       return (
-                        <Tr key={item.productId}>
-                          <Td>{item.productCode.typeName ?? ''}</Td>
-                          <Td>{item.productName ?? ''}</Td>
-                          <Td>{item.productInterest ?? 0}</Td>
-                          <Td>{item.productDescription ?? ''}</Td>
-                          <Td><Switch size='lg' isChecked={item.isShown} onChange={() => changeDisplay(item.productId, item.isShown)} /></Td>
-                        </Tr>)
-                    })}
+                      <Tr
+                        key={item.productId}
+                        onClick={() => handleProductClick(item) }
+                        cursor='pointer'
+                        backgroundColor={ selectedProduct != undefined && item.productId == selectedProduct.productId ? 'gray.100' : 'white' }
+                        _hover={{ backgroundColor: 'gray.100' }}
+                      >
+                        <Td>{item.productCode.typeName ?? ''}</Td>
+                        <Td>{item.productName ?? ''}</Td>
+                        <Td>{item.productInterest ?? 0}</Td>
+                        <Td>{item.productDescription ?? ''}</Td>
+
+                        { isDisplayed && (
+                        <Td><Switch size='lg' isChecked={item.isShown} onChange={() => changeDisplay(item.productId, item.isShown)} /></Td>
+                        )}
+                      </Tr>
+                    )})}
                   </Tbody>
 
                 </Table>

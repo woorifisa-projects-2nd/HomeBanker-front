@@ -5,8 +5,13 @@ import {
   Button,
   Stack,
   Box,
-  Flex
-} from '@chakra-ui/react'
+  Flex,
+  Tabs,
+  TabList,
+  TabPanels,
+  Tab,
+  TabPanel,
+} from '@chakra-ui/react';
 import UserVideoComponent from '../../components/UserVideoComponent';
 import { api } from '../../api/api';
 import ChatComponent from '../../components/Chat';
@@ -17,6 +22,7 @@ import { useNavigate } from "react-router-dom";
 import { event } from 'jquery';
 import { IoMdMic, IoMdMicOff} from "react-icons/io";
 import { IoVideocamOff, IoVideocam } from "react-icons/io5"
+import TransferTab from '../../components/board/admin/TransferTab';
 
 const SESSION_ID_LIST = ['Session1', 'Session2', 'Session3', 'Session4', 'Session5', 'Session6', 'Session7', 'Session8', 'Session9', 'Session10']
 
@@ -32,7 +38,6 @@ export default function Counsel() {
   const navigate = useNavigate();
   const [videoStatus, setVideoStatus] = useState(true);
   const [audioStatus, setAudioStatus] = useState(true);
-
 
   if (publisher !== undefined) {
     session.on('signal:destroy', (event) => {
@@ -74,6 +79,8 @@ export default function Counsel() {
       }
     });
   }, []);
+
+  
 
   /**
    * 세션 등록
@@ -184,70 +191,92 @@ export default function Counsel() {
     setVideoStatus(publisher.stream.videoActive);
   }
 
-const micStatusChanged = () => {
-  publisher.publishAudio(!publisher.stream.audioActive);
-  setAudioStatus(publisher.stream.audioActive);
-  }
+  const micStatusChanged = () => {
+    publisher.publishAudio(!publisher.stream.audioActive);
+    setAudioStatus(publisher.stream.audioActive);
+    }
 
   return (
     <>
-      {session !== undefined  && publisher !== undefined?
+      {session !== undefined && publisher !== undefined ? (
         <>
-          <Header/>
+          <Header />
           <Box width="100%" height="100%">
-            {/* <div id="leaveCounsel" style={{position:'absolute', right:'400px', zIndex:'5'}}> */}
             <Flex>
-              {videoStatus === true ?
+              {videoStatus === true ? (
                 <Button onClick={camStatusChanged}>
-                  카메라 끄기 
-                <IoVideocamOff/>
-                </Button> :
+                  카메라 끄기
+                  <IoVideocamOff />
+                </Button>
+              ) : (
                 <Button onClick={camStatusChanged}>
-                  카메라 켜기 
-                <IoVideocam/>
-                </Button> } 
+                  카메라 켜기
+                  <IoVideocam />
+                </Button>
+              )}
 
-                {audioStatus === true ?
+              {audioStatus === true ? (
                 <Button onClick={micStatusChanged}>
-                  마이크 끄기 <IoMdMicOff/>
-                </Button>  :
+                  마이크 끄기 <IoMdMicOff />
+                </Button>
+              ) : (
                 <Button onClick={micStatusChanged}>
-                마이크 켜기 <IoMdMic/>
-              </Button>  }
+                  마이크 켜기 <IoMdMic />
+                </Button>
+              )}
 
-                <Button onClick={leaveSession} >나가기</Button>
+              <Button onClick={leaveSession}>나가기</Button>
             </Flex>
-            <Flex justify='center'>
+            <Flex justify="center">
               <div>
-                <Box 
-                  id="videos" 
-                  style={{width:'1000px', height:'562.5px'}}>
-                  {publisher !== undefined ?
-                    (<UserVideoComponent streamManager={publisher} role='me'/>) : null}
-                      {subscribers.length === 0 ? <div style={{backgroundColor:'grey', width:'1000px', height:'562.5px'}}></div> :
-                        subscribers.map((sub, i) => ( 
-                          <Fragment key={sub.id}>
-                            <UserVideoComponent streamManager={sub} role='other'/>
-                          </Fragment>
-                    ))}
+                <Box id="videos" style={{ width: '1000px', height: '562.5px' }}>
+                  {publisher !== undefined ? (
+                    <UserVideoComponent streamManager={publisher} role="me" />
+                  ) : null}
+                  {subscribers.length === 0 ? (
+                    <div style={{ backgroundColor: 'grey', width: '1000px', height: '562.5px' }}></div>
+                  ) : (
+                    subscribers.map((sub, i) => (
+                      <Fragment key={sub.id}>
+                        <UserVideoComponent streamManager={sub} role="other" />
+                      </Fragment>
+                    ))
+                  )}
                 </Box>
-                <div id="subtitle" >
+                <div id="subtitle">
                   <h1>음성인식 자막</h1>
                   <textarea className="transcript" value={transcript} onChange={() => {}} />
-                  <button onClick={toggleListening}> {listening ? '음성인식 중지' : '음성인식 시작'} </button>
+                  <button onClick={toggleListening}>
+                    {listening ? '음성인식 중지' : '음성인식 시작'}
+                  </button>
                 </div>
               </div>
-              {publisher !== undefined ? <ChatComponent user={publisher} /> : null}
+
+              <Tabs>
+                <TabList>
+                  <Tab>채팅</Tab>
+                  <Tab>상품</Tab>
+                </TabList>
+                <TabPanels>
+                  <TabPanel>
+                    {publisher !== undefined ? <ChatComponent user={publisher} /> : null}
+                  </TabPanel>
+                  <TabPanel>
+                    <TransferTab />
+                  </TabPanel>
+                </TabPanels>
+              </Tabs>
             </Flex>
-          </Box>  
-
-        </> :
-
+          </Box>
+        </>
+      ) : (
         <Stack alignItems="center">
           <Text>웃는 얼굴로 고객을 맞아주세요</Text>
-          <Button size="lg" onClick={joinSession}>화상 상담 시작</Button>
+          <Button size="lg" onClick={joinSession}>
+            화상 상담 시작
+          </Button>
         </Stack>
-      }
+      )}
     </>
-  )
+  );
 }
