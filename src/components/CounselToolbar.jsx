@@ -1,14 +1,15 @@
 import React, { useState } from 'react'
-import { Text, Box } from '@chakra-ui/react';
+import { Text, Box, useDisclosure } from '@chakra-ui/react';
 import { Button } from '@chakra-ui/react';
 import { HStack } from '@chakra-ui/react';
 import CheckIdentification from './CheckIdentification';
 import useCheckRole from '../hook/useCheckRole';
 
 export default function CounselToolbar({ publisher }) {
-  const [isRequest, setRequest] = useState(false);
-  const [isIdentifyUser, setIdentifyUser] = useState(false);
+  const [isIdentifiedUser, setIdentifyUser] = useState(false);
   const { role } = useCheckRole();
+
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const sendMessage = () => {
     if (publisher) {
@@ -19,10 +20,28 @@ export default function CounselToolbar({ publisher }) {
     }
   }
 
+  const closeModalMessage = () => {
+    if (publisher && role === 'ROLE_ADMIN') {
+      publisher.stream.session.signal({
+        data: JSON.stringify('close'),
+        type: 'identify'
+      })
+    }
+  }
+
+  publisher.stream.session.on('signal:identify', (event) => {
+    const data = JSON.parse(event.data);
+    if (data === 'close') {
+      if (role === 'ROLE_CUSTOMER') {
+        onClose();
+      }
+    }
+  });
+
   publisher.stream.session.on('signal:identify', (event) => {
     const data = JSON.parse(event.data);
     if (data === 'request') {
-      setRequest(true)
+      onOpen();
     }
   });
 
@@ -30,7 +49,7 @@ export default function CounselToolbar({ publisher }) {
     <>
       {role === 'ROLE_ADMIN' &&
         <Box backgroundColor="gray" p={4}>
-          {isIdentifyUser ?
+          {isIdentifiedUser ?
             <Text>신분증 확인 완료</Text>
             :
             <HStack>
@@ -39,12 +58,16 @@ export default function CounselToolbar({ publisher }) {
             </HStack>}
         </Box>}
 
-      {role === 'ROLE_CUSTOMER' && isRequest &&
-        <CheckIdentification
-          setIdentifyUser={setIdentifyUser}
-          streamManager={publisher} />}
-
-
+      <CheckIdentification
+        isOpen={isOpen}
+        onClose={() => {
+          onClose()
+          closeModalMessage()
+        }}
+        onOpen={onOpen}
+        setIdentifyUser={setIdentifyUser}
+        isIdentifiedUser={isIdentifiedUser}
+        streamManager={publisher} />
     </>
   )
 }

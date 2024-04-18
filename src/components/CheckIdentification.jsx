@@ -1,6 +1,6 @@
-import React, { useCallback, useRef } from 'react'
+import React, { useCallback, useRef, useState } from 'react'
 import CustomModal from './Modal'
-import { Button, useDisclosure } from '@chakra-ui/react'
+import { Button, Spinner } from '@chakra-ui/react'
 import { Stack, Box, Text } from '@chakra-ui/react';
 import OpenViduVideoComponent from './OpenViduVideoComponent';
 import { v4 as uuidV4 } from 'uuid';
@@ -10,15 +10,19 @@ const NAVER_INVOKE_URL = import.meta.env.VITE_NAVER_INVOKE_URL
 const NAVER_OCR_SECRET_KEY = import.meta.env.VITE_NAVER_OCR_SECRET_KEY
 import Axios from 'axios';
 import { personalNumberFormatter } from '../util/counsel';
+import useCheckRole from '../hook/useCheckRole';
+import { api } from '../api/api';
 
-export default function CheckIdentification({ streamManager, setIdentifyUser }) {
+export default function CheckIdentification({ isOpen, onClose, streamManager, setIdentifyUser }) {
   const videoRef = useRef(null);
-  const { isOpen, onOpen, onClose } = useDisclosure()
+  const [isLoading, setLoading] = useState(false);
+  const { role } = useCheckRole();
 
   const onCapture = () => {
     if (videoRef.current) {
       html2canvas(videoRef.current).then((canvas) => {
         checkOCR(canvas.toDataURL("image/jpg"))
+        setLoading(true)
       })
     }
   }
@@ -59,6 +63,7 @@ export default function CheckIdentification({ streamManager, setIdentifyUser }) 
     }).catch(e => {
       console.error('실패', e)
       alert("캡처에 실패했습니다.")
+      onClose();
     })
   }
 
@@ -68,19 +73,16 @@ export default function CheckIdentification({ streamManager, setIdentifyUser }) 
     api.post('/api/banker/video/identify', {
       identity: personalNumber,
       userName: name
-    }).then(r => {
+    }).then(() => {
       setIdentifyUser(true)
       onClose();
     }).catch()
   }
 
   return (
-    <>
-      <Button onClick={onOpen}>신분증 캡쳐하기</Button>
-
-      <CustomModal size={'4xl'} isOpen={isOpen} onClose={onClose}
-        successMessage={'캡쳐하기'} successAction={onCapture}
-      >
+    <CustomModal size={'4xl'} isOpen={isOpen} onClose={onClose}>
+      <>
+        {isLoading ? <Spinner /> : <></>}
         <Stack flexDirection="column" alignItems="center" >
           <Text>사각형에 맞게 신분증을 가로로 놓아주세요.</Text>
           {streamManager !== undefined &&
@@ -88,7 +90,8 @@ export default function CheckIdentification({ streamManager, setIdentifyUser }) 
               <OpenViduVideoComponent size={"100%"} streamManager={streamManager} />
             </Box>}
         </Stack>
-      </CustomModal>
-    </>
+        {role === "ROLE_ADMIN" && <Button onClick={onCapture}>{'캡쳐하기'}</Button>}
+      </>
+    </CustomModal>
   )
 }

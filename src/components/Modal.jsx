@@ -22,11 +22,10 @@ import React from 'react'
 
 export default function CustomModal({ isOpen, onClose, children, size, title, successMessage, successAction }) {
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size={size}>
+    <Modal closeOnOverlayClick={false} isOpen={isOpen} onClose={onClose} size={size}>
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>{title}</ModalHeader>
-        <ModalCloseButton />
         <ModalBody>
           {children}
         </ModalBody>
