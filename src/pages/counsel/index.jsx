@@ -246,9 +246,7 @@ export default function Counsel() {
             </Flex>
           </Box>
           <h1>${mySessionId}</h1>
-          <CounselToolbar isIdentifyUser={isIdentifyUser} />
-          {/* 임시 주석 : 상담사가 버튼을 누르면 고객에게 보여줄 화면 */}
-          {/* <CheckIdentification streamManager={publisher} /> */}
+          <CounselToolbar publisher={publisher} isIdentifyUser={isIdentifyUser} />
         </> :
 
         <Stack alignItems="center">
