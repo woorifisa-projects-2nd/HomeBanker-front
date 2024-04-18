@@ -10,11 +10,11 @@ export default function OpenViduVideoComponent({ streamManager, size, role }) {
   }, [streamManager]);
 
   return (
-    <div>
+    <>
       {role === 'other' ?
         <video autoPlay={true} ref={videoRef} width={size ?? "1000"} style={{ position: 'absolute' }} />
         : <video autoPlay={true} ref={videoRef} width={300} style={{ position: 'absolute', zIndex: "999" }} />
       }
-    </div>
+    </>
   )
 }
