@@ -2,7 +2,7 @@ import React, { useContext, useState } from "react";
 import { Box, Input, Text, Button } from "@chakra-ui/react";
 import { TransferContext } from "./TransferTab";
 
-const EnrollmentTab = () => {
+const EnrollmentTab = ( session, publisher ) => {
   const [amount, setAmount] = useState("");
   const [period, setPeriod] = useState("");
 
@@ -20,13 +20,43 @@ const EnrollmentTab = () => {
 
       return;
     }
+
+    // TODO:
+    // if (publisher && role === )
+
   };
 
-  // TODO: 웹 소켓으로 데이터 보내기
+    // const numericAmount = +amount.replace(/,/g, '')
+  // const numericPeriod = +period;
 
-  // product: selectedProduct,
-  // amount: +amount.replace(/,/g, ''), // 쉼표(,) 제거 후 숫자로 변환
-  // period: +period, // 문자열을 숫자로 변환
+  // const transferData = {
+  //   product: selectedProduct,
+  //   amount: numericAmount,
+  //   period: numericPeriod
+  // }
+
+  // const jsonString = JSON.stringify(transferData);
+
+  // // 보내는 쪽
+  // session.signal({
+  //   data: jsonString,
+  //   to: [],
+  //   type: 'enrollment'
+  // })
+  // .then(() => {
+  //     console.log('상품 가입 데이터 전송 완료');
+  // })
+  // .catch(error => {
+  //     console.error('상품 가입 데이터 전송 실패', error);
+  // });
+
+  // // 받는 쪽
+  // session.on('enrollment', (e) => {
+  
+  //   const receivedData = JSON.parse(e.data);
+  //   console.log('전달받은 데이터 :', receivedData);
+
+  // });
 
   return (
     <Box mt={4} p={4} bg="white" borderRadius="md" boxShadow="lg" width="100%">

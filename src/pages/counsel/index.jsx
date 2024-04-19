@@ -21,7 +21,6 @@ import Header from '../../components/Header';
 import './counsel.css';
 import { useNavigate } from "react-router-dom";
 import CounselToolbar from '../../components/CounselToolbar';
-import { event } from 'jquery';
 import { IoMdMic, IoMdMicOff } from "react-icons/io";
 import { IoVideocamOff, IoVideocam } from "react-icons/io5"
 import TransferTab from '../../components/board/admin/TransferTab';
@@ -283,7 +282,20 @@ export default function Counsel() {
                     <button onClick={toggleListening}> {listening ? '음성인식 중지' : '음성인식 시작'} </button>
                   </div>
                 </div>
-                {publisher !== undefined ? <ChatComponent user={publisher} /> : null}
+                <Tabs>
+                  <TabList>
+                    <Tab>채팅</Tab>
+                    <Tab>상품</Tab>
+                  </TabList>
+                  <TabPanels>
+                    <TabPanel>
+                      {publisher !== undefined ? <ChatComponent user={publisher} /> : null}
+                    </TabPanel>
+                    <TabPanel>
+                      <TransferTab session={session} user={publisher} />
+                    </TabPanel>
+                  </TabPanels>
+                </Tabs>
               </Flex>
             </Box>
 

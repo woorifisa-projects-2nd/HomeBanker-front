@@ -4,7 +4,7 @@ import EnrollmentTab from './EnrollmentTab';
 
 export const TransferContext = React.createContext();
 
-const Transfer = () => {
+const Transfer = ( session, publisher ) => {
   // 선택된 상품과 가입 정보를 상태로 관리
   const [selectedProduct, setSelectedProduct] = useState(undefined);
   const [enrollmentData, setEnrollmentData] = useState(null);
@@ -14,7 +14,7 @@ const Transfer = () => {
     <TransferContext.Provider value={{ selectedProduct, setSelectedProduct, enrollmentData, setEnrollmentData }}>
       <div>
         <ProductsTab selectedProduct={selectedProduct} setSelectedProduct={setSelectedProduct} isDisplayed={false} />
-        <EnrollmentTab />
+        <EnrollmentTab session={session} user={publisher} />
       </div>
     </TransferContext.Provider>
   );
