@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from 'react';
 import {useState } from 'react'
-import {Flex, Button, Stack, Spacer, Input, Box} from '@chakra-ui/react'
+import {Flex, Button, Stack, Spacer, Input, Box, Text} from '@chakra-ui/react'
 import ChatMessage from './ChatMessage';
 import { IoMdChatbubbles } from "react-icons/io";
 
@@ -64,7 +64,7 @@ export default function ChatComponent ({user}) {
     },[messageList]);
 
         return (
-            <div id="chatContainer" style={{height:'auto', width: '100%', backgroundColor:'#0083CA'}}>
+            <div id="chatContainer" style={{height:'auto', width: '100%', backgroundColor:'#0083CA', fontFamily:"WooriDaum"}}>
                 <Flex direction='column'>
                 <div style={{marginTop: '10px',marginBottom: '10px',marginLeft: '30px',padding: '5px'}}>
                     <Flex>
