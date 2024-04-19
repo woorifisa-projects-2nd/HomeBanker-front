@@ -9,9 +9,7 @@ for (const path of Object.keys(pages)) {
     continue;
   }
 
-  const normalizedPathName = fileName.includes("$")
-    ? fileName.replace("$", ":")
-    : fileName.replace(/\/index/, "");
+  const normalizedPathName = fileName.includes("$") ? fileName.replace("$", ":") : fileName.replace(/\/index/, "");
 
   routes.push({
     path: fileName === "index" ? "/" : `/${normalizedPathName.toLowerCase()}`,

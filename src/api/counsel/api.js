@@ -14,19 +14,13 @@ export function useBoardsQuery(size, page) {
     keepPreviousData: true,
   });
 
-  return [
-    getBoardsQuery.data,
-    getBoardsQuery.isLoading,
-    getBoardsQuery.refetch,
-  ];
+  return [getBoardsQuery.data, getBoardsQuery.isLoading, getBoardsQuery.refetch];
 }
 
 // 상품 리스트 조회
 export function useProductsQuery(category, page, size) {
   const getProducts = async () => {
-    return await api.get(
-      `/api/banker/product?category=${category}&page=${page}&size=${size}`,
-    );
+    return await api.get(`/api/banker/product?category=${category}&page=${page}&size=${size}`);
   };
 
   const getProductsQeury = useQuery({
@@ -35,11 +29,7 @@ export function useProductsQuery(category, page, size) {
     keepPreviousData: true,
   });
 
-  return [
-    getProductsQeury.data,
-    getProductsQeury.isLoading,
-    getProductsQeury.refetch,
-  ];
+  return [getProductsQeury.data, getProductsQeury.isLoading, getProductsQeury.refetch];
 }
 
 const getAuthUser = () => {

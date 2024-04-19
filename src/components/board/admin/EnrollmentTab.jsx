@@ -34,10 +34,7 @@ const EnrollmentTab = ({ session, user }) => {
     const jsonString = JSON.stringify(transferData);
 
     if (session && user) {
-      console.log("정상 통과");
-      console.log(session);
-      console.log(user.stream);
-
+      // 상품 가입 정보 송신
       user.stream.session
         .signal({
           data: jsonString,
@@ -52,11 +49,11 @@ const EnrollmentTab = ({ session, user }) => {
         });
     }
 
-    // 받는 쪽 가정
-    user.stream.session.on("signal:enrollment", (e) => {
-      const receivedData = JSON.parse(e.data);
-      console.log("전달받은 데이터 :", receivedData);
-    });
+    // 상품 가입 정보 수신
+    // user.stream.session.on("signal:enrollment", (e) => {
+    //   const receivedData = JSON.parse(e.data);
+    //   console.log("전달받은 데이터 :", receivedData);
+    // });
   };
 
   return (

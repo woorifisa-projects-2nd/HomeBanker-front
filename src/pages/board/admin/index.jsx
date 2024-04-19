@@ -1,12 +1,5 @@
 import React from "react";
-import {
-  Tabs,
-  TabList,
-  TabPanels,
-  Tab,
-  TabPanel,
-  Text,
-} from "@chakra-ui/react";
+import { Tabs, TabList, TabPanels, Tab, TabPanel, Text } from "@chakra-ui/react";
 import ProductsTab from "../../../components/board/admin/ProductsTab";
 import BoardsTab from "../../../components/board/admin/BoardsTab";
 

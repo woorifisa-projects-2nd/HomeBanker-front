@@ -13,12 +13,7 @@ import { personalNumberFormatter } from "../util/counsel";
 import useCheckRole from "../hook/useCheckRole";
 import { api } from "../api/api";
 
-export default function CheckIdentification({
-  isOpen,
-  onClose,
-  streamManager,
-  setIdentifyUser,
-}) {
+export default function CheckIdentification({ isOpen, onClose, streamManager, setIdentifyUser }) {
   const videoRef = useRef(null);
   const [isLoading, setLoading] = useState(false);
   const { role } = useCheckRole();
@@ -65,8 +60,7 @@ export default function CheckIdentification({
           const personalNumber = personalNumberFormatter(
             res.data.images[0].idCard.result.ic.personalNum[0].formatted.value,
           );
-          const name =
-            res.data.images[0].idCard.result.ic.name[0].formatted.value;
+          const name = res.data.images[0].idCard.result.ic.name[0].formatted.value;
           indentifyUser(personalNumber, name);
         }
       })
@@ -100,16 +94,11 @@ export default function CheckIdentification({
           <Text>사각형에 맞게 신분증을 가로로 놓아주세요.</Text>
           {streamManager !== undefined && (
             <Box ref={videoRef}>
-              <OpenViduVideoComponent
-                size={"100%"}
-                streamManager={streamManager}
-              />
+              <OpenViduVideoComponent size={"100%"} streamManager={streamManager} />
             </Box>
           )}
         </Stack>
-        {role === "ROLE_ADMIN" && (
-          <Button onClick={onCapture}>{"캡쳐하기"}</Button>
-        )}
+        {role === "ROLE_ADMIN" && <Button onClick={onCapture}>{"캡쳐하기"}</Button>}
       </>
     </CustomModal>
   );

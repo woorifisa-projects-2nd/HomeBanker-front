@@ -28,9 +28,7 @@ export default function Pagination({ pagination, setPagination }) {
             <Fragment key={i}>
               {currentPage < totalPages && (
                 <Button
-                  onClick={() =>
-                    setPagination({ ...pagination, currentPage: i })
-                  }
+                  onClick={() => setPagination({ ...pagination, currentPage: i })}
                   bgColor={currentPage === i ? "blue400" : "white"}
                 >
                   {i + 1}

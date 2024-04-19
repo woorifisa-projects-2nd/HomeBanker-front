@@ -40,11 +40,7 @@ export default function Header() {
         <img src={logo} onClick={goMainPage}></img>
         <Spacer />
         <Flex>
-          <ButtonGroup
-            gap="2"
-            variant="ghost"
-            style={{ fontFamily: "WooridaumR" }}
-          >
+          <ButtonGroup gap="2" variant="ghost" style={{ fontFamily: "WooridaumR" }}>
             {user ? (
               <Button leftIcon={<MdLogout />} onClick={handleLogout}>
                 {" "}

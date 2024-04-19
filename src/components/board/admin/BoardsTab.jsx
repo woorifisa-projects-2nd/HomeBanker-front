@@ -1,16 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  Spinner,
-  Table,
-  Thead,
-  Tbody,
-  Tr,
-  Th,
-  Td,
-  TableContainer,
-  Button,
-  useToast,
-} from "@chakra-ui/react";
+import { Spinner, Table, Thead, Tbody, Tr, Th, Td, TableContainer, Button, useToast } from "@chakra-ui/react";
 import Pagination from "../../Pagination";
 import { useBoardsQuery } from "../../../api/counsel/api";
 import { BOARD_PAGINATION_SIZE } from "../../../constants/index";
@@ -25,10 +14,7 @@ export default function BoardsTab({ displayChangeStatus = true }) {
     pageCount: 0,
     currentPage: 0,
   });
-  const [boardsData, isLoading, refetchBoards] = useBoardsQuery(
-    BOARD_PAGINATION_SIZE,
-    pagination.currentPage,
-  );
+  const [boardsData, isLoading, refetchBoards] = useBoardsQuery(BOARD_PAGINATION_SIZE, pagination.currentPage);
   console.log(boardsData);
   // 상담 처리 완료 API
   const changeBoardStatus = (boardId) => {
@@ -112,10 +98,7 @@ export default function BoardsTab({ displayChangeStatus = true }) {
                             >
                               처리완료
                             </Button>
-                            <Button
-                              bgColor={"red"}
-                              onClick={() => deleteBoard(item.boardId)}
-                            >
+                            <Button bgColor={"red"} onClick={() => deleteBoard(item.boardId)}>
                               삭제
                             </Button>
                           </Td>

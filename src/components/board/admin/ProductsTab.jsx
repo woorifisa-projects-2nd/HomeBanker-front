@@ -1,17 +1,5 @@
 import React, { Fragment, useEffect, useState } from "react";
-import {
-  Spinner,
-  Table,
-  Thead,
-  Tbody,
-  Tr,
-  Th,
-  Td,
-  TableContainer,
-  Switch,
-  useToast,
-  Select,
-} from "@chakra-ui/react";
+import { Spinner, Table, Thead, Tbody, Tr, Th, Td, TableContainer, Switch, useToast, Select } from "@chakra-ui/react";
 import { useProductsQuery } from "../../../api/counsel/api";
 import { BOARD_PAGINATION_SIZE } from "../../../constants/index";
 import Pagination from "../../Pagination";
@@ -21,9 +9,9 @@ const PRODUCT_TYPE = {
   전체: "all",
   카드: "card",
   예적금: "deposit",
-  대출: "loan"
-}
-export default function ProductsTab( { selectedProduct, setSelectedProduct, isDisplayed = true } ) {
+  대출: "loan",
+};
+export default function ProductsTab({ selectedProduct, setSelectedProduct, isDisplayed = true }) {
   const toast = useToast();
   const [products, setProducts] = useState([]);
   const [pagination, setPagination] = useState({
@@ -72,12 +60,14 @@ export default function ProductsTab( { selectedProduct, setSelectedProduct, isDi
   }, [productsData]);
 
   useEffect(() => {
-    refetchProducts()
-  }, [pagination.currentPage, selectedCategory])
+    refetchProducts();
+  }, [pagination.currentPage, selectedCategory]);
 
   const handleProductClick = (product) => {
-    if (isDisplayed == false) { setSelectedProduct(product); }
-  }
+    if (isDisplayed == false) {
+      setSelectedProduct(product);
+    }
+  };
 
   return (
     <>
@@ -100,46 +90,56 @@ export default function ProductsTab( { selectedProduct, setSelectedProduct, isDi
             ))}
           </Select>
 
-            {products &&
-              <TableContainer>
-                <Table variant='simple'>
-                  {/* 테이블 헤더 */}
-                  <Thead>
-                    <Tr>
-                      <Th>상품 분류</Th>
-                      <Th>상품 이름</Th>
-                      <Th>상품 금리</Th>
-                      <Th>상품 설명</Th>
-                      { isDisplayed && <Th>상품 노출</Th> }
-                    </Tr>
-                  </Thead>
+          {products && (
+            <TableContainer>
+              <Table variant="simple">
+                {/* 테이블 헤더 */}
+                <Thead>
+                  <Tr>
+                    <Th>상품 분류</Th>
+                    <Th>상품 이름</Th>
+                    <Th>상품 금리</Th>
+                    <Th>상품 설명</Th>
+                    {isDisplayed && <Th>상품 노출</Th>}
+                  </Tr>
+                </Thead>
 
-                  {/* 테이블 바디 */}
-                  <Tbody>
-                    {products.map(item => {
-                      return (
+                {/* 테이블 바디 */}
+                <Tbody>
+                  {products.map((item) => {
+                    return (
                       <Tr
                         key={item.productId}
-                        onClick={() => handleProductClick(item) }
-                        cursor='pointer'
-                        backgroundColor={ selectedProduct != undefined && item.productId == selectedProduct.productId ? 'gray.100' : 'white' }
-                        _hover={{ backgroundColor: 'gray.100' }}
+                        onClick={() => handleProductClick(item)}
+                        cursor="pointer"
+                        backgroundColor={
+                          selectedProduct != undefined && item.productId == selectedProduct.productId
+                            ? "gray.100"
+                            : "white"
+                        }
+                        _hover={{ backgroundColor: "gray.100" }}
                       >
-                        <Td>{item.productCode.typeName ?? ''}</Td>
-                        <Td>{item.productName ?? ''}</Td>
+                        <Td>{item.productCode.typeName ?? ""}</Td>
+                        <Td>{item.productName ?? ""}</Td>
                         <Td>{item.productInterest ?? 0}</Td>
-                        <Td>{item.productDescription ?? ''}</Td>
+                        <Td>{item.productDescription ?? ""}</Td>
 
-                        { isDisplayed && (
-                        <Td><Switch size='lg' isChecked={item.isShown} onChange={() => changeDisplay(item.productId, item.isShown)} /></Td>
+                        {isDisplayed && (
+                          <Td>
+                            <Switch
+                              size="lg"
+                              isChecked={item.isShown}
+                              onChange={() => changeDisplay(item.productId, item.isShown)}
+                            />
+                          </Td>
                         )}
                       </Tr>
-                    )})}
-                  </Tbody>
-
-                </Table>
-              </TableContainer>
-            }
+                    );
+                  })}
+                </Tbody>
+              </Table>
+            </TableContainer>
+          )}
 
           {pagination.totalItems > 0 && (
             <Pagination
