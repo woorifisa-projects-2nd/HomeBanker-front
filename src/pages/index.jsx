@@ -5,46 +5,31 @@ import { jwtDecode } from 'jwt-decode';
 import {Cookies} from 'react-cookie'; 
 import{api} from '../api/api';
 import Header from "../components/Header";
+import useLogout from "../hook/useLogout";
+import {useAuth} from "../api/counsel/api.js"
+
 export default function Index() {
   const navigate = useNavigate();
-  const [isLoggedIn, setLogin] = useState(document.cookie.includes("token"));
+  const handleLogout = useLogout();
+  const { data: user, isError } = useAuth();
 
   const handleBoardClick = async () => {
-
-    const token = document.cookie.split("=")[1];
-
-    if (token) {
-      const user = jwtDecode(token);
-
+    if(user) {
       if (user.role === "ROLE_ADMIN" || user.role === "ROLE_BANKER") {
         navigate("/board/admin");
       } else {
         navigate("/board");
       }
-      
-    } else {
+    }
+    else {
       alert("로그인이 필요한 기능입니다.");
-      setLogin(false);
       navigate("/login");
     }
   };
 
-  const handleLogout = () => {
-
-    // 쿠키의 만료시간을 현재보다 이전 시간으로 설정하여 삭제 처리
-    document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-
-    alert("로그아웃 되었습니다.");
-
-    navigate("/login");
-  };
-
-  // 쿠키에 토큰이 있는지 확인하여 로그인 상태를 판별
-  
-
   return (
     <>
-      <Header isLoggedIn={isLoggedIn}></Header>
+      <Header/>
       <Flex direction="column" alignItems="center">
         <h2>원하시는 업무를 선택해주세요.</h2>
         <Stack spacing={8} direction="row" align="center" margin="30px">
@@ -63,7 +48,7 @@ export default function Index() {
             고객상담 게시판
           </Button>
         </Stack>
-        {isLoggedIn && (
+        {user && (
           <Button
             mt={4} 
             size="sm"
