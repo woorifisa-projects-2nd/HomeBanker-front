@@ -5,9 +5,13 @@ import {Flex, Spacer, Button, ButtonGroup} from '@chakra-ui/react'
 import logo from '../assets/icon/logo.svg'
 import { MdLogout, MdLogin } from "react-icons/md";
 import { FaHouseUser } from "react-icons/fa";
+import {useAuth} from "../api/counsel/api.js"
+import useLogout from "../hook/useLogout";
 
-export default function Header({isLoggedIn}) {
+export default function Header() {
   const navigate = useNavigate();
+  const { data: user, isError } = useAuth();
+  const handleLogout = useLogout(); 
 
   const goMainPage= () => {
     navigate('/');
@@ -29,7 +33,7 @@ export default function Header({isLoggedIn}) {
         <Spacer/>
         <Flex>
           <ButtonGroup gap='2' variant='ghost' style={{fontFamily:'WooridaumR'}}>
-            {isLoggedIn ?<Button leftIcon={<MdLogout/>}> 로그아웃</Button> :
+            {user ?<Button leftIcon={<MdLogout/>} onClick={handleLogout} > 로그아웃</Button> :
             <Button leftIcon={<MdLogin/>} onClick={goLoginPage}> 로그인</Button> }
           <Button leftIcon={<FaHouseUser/>} onClick={goMyPage}> 내 정보</Button>
           </ButtonGroup>

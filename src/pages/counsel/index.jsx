@@ -18,6 +18,7 @@ import { event } from 'jquery';
 import { IoMdMic, IoMdMicOff} from "react-icons/io";
 import { IoVideocamOff, IoVideocam } from "react-icons/io5"
 import Exit from '../../components/counsel/Exit';
+import { jwtDecode } from 'jwt-decode';
 
 const SESSION_ID_LIST = ['Session1', 'Session2', 'Session3', 'Session4', 'Session5', 'Session6', 'Session7', 'Session8', 'Session9', 'Session10']
 
@@ -70,6 +71,15 @@ export default function Counsel() {
       setExit(true);
       destroySession();
    })}
+
+   const getUserRole = () => {
+    const token = document.cookie.split("=")[1];
+
+    if (token) {
+      const user = jwtDecode(token);
+      return user.role;
+    }
+  }
   
 
   const destroySession = () => {
@@ -149,8 +159,10 @@ export default function Counsel() {
    */
   const createSession = async () => {
     let response;
-    for (let i = 0; i < SESSION_ID_LIST.length; i++) {
-      response = await api.post('api/sessions', { customSessionId: SESSION_ID_LIST[i] }, {
+    let i ;
+    const role = getUserRole();
+    for (i = 0; i < SESSION_ID_LIST.length; i++) {
+      response = await api.post('api/sessions', { customSessionId: SESSION_ID_LIST[i] , role : role }, {
         headers: { 'Content-Type': 'application/json' },
       });
       if (response.data !== 'full') {
@@ -158,6 +170,10 @@ export default function Counsel() {
         break;
       }
     }
+    if (i === SESSION_ID_LIST.length) {
+      alert("모든 상담사가 상담중입니다. 잠시 기다려주세요");
+    }
+
     return response.data;
   };
 
@@ -227,12 +243,12 @@ const micStatusChanged = () => {
 
   return (
     <>
+      <Header/>
       {session !== undefined  && publisher !== undefined?
         <>
-          <Header/>
           <Box width="100%" height="100%">
             {/* <div id="leaveCounsel" style={{position:'absolute', right:'400px', zIndex:'5'}}> */}
-            <Flex>
+            <Flex style={{fontFamily:"WooriDaum"}}>
               {videoStatus === true ?
                 <Button onClick={camStatusChanged}>
                   카메라 끄기 
@@ -279,8 +295,8 @@ const micStatusChanged = () => {
           {exit===true? <Exit time={time}/> : null}
         </> :
 
-        <Stack alignItems="center">
-          <Text>웃는 얼굴로 고객을 맞아주세요</Text>
+        <Stack style={{fontFamily:"WooriDaum"}} alignItems="center">
+          <Text >웃는 얼굴로 고객을 맞아주세요</Text>
           <Button size="lg" onClick={joinSession}>화상 상담 시작</Button>
         </Stack>
       }
