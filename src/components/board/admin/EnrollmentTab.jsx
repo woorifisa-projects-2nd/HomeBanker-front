@@ -1,8 +1,9 @@
 import React, { useContext, useState } from "react";
 import { Box, Input, Text, Button } from "@chakra-ui/react";
 import { TransferContext } from "./TransferTab";
+import useCheckRole from "../../../hook/useCheckRole";
 
-const EnrollmentTab = ( session, publisher ) => {
+const EnrollmentTab = ({ session, user }) => {
   const [amount, setAmount] = useState("");
   const [period, setPeriod] = useState("");
 
@@ -21,42 +22,42 @@ const EnrollmentTab = ( session, publisher ) => {
       return;
     }
 
-    // TODO:
-    // if (publisher && role === )
+    const numericAmount = +amount.replace(/,/g, "");
+    const numericPeriod = +period;
 
+    const transferData = {
+      product: selectedProduct,
+      amount: numericAmount,
+      period: numericPeriod,
+    };
+
+    const jsonString = JSON.stringify(transferData);
+
+    if (session && user) {
+      console.log("정상 통과");
+      console.log(session);
+      console.log(user.stream);
+
+      user.stream.session
+        .signal({
+          data: jsonString,
+          to: [],
+          type: "enrollment",
+        })
+        .then(() => {
+          console.log("상품 가입 데이터 전송 완료");
+        })
+        .catch((error) => {
+          console.error("상품 가입 데이터 전송 실패", error);
+        });
+    }
+
+    // 받는 쪽 가정
+    user.stream.session.on("signal:enrollment", (e) => {
+      const receivedData = JSON.parse(e.data);
+      console.log("전달받은 데이터 :", receivedData);
+    });
   };
-
-    // const numericAmount = +amount.replace(/,/g, '')
-  // const numericPeriod = +period;
-
-  // const transferData = {
-  //   product: selectedProduct,
-  //   amount: numericAmount,
-  //   period: numericPeriod
-  // }
-
-  // const jsonString = JSON.stringify(transferData);
-
-  // // 보내는 쪽
-  // session.signal({
-  //   data: jsonString,
-  //   to: [],
-  //   type: 'enrollment'
-  // })
-  // .then(() => {
-  //     console.log('상품 가입 데이터 전송 완료');
-  // })
-  // .catch(error => {
-  //     console.error('상품 가입 데이터 전송 실패', error);
-  // });
-
-  // // 받는 쪽
-  // session.on('enrollment', (e) => {
-  
-  //   const receivedData = JSON.parse(e.data);
-  //   console.log('전달받은 데이터 :', receivedData);
-
-  // });
 
   return (
     <Box mt={4} p={4} bg="white" borderRadius="md" boxShadow="lg" width="100%">

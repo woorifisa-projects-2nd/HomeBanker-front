@@ -1,39 +1,39 @@
-import React, { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { OpenVidu } from 'openvidu-browser';
-import {
-  Text,
-  Button,
-  Stack,
-  Box,
-  Flex,
-  Tabs,
-  TabList,
-  TabPanels,
-  Tab,
-  TabPanel,
-} from '@chakra-ui/react';
-import UserVideoComponent from '../../components/UserVideoComponent';
-import { api } from '../../api/api';
-import ChatComponent from '../../components/Chat';
-import useSpeechToText from '../../hook/useSpeechToText';
-import CheckIdentification from '../../components/CheckIdentification';
-import Header from '../../components/Header';
-import './counsel.css';
+import React, { Fragment, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { OpenVidu } from "openvidu-browser";
+import { Text, Button, Stack, Box, Flex, Tabs, TabList, TabPanels, Tab, TabPanel } from "@chakra-ui/react";
+import UserVideoComponent from "../../components/UserVideoComponent";
+import { api } from "../../api/api";
+import ChatComponent from "../../components/Chat";
+import useSpeechToText from "../../hook/useSpeechToText";
+import CheckIdentification from "../../components/CheckIdentification";
+import Header from "../../components/Header";
+import "./counsel.css";
 import { useNavigate } from "react-router-dom";
-import CounselToolbar from '../../components/CounselToolbar';
+import CounselToolbar from "../../components/CounselToolbar";
 import { IoMdMic, IoMdMicOff } from "react-icons/io";
-import { IoVideocamOff, IoVideocam } from "react-icons/io5"
-import {jwtDecode} from "jwt-decode"
-import TransferTab from '../../components/board/admin/TransferTab';
+import { IoVideocamOff, IoVideocam } from "react-icons/io5";
+import { jwtDecode } from "jwt-decode";
+import TransferTab from "../../components/board/admin/TransferTab";
 
-const SESSION_ID_LIST = ['Session1', 'Session2', 'Session3', 'Session4', 'Session5', 'Session6', 'Session7', 'Session8', 'Session9', 'Session10']
+const SESSION_ID_LIST = [
+  "Session1",
+  "Session2",
+  "Session3",
+  "Session4",
+  "Session5",
+  "Session6",
+  "Session7",
+  "Session8",
+  "Session9",
+  "Session10",
+];
 
 export default function Counsel() {
   const OV = useRef(new OpenVidu());
   const { transcript, listening, toggleListening } = useSpeechToText();
 
   const [mySessionId, setMySessionId] = useState(SESSION_ID_LIST[0]);
-  const [myUserName, setMyUserName] = useState(`Participant${Math.floor(Math.random() * 100)}`)
+  const [myUserName, setMyUserName] = useState(`Participant${Math.floor(Math.random() * 100)}`);
   const [session, setSession] = useState(undefined);
   const [publisher, setPublisher] = useState(undefined);
   const [subscribers, setSubscribers] = useState([]);
@@ -66,256 +66,268 @@ export default function Counsel() {
       const user = jwtDecode(token);
       return user.role;
     }
-  }
-
+  };
 
   if (publisher !== undefined) {
-    session.on('signal:destroy', (event) => {
+    session.on("signal:destroy", (event) => {
       setTimeout(() => {
         session.unpublish(publisher);
         if (session) {
           session.disconnect();
         }
-        navigate('/')
-      })
-    })
+        navigate("/");
+      });
+    });
   }
-  
 
   const destroySession = () => {
-      api.post(`api/sessions/${mySessionId}/destroy`, {}, {
-        headers: { 'Content-Type': 'application/json' },
-      });
+    api.post(
+      `api/sessions/${mySessionId}/destroy`,
+      {},
+      {
+        headers: { "Content-Type": "application/json" },
+      },
+    );
 
-      session.unpublish(publisher);
+    session.unpublish(publisher);
 
-      const signalOptions = {
-        type: 'destroy',
-        data: JSON.stringify("destroy"),
-      };
-
-      session.signal(signalOptions)
-        .then(() => {
-          console.log('Signal sent');
-        })
-        .catch(error => {
-          console.error(error);
-        })
-    }
-
-    const deleteSubscriber = useCallback((streamManager) => {
-      setSubscribers((prevSubscribers) => {
-        const index = prevSubscribers.indexOf(streamManager);
-        if (index > -1) {
-          const newSubscribers = [...prevSubscribers];
-          newSubscribers.splice(index, 1);
-          return newSubscribers;
-        } else {
-          return prevSubscribers;
-        }
-      });
-    }, []);
-
-    /**
-     * 세션 등록
-     */
-    const joinSession = useCallback(() => {
-      const mySession = OV.current.initSession();
-
-      mySession.on('streamCreated', (event) => {
-        const subscriber = mySession.subscribe(event.stream, undefined);
-        setSubscribers((subscribers) => [...subscribers, subscriber]);
-      });
-      mySession.on('streamDestroyed', (event) => {
-        deleteSubscriber(event.stream.streamManager);
-      });
-
-      mySession.on('exception', (exception) => {
-        console.warn(exception);
-      });
-
-      setSession(mySession);
-    }, [mySessionId]);
-
-    /**
-     * 세션 나가기
-     */
-    const leaveSession = useCallback(() => {
-      const signalOptions = {
-        type: 'exit',
-        data: JSON.stringify("exit"),
-      };
-
-      session.signal(signalOptions)
-        .then(() => {
-          console.log('Signal sent');
-        })
-        .catch(error => {
-          console.error(error);
-        })
-
-    }, [session]);
-
-    /**
-     * 세션 생성
-     */
-    const createSession = async () => {
-      let response;
-      let i;
-      const role = getUserRole();
-      for (i = 0; i < SESSION_ID_LIST.length; i++) {
-        response = await api.post('api/sessions', { customSessionId: SESSION_ID_LIST[i], role: role }, {
-          headers: { 'Content-Type': 'application/json' },
-        });
-        if (response.data !== 'full') {
-          setMySessionId(SESSION_ID_LIST[i]);
-          break;
-        }
-      }
-      if (i === SESSION_ID_LIST.length) {
-        alert("모든 상담사가 상담중입니다. 잠시 기다려주세요");
-      }
-
-      return response.data;
+    const signalOptions = {
+      type: "destroy",
+      data: JSON.stringify("destroy"),
     };
 
-    /**
-     * 토큰 생성
-     */
-    const createToken = async (sessionId) => {
-      const response = await api.post('api/sessions/' + sessionId + '/connections', {}, {
-        headers: { 'Content-Type': 'application/json', },
+    session
+      .signal(signalOptions)
+      .then(() => {
+        console.log("Signal sent");
+      })
+      .catch((error) => {
+        console.error(error);
       });
-      return response.data; // The token
+  };
+
+  const deleteSubscriber = useCallback((streamManager) => {
+    setSubscribers((prevSubscribers) => {
+      const index = prevSubscribers.indexOf(streamManager);
+      if (index > -1) {
+        const newSubscribers = [...prevSubscribers];
+        newSubscribers.splice(index, 1);
+        return newSubscribers;
+      } else {
+        return prevSubscribers;
+      }
+    });
+  }, []);
+
+  /**
+   * 세션 등록
+   */
+  const joinSession = useCallback(() => {
+    const mySession = OV.current.initSession();
+
+    mySession.on("streamCreated", (event) => {
+      const subscriber = mySession.subscribe(event.stream, undefined);
+      setSubscribers((subscribers) => [...subscribers, subscriber]);
+    });
+    mySession.on("streamDestroyed", (event) => {
+      deleteSubscriber(event.stream.streamManager);
+    });
+
+    mySession.on("exception", (exception) => {
+      console.warn(exception);
+    });
+
+    setSession(mySession);
+  }, [mySessionId]);
+
+  /**
+   * 세션 나가기
+   */
+  const leaveSession = useCallback(() => {
+    const signalOptions = {
+      type: "exit",
+      data: JSON.stringify("exit"),
     };
 
-    const getToken = useCallback(async () => {
-      return createSession().then(sessionId =>
-        createToken(sessionId),
+    session
+      .signal(signalOptions)
+      .then(() => {
+        console.log("Signal sent");
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, [session]);
+
+  /**
+   * 세션 생성
+   */
+  const createSession = async () => {
+    let response;
+    let i;
+    const role = getUserRole();
+    for (i = 0; i < SESSION_ID_LIST.length; i++) {
+      response = await api.post(
+        "api/sessions",
+        { customSessionId: SESSION_ID_LIST[i], role: role },
+        {
+          headers: { "Content-Type": "application/json" },
+        },
       );
-    }, [mySessionId]);
-
-    useEffect(() => {
-      if (session) {
-        // Get a token from the OpenVidu deployment
-        getToken().then(async (token) => {
-          try {
-            await session.connect(token, { clientData: myUserName });
-
-            let publisher = await OV.current.initPublisherAsync(undefined, {
-              audioSource: undefined,
-              videoSource: undefined,
-              publishAudio: true,
-              publishVideo: true,
-              resolution: '1920x1080',
-              frameRate: 60,
-              insertMode: 'APPEND',
-              mirror: false,
-            });
-
-            session.publish(publisher);
-
-            setPublisher(publisher);
-          } catch (error) {
-            console.log('There was an error connecting to the session:', error.code, error.message);
-          }
-        });
+      if (response.data !== "full") {
+        setMySessionId(SESSION_ID_LIST[i]);
+        break;
       }
-    }, [session, myUserName])
-
-    useEffect(() => {
-      const handleBeforeUnload = () => {
-        leaveSession();
-      };
-      window.addEventListener('beforeunload', handleBeforeUnload);
-
-      return () => {
-        window.removeEventListener('beforeunload', handleBeforeUnload);
-      };
-    }, [leaveSession])
-
-    const camStatusChanged = () => {
-      publisher.publishVideo(!publisher.stream.videoActive);
-      setVideoStatus(publisher.stream.videoActive);
+    }
+    if (i === SESSION_ID_LIST.length) {
+      alert("모든 상담사가 상담중입니다. 잠시 기다려주세요");
     }
 
-    const micStatusChanged = () => {
-      publisher.publishAudio(!publisher.stream.audioActive);
-      setAudioStatus(publisher.stream.audioActive);
-    }
+    return response.data;
+  };
 
-    return (
-      <>
-        {session !== undefined && publisher !== undefined ?
-          <>
-            <Header />
-            <Box width="100%" height="100%">
-              {/* <div id="leaveCounsel" style={{position:'absolute', right:'400px', zIndex:'5'}}> */}
-              <Flex style={{ fontFamily: "WooriDaum" }}>
-                {videoStatus === true ?
-                  <Button onClick={camStatusChanged}>
-                    카메라 끄기
-                    <IoVideocamOff />
-                  </Button> :
-                  <Button onClick={camStatusChanged}>
-                    카메라 켜기
-                    <IoVideocam />
-                  </Button>}
+  /**
+   * 토큰 생성
+   */
+  const createToken = async (sessionId) => {
+    const response = await api.post(
+      "api/sessions/" + sessionId + "/connections",
+      {},
+      {
+        headers: { "Content-Type": "application/json" },
+      },
+    );
+    return response.data; // The token
+  };
 
-                {audioStatus === true ?
-                  <Button onClick={micStatusChanged}>
-                    마이크 끄기 <IoMdMicOff />
-                  </Button> :
-                  <Button onClick={micStatusChanged}>
-                    마이크 켜기 <IoMdMic />
-                  </Button>}
+  const getToken = useCallback(async () => {
+    return createSession().then((sessionId) => createToken(sessionId));
+  }, [mySessionId]);
 
-                <Button onClick={leaveSession} >나가기</Button>
-              </Flex>
-              <Flex justify='center'>
-                <div>
-                  <Box
-                    id="videos"
-                    style={{ width: '1000px', height: '562.5px' }}>
-                    {publisher !== undefined ?
-                      (<UserVideoComponent streamManager={publisher} role='me' />) : null}
-                    {subscribers.length === 0 ? <div style={{ backgroundColor: 'grey', width: '1000px', height: '562.5px' }}></div> :
-                      subscribers.map((sub, i) => (
-                        <Fragment key={sub.id}>
-                          <UserVideoComponent streamManager={sub} role='other' />
-                        </Fragment>
-                      ))}
-                  </Box>
-                  <div id="subtitle" >
-                    <h1>음성인식 자막</h1>
-                    <textarea className="transcript" value={transcript} onChange={() => { }} />
-                    <button onClick={toggleListening}> {listening ? '음성인식 중지' : '음성인식 시작'} </button>
-                  </div>
-                </div>
-                <Tabs>
-                  <TabList>
-                    <Tab>채팅</Tab>
-                    <Tab>상품</Tab>
-                  </TabList>
-                  <TabPanels>
-                    <TabPanel>
-                      {publisher !== undefined ? <ChatComponent user={publisher} /> : null}
-                    </TabPanel>
-                    <TabPanel>
-                      <TransferTab session={session} user={publisher} />
-                    </TabPanel>
-                  </TabPanels>
-                </Tabs>
-              </Flex>
-            </Box>
+  useEffect(() => {
+    if (session) {
+      // Get a token from the OpenVidu deployment
+      getToken().then(async (token) => {
+        try {
+          await session.connect(token, { clientData: myUserName });
 
-          </> :
+          let publisher = await OV.current.initPublisherAsync(undefined, {
+            audioSource: undefined,
+            videoSource: undefined,
+            publishAudio: true,
+            publishVideo: true,
+            resolution: "1920x1080",
+            frameRate: 60,
+            insertMode: "APPEND",
+            mirror: false,
+          });
 
-          <Stack style={{ fontFamily: "WooriDaum" }} alignItems="center">
-            <Text >웃는 얼굴로 고객을 맞아주세요</Text>
-            <Button size="lg" onClick={joinSession}>화상 상담 시작</Button>
-          </Stack>
+          session.publish(publisher);
+
+          setPublisher(publisher);
+        } catch (error) {
+          console.log("There was an error connecting to the session:", error.code, error.message);
         }
-      </>
-    )
-  }
+      });
+    }
+  }, [session, myUserName]);
+
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      leaveSession();
+    };
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, [leaveSession]);
+
+  const camStatusChanged = () => {
+    publisher.publishVideo(!publisher.stream.videoActive);
+    setVideoStatus(publisher.stream.videoActive);
+  };
+
+  const micStatusChanged = () => {
+    publisher.publishAudio(!publisher.stream.audioActive);
+    setAudioStatus(publisher.stream.audioActive);
+  };
+
+  return (
+    <>
+      {session !== undefined && publisher !== undefined ? (
+        <>
+          <Header />
+          <Box width="100%" height="100%">
+            {/* <div id="leaveCounsel" style={{position:'absolute', right:'400px', zIndex:'5'}}> */}
+            <Flex style={{ fontFamily: "WooriDaum" }}>
+              {videoStatus === true ? (
+                <Button onClick={camStatusChanged}>
+                  카메라 끄기
+                  <IoVideocamOff />
+                </Button>
+              ) : (
+                <Button onClick={camStatusChanged}>
+                  카메라 켜기
+                  <IoVideocam />
+                </Button>
+              )}
+
+              {audioStatus === true ? (
+                <Button onClick={micStatusChanged}>
+                  마이크 끄기 <IoMdMicOff />
+                </Button>
+              ) : (
+                <Button onClick={micStatusChanged}>
+                  마이크 켜기 <IoMdMic />
+                </Button>
+              )}
+
+              <Button onClick={leaveSession}>나가기</Button>
+            </Flex>
+            <Flex justify="center">
+              <div>
+                <Box id="videos" style={{ width: "1000px", height: "562.5px" }}>
+                  {publisher !== undefined ? <UserVideoComponent streamManager={publisher} role="me" /> : null}
+                  {subscribers.length === 0 ? (
+                    <div style={{ backgroundColor: "grey", width: "1000px", height: "562.5px" }}></div>
+                  ) : (
+                    subscribers.map((sub, i) => (
+                      <Fragment key={sub.id}>
+                        <UserVideoComponent streamManager={sub} role="other" />
+                      </Fragment>
+                    ))
+                  )}
+                </Box>
+                <div id="subtitle">
+                  <h1>음성인식 자막</h1>
+                  <textarea className="transcript" value={transcript} onChange={() => {}} />
+                  <button onClick={toggleListening}> {listening ? "음성인식 중지" : "음성인식 시작"} </button>
+                </div>
+              </div>
+              <Tabs>
+                <TabList>
+                  <Tab>채팅</Tab>
+                  <Tab>상품</Tab>
+                </TabList>
+                <TabPanels>
+                  <TabPanel>{publisher !== undefined ? <ChatComponent user={publisher} /> : null}</TabPanel>
+                  <TabPanel>
+                    <TransferTab session={session} user={publisher} />
+                  </TabPanel>
+                </TabPanels>
+              </Tabs>
+            </Flex>
+          </Box>
+        </>
+      ) : (
+        <Stack style={{ fontFamily: "WooriDaum" }} alignItems="center">
+          <Text>웃는 얼굴로 고객을 맞아주세요</Text>
+          <Button size="lg" onClick={joinSession}>
+            화상 상담 시작
+          </Button>
+        </Stack>
+      )}
+    </>
+  );
+}
