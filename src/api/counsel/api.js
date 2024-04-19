@@ -1,6 +1,6 @@
 import { api } from "../api";
-import { useQuery } from '@tanstack/react-query'
-import {jwtDecode} from "jwt-decode";
+import { useQuery } from "@tanstack/react-query";
+import { jwtDecode } from "jwt-decode";
 
 // 상담게시글 리스트 조회
 export function useBoardsQuery(size, page) {
@@ -9,33 +9,42 @@ export function useBoardsQuery(size, page) {
   };
 
   const getBoardsQuery = useQuery({
-    queryKey: ['boards'],
+    queryKey: ["boards"],
     queryFn: () => getBoards(),
-    keepPreviousData: true
+    keepPreviousData: true,
   });
 
-  return [getBoardsQuery.data, getBoardsQuery.isLoading, getBoardsQuery.refetch];
+  return [
+    getBoardsQuery.data,
+    getBoardsQuery.isLoading,
+    getBoardsQuery.refetch,
+  ];
 }
 
 // 상품 리스트 조회
 export function useProductsQuery(category, page, size) {
   const getProducts = async () => {
-    return await api.get(`/api/banker/product?category=${category}&page=${page}&size=${size}`)
-  }
+    return await api.get(
+      `/api/banker/product?category=${category}&page=${page}&size=${size}`,
+    );
+  };
 
   const getProductsQeury = useQuery({
-    queryKey: ['products'],
+    queryKey: ["products"],
     queryFn: () => getProducts(),
     keepPreviousData: true,
-  })
+  });
 
-  return [getProductsQeury.data, getProductsQeury.isLoading, getProductsQeury.refetch]
-
+  return [
+    getProductsQeury.data,
+    getProductsQeury.isLoading,
+    getProductsQeury.refetch,
+  ];
 }
 
 const getAuthUser = () => {
-  const token = document.cookie.split('=')[1];
-  
+  const token = document.cookie.split("=")[1];
+
   if (!token) {
     throw new Error("No token found");
   }
@@ -50,8 +59,7 @@ const getAuthUser = () => {
 
 export const useAuth = () => {
   return useQuery({
-    queryKey : "authUser",
-    queryFn : ()=> getAuthUser(),
+    queryKey: "authUser",
+    queryFn: () => getAuthUser(),
   });
-  
 };

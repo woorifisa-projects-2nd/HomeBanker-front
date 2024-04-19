@@ -1,18 +1,17 @@
-
 #leaveCounsel {
-    position:absolute;
-    right:470px;
-    z-index:5;
+  position: absolute;
+  right: 470px;
+  z-index: 5;
 }
 
 #videos {
-    width:1000px;
-    height:500px;
+  width: 1000px;
+  height: 500px;
 }
 
 #subtitle {
-    background-color: aquamarine;
-    position:relative;
-    top:0px;
-    z-index:5;
+  background-color: aquamarine;
+  position: relative;
+  top: 0px;
+  z-index: 5;
 }

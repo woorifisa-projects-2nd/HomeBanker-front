@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom"; 
+import { useNavigate } from "react-router-dom";
 import {
   Flex,
   Heading,
@@ -8,11 +8,11 @@ import {
   Button,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { api } from '../../api/api';
+import { api } from "../../api/api";
 
 export default function Login() {
   const formBackground = useColorModeValue("gray.100", "gray.700");
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
@@ -31,15 +31,11 @@ export default function Login() {
       formData.append("loginId", id);
       formData.append("loginPw", password);
 
-      const response = await api.post(
-        "/login",
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+      const response = await api.post("/login", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
 
       const token = response.headers.authorization.split(" ")[1];
 
@@ -48,7 +44,7 @@ export default function Login() {
 
         expirationDate.setDate(expirationDate.getDate() + 1); // 1일 후 만료
         document.cookie = `token=${token}; expires=${expirationDate.toUTCString()}; path=/`;
-        
+
         navigate("/");
       }
     } catch (error) {

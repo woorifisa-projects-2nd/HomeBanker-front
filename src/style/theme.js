@@ -1,6 +1,6 @@
 export default {
   colors: {
-    transparent: 'transparent',
+    transparent: "transparent",
     black: "#000000",
     white: "#FFFFFF",
     lightgray: "FBF9F1",
@@ -9,6 +9,6 @@ export default {
     blue100: "#20C4F4",
     blue200: "#20C4F4",
     blue300: "#0067AC",
-    blue400: "#00235B"
-  }
-}
+    blue400: "#00235B",
+  },
+};
