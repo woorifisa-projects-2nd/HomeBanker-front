@@ -1,6 +1,13 @@
-import React, { Fragment, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, {
+  Fragment,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { OpenVidu } from "openvidu-browser";
-import { Text, Button, Stack, Box, Flex, Tabs, TabList, TabPanels, Tab, TabPanel } from "@chakra-ui/react";
+import { Text, Button, Stack, Box, Flex } from "@chakra-ui/react";
 import UserVideoComponent from "../../components/UserVideoComponent";
 import { api } from "../../api/api";
 import ChatComponent from "../../components/Chat";
@@ -10,7 +17,10 @@ import Header from "../../components/Header";
 import "./counsel.css";
 import { useNavigate } from "react-router-dom";
 import CounselToolbar from "../../components/CounselToolbar";
+import { event } from "jquery";
 import { IoMdMic, IoMdMicOff } from "react-icons/io";
+import { IoVideocamOff, IoVideocam } from "react-icons/io5";
+import { jwtDecode } from "jwt-decode";
 import { IoVideocamOff, IoVideocam } from "react-icons/io5";
 import { jwtDecode } from "jwt-decode";
 import TransferTab from "../../components/board/admin/TransferTab";
@@ -33,7 +43,9 @@ export default function Counsel() {
   const { transcript, listening, toggleListening } = useSpeechToText();
 
   const [mySessionId, setMySessionId] = useState(SESSION_ID_LIST[0]);
-  const [myUserName, setMyUserName] = useState(`Participant${Math.floor(Math.random() * 100)}`);
+  const [myUserName, setMyUserName] = useState(
+    `Participant${Math.floor(Math.random() * 100)}`,
+  );
   const [session, setSession] = useState(undefined);
   const [publisher, setPublisher] = useState(undefined);
   const [subscribers, setSubscribers] = useState([]);
@@ -226,7 +238,11 @@ export default function Counsel() {
 
           setPublisher(publisher);
         } catch (error) {
-          console.log("There was an error connecting to the session:", error.code, error.message);
+          console.log(
+            "There was an error connecting to the session:",
+            error.code,
+            error.message,
+          );
         }
       });
     }
@@ -288,9 +304,17 @@ export default function Counsel() {
             <Flex justify="center">
               <div>
                 <Box id="videos" style={{ width: "1000px", height: "562.5px" }}>
-                  {publisher !== undefined ? <UserVideoComponent streamManager={publisher} role="me" /> : null}
+                  {publisher !== undefined ? (
+                    <UserVideoComponent streamManager={publisher} role="me" />
+                  ) : null}
                   {subscribers.length === 0 ? (
-                    <div style={{ backgroundColor: "grey", width: "1000px", height: "562.5px" }}></div>
+                    <div
+                      style={{
+                        backgroundColor: "grey",
+                        width: "1000px",
+                        height: "562.5px",
+                      }}
+                    ></div>
                   ) : (
                     subscribers.map((sub, i) => (
                       <Fragment key={sub.id}>
@@ -301,8 +325,15 @@ export default function Counsel() {
                 </Box>
                 <div id="subtitle">
                   <h1>음성인식 자막</h1>
-                  <textarea className="transcript" value={transcript} onChange={() => {}} />
-                  <button onClick={toggleListening}> {listening ? "음성인식 중지" : "음성인식 시작"} </button>
+                  <textarea
+                    className="transcript"
+                    value={transcript}
+                    onChange={() => {}}
+                  />
+                  <button onClick={toggleListening}>
+                    {" "}
+                    {listening ? "음성인식 중지" : "음성인식 시작"}{" "}
+                  </button>
                 </div>
               </div>
               <Tabs>

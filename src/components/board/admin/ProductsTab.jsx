@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import React, { Fragment, useEffect, useState } from "react";
 import {
   Spinner,
   Table,
@@ -10,13 +10,12 @@ import {
   TableContainer,
   Switch,
   useToast,
-  Select
-} from '@chakra-ui/react'
-import { useProductsQuery } from '../../../api/counsel/api'
-import { BOARD_PAGINATION_SIZE } from '../../../constants/index';
-import Pagination from '../../Pagination';
-import { api } from '../../../api/api';
-
+  Select,
+} from "@chakra-ui/react";
+import { useProductsQuery } from "../../../api/counsel/api";
+import { BOARD_PAGINATION_SIZE } from "../../../constants/index";
+import Pagination from "../../Pagination";
+import { api } from "../../../api/api";
 
 const PRODUCT_TYPE = {
   전체: "all",
@@ -26,34 +25,39 @@ const PRODUCT_TYPE = {
 }
 export default function ProductsTab( { selectedProduct, setSelectedProduct, isDisplayed = true } ) {
   const toast = useToast();
-  const [products, setProducts] = useState([])
+  const [products, setProducts] = useState([]);
   const [pagination, setPagination] = useState({
     totalItems: 0,
     itemCountPerPage: 0,
     pageCount: 0,
-    currentPage: 0
-  })
-  const [selectedCategory, setSelectedCategory] = useState('all');
+    currentPage: 0,
+  });
+  const [selectedCategory, setSelectedCategory] = useState("all");
 
-  const [productsData, isLoading, refetchProducts] = useProductsQuery(selectedCategory, pagination.currentPage, BOARD_PAGINATION_SIZE)
+  const [productsData, isLoading, refetchProducts] = useProductsQuery(
+    selectedCategory,
+    pagination.currentPage,
+    BOARD_PAGINATION_SIZE,
+  );
 
   // 상품 노출 변경
   const changeDisplay = (productId, isShown) => {
-    api.post(`/api/banker/product/show`, {
-      productId,
-      isShown
-    }).then(() => {
-      refetchProducts()
-      toast({
-        position: 'top',
-        title: '노출이 변경되었습니다.',
-        status: 'success',
-        duration: 800,
-        isClosable: true,
+    api
+      .post(`/api/banker/product/show`, {
+        productId,
+        isShown,
       })
-    }
-    )
-  }
+      .then(() => {
+        refetchProducts();
+        toast({
+          position: "top",
+          title: "노출이 변경되었습니다.",
+          status: "success",
+          duration: 800,
+          isClosable: true,
+        });
+      });
+  };
 
   useEffect(() => {
     if (productsData) {
@@ -62,10 +66,10 @@ export default function ProductsTab( { selectedProduct, setSelectedProduct, isDi
         totalItems: productsData.data.pagination.totalElements,
         itemCountPerPage: BOARD_PAGINATION_SIZE,
         pageCount: productsData.data.pagination.totalPages,
-        currentPage: productsData.data.pagination.pageNumber
-      })
+        currentPage: productsData.data.pagination.pageNumber,
+      });
     }
-  }, [productsData])
+  }, [productsData]);
 
   useEffect(() => {
     refetchProducts()
@@ -77,21 +81,24 @@ export default function ProductsTab( { selectedProduct, setSelectedProduct, isDi
 
   return (
     <>
-      {
-        isLoading ? 
-          <Spinner />
-          :
-          <>
-            <Select onChange={e => {
-                setSelectedCategory(e.target.value)
-              }} width={"150px"} variant='outline'>
-                {Object.entries(PRODUCT_TYPE).map(item =>
-                  <Fragment key={item[1]}>
-                    <option value={item[1]}>{item[0]}</option>
-                  </Fragment>
-                )}
-
-            </Select>
+      {isLoading ? (
+        <Spinner />
+      ) : (
+        <>
+          <Select
+            onChange={(e) => {
+              setSelectedCategory(e.target.value);
+            }}
+            width={"150px"}
+            variant="outline"
+            placeholder="전체"
+          >
+            {Object.entries(PRODUCT_TYPE).map((item) => (
+              <Fragment key={item[1]}>
+                <option value={item[1]}>{item[0]}</option>
+              </Fragment>
+            ))}
+          </Select>
 
             {products &&
               <TableContainer>
@@ -134,16 +141,18 @@ export default function ProductsTab( { selectedProduct, setSelectedProduct, isDi
               </TableContainer>
             }
 
-            {pagination.totalItems > 0 &&
-              <Pagination pagination={pagination}
-                setPagination={setPagination}
-                totalItems={pagination.totalItems}
-                itemCountPerPage={pagination.itemCountPerPage}
-                pageCount={pagination.pageCount}
-                currentPage={pagination.currentPage}
-              />}
-          </>
-      }
+          {pagination.totalItems > 0 && (
+            <Pagination
+              pagination={pagination}
+              setPagination={setPagination}
+              totalItems={pagination.totalItems}
+              itemCountPerPage={pagination.itemCountPerPage}
+              pageCount={pagination.pageCount}
+              currentPage={pagination.currentPage}
+            />
+          )}
+        </>
+      )}
     </>
-  )
+  );
 }
