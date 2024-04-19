@@ -23,6 +23,7 @@ import { useNavigate } from "react-router-dom";
 import CounselToolbar from '../../components/CounselToolbar';
 import { IoMdMic, IoMdMicOff } from "react-icons/io";
 import { IoVideocamOff, IoVideocam } from "react-icons/io5"
+import {jwtDecode} from "jwt-decode"
 import TransferTab from '../../components/board/admin/TransferTab';
 
 const SESSION_ID_LIST = ['Session1', 'Session2', 'Session3', 'Session4', 'Session5', 'Session6', 'Session7', 'Session8', 'Session9', 'Session10']
@@ -57,6 +58,15 @@ export default function Counsel() {
       return () => clearInterval(countdown);
     }
   }, [exit]);
+
+  const getUserRole = () => {
+    const token = document.cookie.split("=")[1];
+
+    if (token) {
+      const user = jwtDecode(token);
+      return user.role;
+    }
+  }
 
 
   if (publisher !== undefined) {
