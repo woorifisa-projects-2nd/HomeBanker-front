@@ -17,6 +17,7 @@ import { useNavigate } from "react-router-dom";
 import { event } from 'jquery';
 import { IoMdMic, IoMdMicOff} from "react-icons/io";
 import { IoVideocamOff, IoVideocam } from "react-icons/io5"
+import Exit from '../../components/counsel/Exit';
 import { jwtDecode } from 'jwt-decode';
 
 const SESSION_ID_LIST = ['Session1', 'Session2', 'Session3', 'Session4', 'Session5', 'Session6', 'Session7', 'Session8', 'Session9', 'Session10']
@@ -33,12 +34,42 @@ export default function Counsel() {
   const navigate = useNavigate();
   const [videoStatus, setVideoStatus] = useState(true);
   const [audioStatus, setAudioStatus] = useState(true);
+  const [exit, setExit] = useState(false);
+  const [time, setTime] = useState(5);
+
+  useEffect(() => {
+    if (exit) {
+    const countdown = setInterval(() => {
+      setTime((time) => {
+        const nextTime = time -1;
+        console.log(nextTime);
+        if (nextTime === 0) clearInterval(countdown);
+        return nextTime;
+      });
+    }, 1000);
+    
+    return () => clearInterval(countdown);
+  }
+  }, [exit]); 
+  
 
 
   if (publisher !== undefined) {
     session.on('signal:destroy', (event) => {
+      setTimeout(()=> {
       session.unpublish(publisher);
+      if (session) {
+        session.disconnect();
+      }
       navigate('/')
+    },5000);
+   })}
+
+   if (publisher !== undefined) {
+    session.on('signal:exit', (event) => {
+      console.log("received")
+      setExit(true);
+      destroySession();
    })}
 
    const getUserRole = () => {
@@ -55,8 +86,6 @@ export default function Counsel() {
     api.post(`api/sessions/${mySessionId}/destroy`, {}, {
       headers: { 'Content-Type': 'application/json' },
     }); 
-
-    session.unpublish(publisher);
 
     const signalOptions = {
       type: 'destroy', 
@@ -110,12 +139,19 @@ export default function Counsel() {
    * 세션 나가기
    */
   const leaveSession = useCallback(() => {
-    destroySession();
+    const signalOptions = {
+      type: 'exit', 
+      data : JSON.stringify("exit"),
+    };
 
-    if (session) {
-      session.disconnect();
-    }
-    navigate('/');
+    session.signal(signalOptions)
+      .then(() => {
+        console.log('Signal sent');
+      })
+      .catch(error => {
+        console.error(error);
+      })
+    
   }, [session]);
 
   /**
@@ -255,8 +291,8 @@ const micStatusChanged = () => {
               </div>
               {publisher !== undefined ? <ChatComponent user={publisher} /> : null}
             </Flex>
-          </Box>  
-
+          </Box>
+          {exit===true? <Exit time={time}/> : null}
         </> :
 
         <Stack style={{fontFamily:"WooriDaum"}} alignItems="center">
