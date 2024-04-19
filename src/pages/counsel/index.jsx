@@ -64,7 +64,8 @@ export default function Counsel() {
         }
         navigate('/')
       })
-    }
+    })
+  }
   
 
   const destroySession = () => {
