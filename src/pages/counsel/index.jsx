@@ -324,7 +324,7 @@ export default function Counsel() {
               <Tabs>
                 <TabList>
                   <Tab>채팅</Tab>
-                  <Tab>상품</Tab>
+                  {getUserRole === "ROLE_ADMIN" ? <Tab>상품</Tab> : null}
                 </TabList>
                 <TabPanels>
                   <TabPanel>{publisher !== undefined ? <ChatComponent user={publisher} /> : null}</TabPanel>

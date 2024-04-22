@@ -81,7 +81,6 @@ export default function ProductsTab({ selectedProduct, setSelectedProduct, isDis
             }}
             width={"150px"}
             variant="outline"
-            placeholder="전체"
           >
             {Object.entries(PRODUCT_TYPE).map((item) => (
               <Fragment key={item[1]}>
