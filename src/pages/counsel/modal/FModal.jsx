@@ -11,7 +11,7 @@ import {
 
 import { TbSquareRoundedFilled } from "react-icons/tb";
 // import RadioCard from "../../../components/RadioCard";
-import Canvas from "../../../components/Canvas";
+import Canvas from "../../../components/counsel/Canvas";
 
 export const FModal = ({
   isOpen,
