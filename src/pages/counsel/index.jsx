@@ -325,7 +325,7 @@ export default function Counsel() {
                   <textarea
                     className="transcript"
                     value={transcript}
-                    onChange={() => {}}
+                    onChange={() => { }}
                   />
                   <button onClick={toggleListening}>
                     {" "}
@@ -337,6 +337,7 @@ export default function Counsel() {
                 <ChatComponent user={publisher} />
               ) : null}
             </Flex>
+            <CounselToolbar publisher={publisher} />
           </Box>
         </>
       ) : (
