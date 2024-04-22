@@ -18,6 +18,7 @@ import {
   TabPanels,
   Tab,
   TabPanel,
+  useDisclosure,
 } from "@chakra-ui/react";
 import UserVideoComponent from "../../components/UserVideoComponent";
 import { api } from "../../api/api";
@@ -35,6 +36,7 @@ import { IoVideocamOff, IoVideocam } from "react-icons/io5";
 import { jwtDecode } from "jwt-decode";
 import Exit from "../../components/counsel/Exit";
 import TransferTab from "../../components/board/admin/TransferTab";
+import { ModalList } from "./modal/ModalList";
 
 const SESSION_ID_LIST = [
   "Session1",
@@ -55,7 +57,7 @@ export default function Counsel() {
 
   const [mySessionId, setMySessionId] = useState(SESSION_ID_LIST[0]);
   const [myUserName, setMyUserName] = useState(
-    `Participant${Math.floor(Math.random() * 100)}`,
+    `Participant${Math.floor(Math.random() * 100)}`
   );
   const [session, setSession] = useState(undefined);
   const [publisher, setPublisher] = useState(undefined);
@@ -116,7 +118,7 @@ export default function Counsel() {
       {},
       {
         headers: { "Content-Type": "application/json" },
-      },
+      }
     );
 
     const signalOptions = {
@@ -200,7 +202,7 @@ export default function Counsel() {
         { customSessionId: SESSION_ID_LIST[i], role: role },
         {
           headers: { "Content-Type": "application/json" },
-        },
+        }
       );
       if (response.data !== "full") {
         setMySessionId(SESSION_ID_LIST[i]);
@@ -223,7 +225,7 @@ export default function Counsel() {
       {},
       {
         headers: { "Content-Type": "application/json" },
-      },
+      }
     );
     return response.data; // The token
   };
@@ -257,7 +259,7 @@ export default function Counsel() {
           console.log(
             "There was an error connecting to the session:",
             error.code,
-            error.message,
+            error.message
           );
         }
       });
@@ -293,6 +295,15 @@ export default function Counsel() {
     });
   }
 
+  //모달
+  const { isOpen, onClose, onOpen } = useDisclosure();
+  const [modalMODE, setModalMODE] = useState("F");
+
+  const changeMode = () => {
+    if (modalMODE === "F") setModalMODE("S");
+    else if (modalMODE === "S") setModalMODE("T");
+  };
+
   return (
     <>
       {session !== undefined && publisher !== undefined ? (
@@ -324,6 +335,7 @@ export default function Counsel() {
               )}
 
               <Button onClick={leaveSession}>나가기</Button>
+              <Button onClick={onOpen}>상품 선택</Button>
             </Flex>
             <Flex justify="center">
               <div>
@@ -352,7 +364,7 @@ export default function Counsel() {
                   <textarea
                     className="transcript"
                     value={transcript}
-                    onChange={() => { }}
+                    onChange={() => {}}
                   />
                   <button onClick={toggleListening}>
                     {" "}
@@ -379,6 +391,14 @@ export default function Counsel() {
             </Flex>
             <CounselToolbar publisher={publisher} />
           </Box>
+          <ModalList
+            MODE={modalMODE}
+            isOpen={isOpen}
+            onClose={onClose}
+            size={"xl"}
+            successMessage={"다음"}
+            successAction={changeMode}
+          ></ModalList>
           {exit === true ? <Exit time={time} /> : null}
         </>
       ) : (

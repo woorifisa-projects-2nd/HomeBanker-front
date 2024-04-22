@@ -7,6 +7,7 @@ import {
   ListIcon,
   useRadioGroup,
   HStack,
+  Box,
 } from "@chakra-ui/react";
 
 import { TbSquareRoundedFilled } from "react-icons/tb";
@@ -81,7 +82,9 @@ export const FModal = ({
                 })}
               </HStack> */}
             </Stack>
-            <Canvas></Canvas>
+            <Box borderWidth="5px">
+              <Canvas></Canvas>
+            </Box>
           </>
         }
       ></CustomModal>

@@ -4,8 +4,8 @@ import React, { useState, useEffect } from "react";
 
 const Canvas = () => {
   const [color, setColor] = useState("#FFFFFF");
-  const [width, setWidth] = useState(400);
-  const [height, setHeight] = useState(400);
+  const [width, setWidth] = useState(518);
+  const [height, setHeight] = useState(250);
   const [brushRadius, setBrushRadius] = useState(5);
   const [lazyRadius, setLazyRadius] = useState(5);
   const [backgroundImg, setBackgroundImg] = useState("");
