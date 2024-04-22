@@ -1,5 +1,7 @@
 import React from "react";
-import SpeechRecognition, { useSpeechRecognition } from "react-speech-recognition";
+import SpeechRecognition, {
+  useSpeechRecognition,
+} from "react-speech-recognition";
 
 export default function useSpeechToText() {
   const { transcript, listening, resetTranscript } = useSpeechRecognition();

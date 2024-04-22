@@ -11,9 +11,20 @@ const Transfer = ({ session, user }) => {
 
   return (
     // TransferContext.Provider로 감싸 Context를 사용
-    <TransferContext.Provider value={{ selectedProduct, setSelectedProduct, enrollmentData, setEnrollmentData }}>
+    <TransferContext.Provider
+      value={{
+        selectedProduct,
+        setSelectedProduct,
+        enrollmentData,
+        setEnrollmentData,
+      }}
+    >
       <div>
-        <ProductsTab selectedProduct={selectedProduct} setSelectedProduct={setSelectedProduct} isDisplayed={false} />
+        <ProductsTab
+          selectedProduct={selectedProduct}
+          setSelectedProduct={setSelectedProduct}
+          isDisplayed={false}
+        />
         <EnrollmentTab session={session} user={user} />
       </div>
     </TransferContext.Provider>

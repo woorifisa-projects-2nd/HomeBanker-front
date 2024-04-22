@@ -1,5 +1,17 @@
 import React, { Fragment, useEffect, useState } from "react";
-import { Spinner, Table, Thead, Tbody, Tr, Th, Td, TableContainer, Switch, useToast, Select } from "@chakra-ui/react";
+import {
+  Spinner,
+  Table,
+  Thead,
+  Tbody,
+  Tr,
+  Th,
+  Td,
+  TableContainer,
+  Switch,
+  useToast,
+  Select,
+} from "@chakra-ui/react";
 import { useProductsQuery } from "../../../api/counsel/api";
 import { BOARD_PAGINATION_SIZE } from "../../../constants/index";
 import Pagination from "../../Pagination";
@@ -11,7 +23,11 @@ const PRODUCT_TYPE = {
   예적금: "deposit",
   대출: "loan",
 };
-export default function ProductsTab({ selectedProduct, setSelectedProduct, isDisplayed = true }) {
+export default function ProductsTab({
+  selectedProduct,
+  setSelectedProduct,
+  isDisplayed = true,
+}) {
   const toast = useToast();
   const [products, setProducts] = useState([]);
   const [pagination, setPagination] = useState({
@@ -112,7 +128,8 @@ export default function ProductsTab({ selectedProduct, setSelectedProduct, isDis
                         onClick={() => handleProductClick(item)}
                         cursor="pointer"
                         backgroundColor={
-                          selectedProduct != undefined && item.productId == selectedProduct.productId
+                          selectedProduct != undefined &&
+                          item.productId == selectedProduct.productId
                             ? "gray.100"
                             : "white"
                         }
@@ -128,7 +145,9 @@ export default function ProductsTab({ selectedProduct, setSelectedProduct, isDis
                             <Switch
                               size="lg"
                               isChecked={item.isShown}
-                              onChange={() => changeDisplay(item.productId, item.isShown)}
+                              onChange={() =>
+                                changeDisplay(item.productId, item.isShown)
+                              }
                             />
                           </Td>
                         )}

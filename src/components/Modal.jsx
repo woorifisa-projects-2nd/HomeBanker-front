@@ -20,9 +20,22 @@ import React from "react";
  * @param {function} successAction
  */
 
-export default function CustomModal({ isOpen, onClose, children, size, title, successMessage, successAction }) {
+export default function CustomModal({
+  isOpen,
+  onClose,
+  children,
+  size,
+  title,
+  successMessage,
+  successAction,
+}) {
   return (
-    <Modal closeOnOverlayClick={false} isOpen={isOpen} onClose={onClose} size={size}>
+    <Modal
+      closeOnOverlayClick={false}
+      isOpen={isOpen}
+      onClose={onClose}
+      size={size}
+    >
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>{title}</ModalHeader>

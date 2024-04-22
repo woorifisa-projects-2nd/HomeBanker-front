@@ -1,6 +1,14 @@
 import React, { useRef, useEffect } from "react";
 import { useState } from "react";
-import { Flex, Button, Stack, Spacer, Input, Box, Text } from "@chakra-ui/react";
+import {
+  Flex,
+  Button,
+  Stack,
+  Spacer,
+  Input,
+  Box,
+  Text,
+} from "@chakra-ui/react";
 import ChatMessage from "./ChatMessage";
 import { IoMdChatbubbles } from "react-icons/io";
 
@@ -22,7 +30,8 @@ export default function ChatComponent({ user }) {
         message: data.message,
       };
 
-      if (data.nickname !== nickname) setMessageList([...messageList, newMessage]);
+      if (data.nickname !== nickname)
+        setMessageList([...messageList, newMessage]);
     }
   });
 
