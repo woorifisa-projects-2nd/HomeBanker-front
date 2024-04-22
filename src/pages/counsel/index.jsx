@@ -7,7 +7,18 @@ import React, {
   useState,
 } from "react";
 import { OpenVidu } from "openvidu-browser";
-import { Text, Button, Stack, Box, Flex } from "@chakra-ui/react";
+import {
+  Text,
+  Button,
+  Stack,
+  Box,
+  Flex,
+  Tabs,
+  TabList,
+  TabPanels,
+  Tab,
+  TabPanel,
+} from "@chakra-ui/react";
 import UserVideoComponent from "../../components/UserVideoComponent";
 import { api } from "../../api/api";
 import ChatComponent from "../../components/Chat";
@@ -20,7 +31,10 @@ import CounselToolbar from "../../components/CounselToolbar";
 import { event } from "jquery";
 import { IoMdMic, IoMdMicOff } from "react-icons/io";
 import { IoVideocamOff, IoVideocam } from "react-icons/io5";
+
 import { jwtDecode } from "jwt-decode";
+import Exit from "../../components/counsel/Exit";
+import TransferTab from "../../components/board/admin/TransferTab";
 
 const SESSION_ID_LIST = [
   "Session1",
@@ -58,7 +72,6 @@ export default function Counsel() {
       const countdown = setInterval(() => {
         setTime((time) => {
           const nextTime = time - 1;
-          console.log(nextTime);
           if (nextTime === 0) clearInterval(countdown);
           return nextTime;
         });
@@ -85,7 +98,15 @@ export default function Counsel() {
           session.disconnect();
         }
         navigate("/");
-      });
+      }, 5000);
+    });
+  }
+
+  if (publisher !== undefined) {
+    session.on("signal:exit", (event) => {
+      console.log("received");
+      setExit(true);
+      destroySession();
     });
   }
 
@@ -97,8 +118,6 @@ export default function Counsel() {
         headers: { "Content-Type": "application/json" },
       },
     );
-
-    session.unpublish(publisher);
 
     const signalOptions = {
       type: "destroy",
@@ -266,6 +285,14 @@ export default function Counsel() {
     setAudioStatus(publisher.stream.audioActive);
   };
 
+  // 상품 가입 정보 수신
+  if (publisher !== undefined) {
+    session.on("signal:enrollment", (e) => {
+      const receivedData = JSON.parse(e.data);
+      console.log("전달받은 데이터 :", receivedData);
+    });
+  }
+
   return (
     <>
       {session !== undefined && publisher !== undefined ? (
@@ -325,7 +352,7 @@ export default function Counsel() {
                   <textarea
                     className="transcript"
                     value={transcript}
-                    onChange={() => {}}
+                    onChange={() => { }}
                   />
                   <button onClick={toggleListening}>
                     {" "}
@@ -333,11 +360,26 @@ export default function Counsel() {
                   </button>
                 </div>
               </div>
-              {publisher !== undefined ? (
-                <ChatComponent user={publisher} />
-              ) : null}
+              <Tabs>
+                <TabList>
+                  <Tab>채팅</Tab>
+                  {getUserRole === "ROLE_ADMIN" ? <Tab>상품</Tab> : null}
+                </TabList>
+                <TabPanels>
+                  <TabPanel>
+                    {publisher !== undefined ? (
+                      <ChatComponent user={publisher} />
+                    ) : null}
+                  </TabPanel>
+                  <TabPanel>
+                    <TransferTab session={session} user={publisher} />
+                  </TabPanel>
+                </TabPanels>
+              </Tabs>
             </Flex>
+            <CounselToolbar publisher={publisher} />
           </Box>
+          {exit === true ? <Exit time={time} /> : null}
         </>
       ) : (
         <Stack style={{ fontFamily: "WooriDaum" }} alignItems="center">

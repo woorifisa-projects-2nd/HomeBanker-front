@@ -20,6 +20,7 @@ export default function CounselToolbar({ publisher }) {
     }
   };
 
+  // 양쪽 다 닫히는 메세지 전송
   const closeModalMessage = () => {
     if (publisher && role === "ROLE_ADMIN") {
       publisher.stream.session.signal({

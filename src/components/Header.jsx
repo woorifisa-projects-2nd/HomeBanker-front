@@ -42,6 +42,7 @@ export default function Header() {
         <Flex>
           <ButtonGroup
             gap="2"
+            size="lg"
             variant="ghost"
             style={{ fontFamily: "WooridaumR" }}
           >
