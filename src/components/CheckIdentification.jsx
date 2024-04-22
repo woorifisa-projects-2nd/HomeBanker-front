@@ -1,6 +1,6 @@
 import React, { useCallback, useRef, useState } from "react";
 import CustomModal from "./Modal";
-import { Button, Spinner } from "@chakra-ui/react";
+import { Button, Spinner, ModalCloseButton } from "@chakra-ui/react";
 import { Stack, Box, Text } from "@chakra-ui/react";
 import OpenViduVideoComponent from "./OpenViduVideoComponent";
 import { v4 as uuidV4 } from "uuid";
@@ -8,6 +8,7 @@ import html2canvas from "html2canvas";
 
 const NAVER_INVOKE_URL = import.meta.env.VITE_NAVER_INVOKE_URL;
 const NAVER_OCR_SECRET_KEY = import.meta.env.VITE_NAVER_OCR_SECRET_KEY;
+
 import Axios from "axios";
 import { personalNumberFormatter } from "../util/counsel";
 import useCheckRole from "../hook/useCheckRole";
@@ -32,9 +33,9 @@ export default function CheckIdentification({
     }
   };
 
-  const removeDataPrefix = useCallback((dataString) => {
+  const removeDataPrefix = (dataString) => {
     return dataString.replace(/^data:image\/png;base64,/, "");
-  }, []);
+  };
 
   // 신분증 OCR api
   const checkOCR = (uri) => {
@@ -95,6 +96,7 @@ export default function CheckIdentification({
   return (
     <CustomModal size={"4xl"} isOpen={isOpen} onClose={onClose}>
       <>
+        <ModalCloseButton onClose={onClose} />
         {isLoading ? <Spinner /> : <></>}
         <Stack flexDirection="column" alignItems="center">
           <Text>사각형에 맞게 신분증을 가로로 놓아주세요.</Text>
