@@ -346,7 +346,7 @@ export default function Counsel() {
                   <textarea
                     className="transcript"
                     value={transcript}
-                    onChange={() => {}}
+                    onChange={() => { }}
                   />
                   <button onClick={toggleListening}>
                     {" "}
@@ -371,6 +371,7 @@ export default function Counsel() {
                 </TabPanels>
               </Tabs>
             </Flex>
+            <CounselToolbar publisher={publisher} />
           </Box>
         </>
       ) : (
