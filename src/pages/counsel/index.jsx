@@ -21,6 +21,7 @@ import { event } from "jquery";
 import { IoMdMic, IoMdMicOff } from "react-icons/io";
 import { IoVideocamOff, IoVideocam } from "react-icons/io5";
 import { jwtDecode } from "jwt-decode";
+import Exit from "../../components/counsel/Exit";
 
 const SESSION_ID_LIST = [
   "Session1",
@@ -58,7 +59,6 @@ export default function Counsel() {
       const countdown = setInterval(() => {
         setTime((time) => {
           const nextTime = time - 1;
-          console.log(nextTime);
           if (nextTime === 0) clearInterval(countdown);
           return nextTime;
         });
@@ -85,7 +85,15 @@ export default function Counsel() {
           session.disconnect();
         }
         navigate("/");
-      });
+      }, 5000);
+    });
+  }
+
+  if (publisher !== undefined) {
+    session.on("signal:exit", (event) => {
+      console.log("received");
+      setExit(true);
+      destroySession();
     });
   }
 
@@ -97,8 +105,6 @@ export default function Counsel() {
         headers: { "Content-Type": "application/json" },
       },
     );
-
-    session.unpublish(publisher);
 
     const signalOptions = {
       type: "destroy",
@@ -338,6 +344,7 @@ export default function Counsel() {
               ) : null}
             </Flex>
           </Box>
+          {exit === true ? <Exit time={time} /> : null}
         </>
       ) : (
         <Stack style={{ fontFamily: "WooriDaum" }} alignItems="center">

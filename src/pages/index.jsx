@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, Stack, Flex } from "@chakra-ui/react";
+import { Button, Stack, Flex, Spacer, Text } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import { Cookies } from "react-cookie";
@@ -26,66 +26,117 @@ export default function Index() {
     }
   };
 
+  const handleCounselClick = () => {
+    navigate("/counsel");
+  };
+
   return (
     <>
       <Header />
-      <Flex direction="column" alignItems="center">
-        <h2>원하시는 업무를 선택해주세요.</h2>
-        <Stack spacing={8} direction="row" align="center" margin="30px">
-          <Button
-            size="md"
-            height="48px"
-            width="200px"
-            border="2px"
-            borderColor="green.500"
-          >
-            예/적금 업무
-          </Button>
-          <Button
-            size="md"
-            height="48px"
-            width="200px"
-            border="2px"
-            borderColor="green.500"
-          >
-            카드 업무
-          </Button>
-        </Stack>
-        <Stack spacing={8} direction="row" align="center">
-          <Button
-            size="md"
-            height="48px"
-            width="200px"
-            border="2px"
-            borderColor="green.500"
-          >
-            대출 업무
-          </Button>
-          <Button
-            size="md"
-            height="48px"
-            width="200px"
-            border="2px"
-            borderColor="green.500"
-            onClick={handleBoardClick}
-          >
-            고객상담 게시판
-          </Button>
-        </Stack>
-        {user && (
-          <Button
-            mt={4}
-            size="sm"
-            height="32px"
-            width="120px"
-            border="2px"
-            borderColor="red.500"
-            onClick={handleLogout}
-          >
-            로그아웃
-          </Button>
-        )}
-      </Flex>
+      <div
+        style={{
+          position: "fixed",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%,-50%)",
+          fontFamily: "WooriDaum",
+        }}
+      >
+        <Flex direction="column" alignItems="baseline">
+          <Text fontSize="5xl" color="#0083CA">
+            우리집은행 화상상담 창구
+          </Text>
+          <Spacer />
+          <Stack spacing={8} direction="row" align="center" margin="30px">
+            <Button
+              height="10rem"
+              width="30rem"
+              color="#F1F1F1"
+              onClick={handleCounselClick}
+            >
+              <div style={{ width: "25rem", height: "5rem" }}>
+                <Text
+                  style={{ float: "left", marginBottom: "15px" }}
+                  fontSize="3xl"
+                  color="black"
+                >
+                  예/적금 상담
+                </Text>
+
+                <Text style={{ float: "left" }} color="#909090" fontSize="lg">
+                  화상 상담을 통해 예/적금 상품을 가입할 수 있습니다
+                </Text>
+              </div>
+            </Button>
+            <Button
+              height="10rem"
+              width="30rem"
+              color="#F1F1F1"
+              onClick={handleCounselClick}
+            >
+              <div style={{ width: "25rem", height: "5rem" }}>
+                <Text
+                  style={{ float: "left", marginBottom: "15px" }}
+                  fontSize="3xl"
+                  color="black"
+                >
+                  카드 상담
+                </Text>
+
+                <Text style={{ float: "left" }} color="#909090" fontSize="lg">
+                  화상 상담을 통해 카드 상품을 가입할 수 있습니다
+                </Text>
+              </div>
+            </Button>
+          </Stack>
+          <Stack spacing={8} direction="row" align="center">
+            <Button
+              height="10rem"
+              width="30rem"
+              color="#F1F1F1"
+              onClick={handleCounselClick}
+            >
+              <div style={{ width: "25rem", height: "5rem" }}>
+                <Text
+                  style={{ float: "left", marginBottom: "15px" }}
+                  fontSize="3xl"
+                  color="black"
+                >
+                  대출 상담
+                </Text>
+
+                <Text style={{ float: "left" }} color="#909090" fontSize="lg">
+                  화상 상담을 통해 대출 상품을 가입할 수 있습니다
+                </Text>
+              </div>
+            </Button>
+            <Button
+              height="10rem"
+              width="30rem"
+              color="#F1F1F1"
+              onClick={handleBoardClick}
+            >
+              <Flex
+                direction="column"
+                align="baseline"
+                style={{ width: "25rem", height: "5rem" }}
+              >
+                <Text
+                  style={{ float: "left", marginBottom: "15px" }}
+                  fontSize="3xl"
+                  color="black"
+                >
+                  문의 게시판
+                </Text>
+
+                <Text style={{ float: "left" }} color="#909090" fontSize="lg">
+                  문의 글을 작성할 수 있습니다
+                </Text>
+              </Flex>
+            </Button>
+          </Stack>
+        </Flex>
+      </div>
     </>
   );
 }
