@@ -87,8 +87,6 @@ export default function Counsel() {
     if (token) {
       const user = jwtDecode(token);
 
-      console.log(user.role === "ROLE_ADMIN");
-
       return user.role;
     }
   };
