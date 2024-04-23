@@ -8,7 +8,7 @@ import {
   Text,
 } from "@chakra-ui/react";
 import ProfileTab from "../../components/mypage/ProfileTab";
-import SaleTab from "../../components/mypage/SaleTab"
+import SaleTab from "../../components/mypage/SalesTab";
 import Header from "../../components/Header";
 
 export default function MyPage() {
