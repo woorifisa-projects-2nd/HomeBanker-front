@@ -298,116 +298,112 @@ export default function Counsel() {
   return (
     <>
       {session !== undefined && publisher !== undefined ? (
-        <>
-          <Header />
-
-          <Grid
-            position="relative"
-            height="100vh"
-            width="100vw"
-            templateColumns="repeat(8, 1fr)"
-          >
-            <GridItem colSpan={6} position="relative">
-              <Stack
-                bgColor={"black"}
-                zIndex="99"
-                position="absolute"
-                right="0"
-                space={0}
+        <Grid
+          position="relative"
+          height="100vh"
+          width="100vw"
+          templateColumns="repeat(8, 1fr)"
+        >
+          <GridItem colSpan={6} position="relative">
+            <Stack
+              bgColor={"black"}
+              zIndex="99"
+              position="absolute"
+              right="0"
+              space={0}
+            >
+              <Flex
+                width={8}
+                height={8}
+                justifyContent={"center"}
+                alignItems={"center"}
+                onClick={videoStatus ? camStatusChanged : camStatusChanged}
               >
-                <Flex
-                  width={8}
-                  height={8}
-                  justifyContent={"center"}
-                  alignItems={"center"}
-                  onClick={videoStatus ? camStatusChanged : camStatusChanged}
-                >
-                  {videoStatus ? (
-                    <IoVideocamOff fontSize="27px" color="white" />
-                  ) : (
-                    <IoVideocam fontSize="27px" color="white" />
-                  )}
-                </Flex>
+                {videoStatus ? (
+                  <IoVideocamOff fontSize="27px" color="white" />
+                ) : (
+                  <IoVideocam fontSize="27px" color="white" />
+                )}
+              </Flex>
 
-                <Flex
-                  width={8}
-                  height={8}
-                  justifyContent={"center"}
-                  alignItems={"center"}
-                  onClick={audioStatus ? micStatusChanged : micStatusChanged}
-                >
-                  {audioStatus ? (
-                    <IoMdMicOff fontSize="30px" color="white" />
-                  ) : (
-                    <IoMdMic />
-                  )}
-                </Flex>
+              <Flex
+                width={8}
+                height={8}
+                justifyContent={"center"}
+                alignItems={"center"}
+                onClick={audioStatus ? micStatusChanged : micStatusChanged}
+              >
+                {audioStatus ? (
+                  <IoMdMicOff fontSize="30px" color="white" />
+                ) : (
+                  <IoMdMic />
+                )}
+              </Flex>
 
-                <Flex
-                  width={8}
-                  height={8}
-                  justifyContent={"center"}
-                  alignItems={"center"}
-                  cursor="pointer"
-                  onClick={leaveSession}
-                >
-                  <IoLogOutOutline fontSize="30px" color="white" />
-                </Flex>
-              </Stack>
+              <Flex
+                width={8}
+                height={8}
+                justifyContent={"center"}
+                alignItems={"center"}
+                cursor="pointer"
+                onClick={leaveSession}
+              >
+                <IoLogOutOutline fontSize="30px" color="white" />
+              </Flex>
+            </Stack>
 
-              <Box width="100%" position="absolute" top={0}>
-                {publisher !== undefined ? (
-                  <UserVideoComponent streamManager={publisher} role="me" />
-                ) : null}
-              </Box>
+            <Box width="100%" position="absolute" top={0}>
+              {publisher !== undefined ? (
+                <UserVideoComponent streamManager={publisher} role="me" />
+              ) : null}
+            </Box>
 
-              {subscribers.length === 0 ? (
-                <>
-                  <Image
-                    position="absolute"
-                    bottom={0}
-                    left={0}
-                    objectFit="cover"
-                    src={WaitImage}
-                    width="100%"
-                    maxHeight="100vh"
-                  />
-                  <Box width="100%" height="100%" bgColor={"#C8DFFA"} />
-                </>
-              ) : (
-                subscribers.map((sub, i) => (
-                  <Box key={i}>
-                    <UserVideoComponent streamManager={sub} role="other" />
-                  </Box>
-                ))
-              )}
+            {subscribers.length === 0 ? (
+              <>
+                <Image
+                  position="absolute"
+                  bottom={0}
+                  left={0}
+                  objectFit="cover"
+                  src={WaitImage}
+                  width="100%"
+                  maxHeight="100vh"
+                />
+                <Box width="100%" height="100%" bgColor={"#C8DFFA"} />
+              </>
+            ) : (
+              subscribers.map((sub, i) => (
+                <Box key={i}>
+                  <UserVideoComponent streamManager={sub} role="other" />
+                </Box>
+              ))
+            )}
 
-              <CounselToolbar publisher={publisher} />
-            </GridItem>
+            <CounselToolbar publisher={publisher} />
+          </GridItem>
 
-            <GridItem colSpan={2}>
-              {/* 여기 안에서 탭 관리 */}
-              <Tabs>
-                <TabList>
-                  <Tab>채팅</Tab>
-                  {getUserRole === "ROLE_ADMIN" ? <Tab>상품</Tab> : null}
-                </TabList>
-                <TabPanels>
-                  <TabPanel>
-                    {publisher !== undefined ? (
-                      <ChatComponent user={publisher} />
-                    ) : null}
-                  </TabPanel>
-                  <TabPanel>
-                    <TransferTab session={session} user={publisher} />
-                  </TabPanel>
-                </TabPanels>
-              </Tabs>
-            </GridItem>
+          <GridItem colSpan={2}>
+            {/* 여기 안에서 탭 관리 */}
+            <Tabs>
+              <TabList>
+                <Tab>채팅</Tab>
+                {getUserRole === "ROLE_ADMIN" ? <Tab>상품</Tab> : null}
+              </TabList>
+              <TabPanels>
+                <TabPanel>
+                  {publisher !== undefined ? (
+                    <ChatComponent user={publisher} />
+                  ) : null}
+                </TabPanel>
+                <TabPanel>
+                  <TransferTab session={session} user={publisher} />
+                </TabPanel>
+              </TabPanels>
+            </Tabs>
+          </GridItem>
 
-            {exit === true ? <Exit time={time} /> : null}
-          </Grid>
-        </>
+          {exit === true ? <Exit time={time} /> : null}
+        </Grid>
       ) : (
         <Stack style={{ fontFamily: "WooriDaum" }} alignItems="center">
           <Text>웃는 얼굴로 고객을 맞아주세요</Text>
