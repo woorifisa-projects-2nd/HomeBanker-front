@@ -41,7 +41,7 @@ export const TModal = ({
         title={"고객 확인"}
         size={size}
         successMessage={"완료"}
-        successAction={onClose}
+        successAction={successAction}
         children={
           <>
             <List spacing={3}>

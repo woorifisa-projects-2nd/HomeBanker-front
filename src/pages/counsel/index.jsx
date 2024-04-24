@@ -5,6 +5,7 @@ import React, {
   useMemo,
   useRef,
   useState,
+  useContext,
 } from "react";
 import { OpenVidu } from "openvidu-browser";
 import {
@@ -36,7 +37,6 @@ import { IoVideocamOff, IoVideocam } from "react-icons/io5";
 import { jwtDecode } from "jwt-decode";
 import Exit from "../../components/counsel/Exit";
 import TransferTab from "../../components/board/admin/TransferTab";
-import { ModalList } from "./modal/ModalList";
 
 const SESSION_ID_LIST = [
   "Session1",
@@ -68,6 +68,12 @@ export default function Counsel() {
   const [audioStatus, setAudioStatus] = useState(true);
   const [exit, setExit] = useState(false);
   const [time, setTime] = useState(5);
+
+  // 상품가입정보
+  const [productName, setProductName] = useState();
+  const [amount, setAmount] = useState();
+  const [period, setPeriod] = useState();
+  const [isModalDisplayed, setIsModalDisplayed] = useState(false);
 
   useEffect(() => {
     if (exit) {
@@ -287,22 +293,24 @@ export default function Counsel() {
     setAudioStatus(publisher.stream.audioActive);
   };
 
+  useEffect(() => {
+    console.log(isModalDisplayed);
+  }, [isModalDisplayed]);
+
   // 상품 가입 정보 수신
   if (publisher !== undefined) {
     session.on("signal:enrollment", (e) => {
+      setIsModalDisplayed(true);
       const receivedData = JSON.parse(e.data);
-      console.log("전달받은 데이터 :", receivedData);
+      console.log("상품 이름 :", receivedData.product.productName);
+      console.log("상품 금액 :", receivedData.amount);
+      console.log("가입 기간 :", receivedData.period);
+      console.log("은행원 ID :", receivedData.bankerId);
+      setProductName(receivedData.product.productName);
+      setAmount(receivedData.amount);
+      setPeriod(receivedData.period);
     });
   }
-
-  //모달
-  const { isOpen, onClose, onOpen } = useDisclosure();
-  const [modalMODE, setModalMODE] = useState("F");
-
-  const changeMode = () => {
-    if (modalMODE === "F") setModalMODE("S");
-    else if (modalMODE === "S") setModalMODE("T");
-  };
 
   return (
     <>
@@ -335,7 +343,6 @@ export default function Counsel() {
               )}
 
               <Button onClick={leaveSession}>나가기</Button>
-              <Button onClick={onOpen}>상품 선택</Button>
             </Flex>
             <Flex justify="center">
               <div>
@@ -375,7 +382,7 @@ export default function Counsel() {
               <Tabs>
                 <TabList>
                   <Tab>채팅</Tab>
-                  {getUserRole === "ROLE_ADMIN" ? <Tab>상품</Tab> : null}
+                  {getUserRole() === "ROLE_ADMIN" ? <Tab>상품</Tab> : null}
                 </TabList>
                 <TabPanels>
                   <TabPanel>
@@ -384,21 +391,21 @@ export default function Counsel() {
                     ) : null}
                   </TabPanel>
                   <TabPanel>
-                    <TransferTab session={session} user={publisher} />
+                    <TransferTab
+                      session={session}
+                      user={publisher}
+                      productName={productName}
+                      amount={amount}
+                      period={period}
+                      isModalDisplayed={isModalDisplayed}
+                    />
                   </TabPanel>
                 </TabPanels>
               </Tabs>
             </Flex>
             <CounselToolbar publisher={publisher} />
           </Box>
-          <ModalList
-            MODE={modalMODE}
-            isOpen={isOpen}
-            onClose={onClose}
-            size={"xl"}
-            successMessage={"다음"}
-            successAction={changeMode}
-          ></ModalList>
+
           {exit === true ? <Exit time={time} /> : null}
         </>
       ) : (

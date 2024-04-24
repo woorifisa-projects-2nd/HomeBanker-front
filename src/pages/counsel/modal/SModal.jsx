@@ -20,6 +20,9 @@ export const SModal = ({
   title,
   successMessage,
   successAction,
+  productName,
+  amount,
+  period,
 }) => {
   const options = ["예", "아니오"];
 
@@ -46,15 +49,15 @@ export const SModal = ({
                 <Tbody>
                   <Tr>
                     <Td>상품명</Td>
-                    <Td>시니어플러스 우리예금</Td>
+                    <Td>{productName}</Td>
                   </Tr>
                   <Tr>
                     <Td>금액</Td>
-                    <Td>100,000,000</Td>
+                    <Td>{amount}</Td>
                   </Tr>
                   <Tr>
                     <Td>가입기간</Td>
-                    <Td>12개월</Td>
+                    <Td>{period}개월</Td>
                   </Tr>
                 </Tbody>
               </Table>
