@@ -88,6 +88,7 @@ export default function Counsel() {
 
     if (token) {
       const user = jwtDecode(token);
+
       return user.role;
     }
   };
@@ -387,7 +388,7 @@ export default function Counsel() {
             <Tabs>
               <TabList>
                 <Tab>채팅</Tab>
-                {getUserRole === "ROLE_ADMIN" ? <Tab>상품</Tab> : null}
+                {getUserRole() === "ROLE_ADMIN" ? <Tab>상품</Tab> : null}
               </TabList>
               <TabPanels>
                 <TabPanel>
