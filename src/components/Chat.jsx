@@ -85,78 +85,67 @@ export default function ChatComponent({ user }) {
   }, [messageList]);
 
   return (
-    <div
-      id="chatContainer"
-      style={{
-        height: "auto",
-        width: "100%",
-        backgroundColor: "#0083CA",
-        fontFamily: "WooriDaum",
-      }}
-    >
-      <Flex direction="column">
+    <Flex direction="column">
+      <div
+        style={{
+          marginTop: "10px",
+          marginBottom: "10px",
+          marginLeft: "30px",
+          padding: "5px",
+        }}
+      >
+        <Flex>
+          <IoMdChatbubbles style={{ display: "inline" }} size="2rem" />
+          <div style={{ marginLeft: "10px" }}>채팅방</div>
+        </Flex>
+      </div>
+      <div
+        id="chatComponent"
+        style={{
+          marginLeft: "30px",
+          marginRight: "30px",
+          marginBottom: "30px",
+          backgroundColor: "white",
+          padding: "20px",
+          borderRadius: "20px",
+        }}
+      >
         <div
           style={{
-            marginTop: "10px",
-            marginBottom: "10px",
-            marginLeft: "30px",
-            padding: "5px",
+            width: "auto",
+            overflowY: "auto",
+            paddingBottom: "30px",
           }}
         >
-          <Flex>
-            <IoMdChatbubbles style={{ display: "inline" }} size="2rem" />
-            <div style={{ marginLeft: "10px" }}>채팅방</div>
+          <Flex direction="column">
+            <Stack>
+              {Array.from(messageList).map((m, index) => (
+                <ChatMessage
+                  ref={chatScroll}
+                  key={index}
+                  message={m.message}
+                  sender={findMessageSender(m.nickname)}
+                />
+              ))}
+            </Stack>
           </Flex>
         </div>
-        <div
-          id="chatComponent"
-          style={{
-            marginLeft: "30px",
-            marginRight: "30px",
-            marginBottom: "30px",
-            backgroundColor: "white",
-            padding: "20px",
-            borderRadius: "20px",
-          }}
-        >
-          <div
-            style={{
-              width: "auto",
-              height: "500px",
-              overflowY: "auto",
-              paddingBottom: "30px",
-            }}
-          >
-            <Flex direction="column">
-              <Stack>
-                {Array.from(messageList).map((m, index) => (
-                  <ChatMessage
-                    ref={chatScroll}
-                    key={index}
-                    message={m.message}
-                    sender={findMessageSender(m.nickname)}
-                  />
-                ))}
-              </Stack>
-            </Flex>
-          </div>
-          <Flex>
-            <Input
-              width="75%"
-              focusBorderColor="#0067AC"
-              placeholder="채팅 메세지를 입력해보세요"
-              ref={inputRef}
-              value={message}
-              onChange={handleChange}
-              onKeyPress={handlePressKey}
-            />
-            <Spacer />
-            <Button id="sendButton" onClick={sendMessage}>
-              보내기
-            </Button>
-          </Flex>
-        </div>
-      </Flex>
-    </div>
+        <Flex>
+          <Input
+            width="75%"
+            focusBorderColor="#0067AC"
+            placeholder="채팅 메세지를 입력해보세요"
+            ref={inputRef}
+            value={message}
+            onChange={handleChange}
+            onKeyPress={handlePressKey}
+          />
+          <Spacer />
+          <Button id="sendButton" onClick={sendMessage}>
+            보내기
+          </Button>
+        </Flex>
+      </div>
+    </Flex>
   );
 }
