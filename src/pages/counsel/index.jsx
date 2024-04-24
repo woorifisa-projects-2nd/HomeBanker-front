@@ -37,6 +37,7 @@ import { IoVideocamOff, IoVideocam } from "react-icons/io5";
 import { jwtDecode } from "jwt-decode";
 import Exit from "../../components/counsel/Exit";
 import TransferTab from "../../components/board/admin/TransferTab";
+import { ModalContext } from "../../components/counsel/modal/ModalProvider";
 
 const SESSION_ID_LIST = [
   "Session1",
@@ -57,7 +58,7 @@ export default function Counsel() {
 
   const [mySessionId, setMySessionId] = useState(SESSION_ID_LIST[0]);
   const [myUserName, setMyUserName] = useState(
-    `Participant${Math.floor(Math.random() * 100)}`
+    `Participant${Math.floor(Math.random() * 100)}`,
   );
   const [session, setSession] = useState(undefined);
   const [publisher, setPublisher] = useState(undefined);
@@ -73,7 +74,11 @@ export default function Counsel() {
   const [productName, setProductName] = useState();
   const [amount, setAmount] = useState();
   const [period, setPeriod] = useState();
-  const [isModalDisplayed, setIsModalDisplayed] = useState(false);
+  // const [isModalDisplayed, setIsModalDisplayed] = useState(false);
+
+  const { state, actions } = useContext(ModalContext);
+  const { isModalDisplayed } = state;
+  const { setIsModalDisplayed } = actions;
 
   useEffect(() => {
     if (exit) {
@@ -124,7 +129,7 @@ export default function Counsel() {
       {},
       {
         headers: { "Content-Type": "application/json" },
-      }
+      },
     );
 
     const signalOptions = {
@@ -208,7 +213,7 @@ export default function Counsel() {
         { customSessionId: SESSION_ID_LIST[i], role: role },
         {
           headers: { "Content-Type": "application/json" },
-        }
+        },
       );
       if (response.data !== "full") {
         setMySessionId(SESSION_ID_LIST[i]);
@@ -231,7 +236,7 @@ export default function Counsel() {
       {},
       {
         headers: { "Content-Type": "application/json" },
-      }
+      },
     );
     return response.data; // The token
   };
@@ -265,7 +270,7 @@ export default function Counsel() {
           console.log(
             "There was an error connecting to the session:",
             error.code,
-            error.message
+            error.message,
           );
         }
       });
@@ -293,14 +298,11 @@ export default function Counsel() {
     setAudioStatus(publisher.stream.audioActive);
   };
 
-  useEffect(() => {
-    console.log(isModalDisplayed);
-  }, [isModalDisplayed]);
-
   // 상품 가입 정보 수신
   if (publisher !== undefined) {
     session.on("signal:enrollment", (e) => {
-      setIsModalDisplayed(true);
+      console.log(isModalDisplayed);
+
       const receivedData = JSON.parse(e.data);
       console.log("상품 이름 :", receivedData.product.productName);
       console.log("상품 금액 :", receivedData.amount);
@@ -309,6 +311,8 @@ export default function Counsel() {
       setProductName(receivedData.product.productName);
       setAmount(receivedData.amount);
       setPeriod(receivedData.period);
+      setIsModalDisplayed(true);
+      console.log(isModalDisplayed);
     });
   }
 
@@ -397,7 +401,7 @@ export default function Counsel() {
                       productName={productName}
                       amount={amount}
                       period={period}
-                      isModalDisplayed={isModalDisplayed}
+                      // isModalDisplayed={isModalDisplayed}
                     />
                   </TabPanel>
                 </TabPanels>

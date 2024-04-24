@@ -2,8 +2,9 @@ import React, { useContext, useState } from "react";
 import { Box, Input, Text, Button } from "@chakra-ui/react";
 import { TransferContext } from "./TransferTab";
 import useCheckRole from "../../../hook/useCheckRole";
-import { ModalList } from "../../../pages/counsel/modal/ModalList";
+import { ModalList } from "../../counsel/modal/ModalList";
 import useCheckId from "../../../hook/useCheckId";
+import { ModalContext } from "../../counsel/modal/ModalProvider";
 
 const EnrollmentTab = ({
   session,
@@ -11,13 +12,18 @@ const EnrollmentTab = ({
   productName,
   modalAmount,
   ModalPeriod,
-  isModalDisplayed,
+  // isModalDisplayed,
 }) => {
   const [amount, setAmount] = useState("");
   const [period, setPeriod] = useState("");
   const [bankerId, setBankerId] = useState(useCheckId().loginId);
 
   const { selectedProduct } = useContext(TransferContext);
+
+  const { state, actions } = useContext(ModalContext);
+  const { isModalDisplayed } = state;
+  const { setIsModalDisplayed } = actions;
+
   // const [isDisplayed, setIsDisplayed] = useState(isModalDisplayed);
 
   const handleAmountChange = (value) => {
@@ -76,7 +82,7 @@ const EnrollmentTab = ({
     if (modalMODE === "F") setModalMODE("S");
     else if (modalMODE === "S") setModalMODE("T");
     else if (modalMODE === "T") {
-      setIsDisplayed(false);
+      setIsModalDisplayed(false);
       setModalMODE("F");
     }
   };

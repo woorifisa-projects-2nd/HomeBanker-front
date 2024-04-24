@@ -1,4 +1,4 @@
-import CustomModal from "../../../components/Modal";
+import CustomModal from "../../Modal";
 import {
   Text,
   Stack,
@@ -6,13 +6,11 @@ import {
   ListItem,
   ListIcon,
   useRadioGroup,
-  HStack,
   Box,
 } from "@chakra-ui/react";
 
 import { TbSquareRoundedFilled } from "react-icons/tb";
-// import RadioCard from "../../../components/RadioCard";
-import Canvas from "../../../components/counsel/Canvas";
+import Canvas from "../Canvas";
 
 export const FModal = ({
   isOpen,
@@ -23,15 +21,6 @@ export const FModal = ({
   successMessage,
   successAction,
 }) => {
-  const options = ["예", "아니오"];
-
-  const { getRootProps, getRadioProps } = useRadioGroup({
-    name: "checkbox",
-    onChange: console.log,
-  });
-
-  const group = getRootProps();
-
   return (
     <>
       <CustomModal

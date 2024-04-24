@@ -34,6 +34,7 @@ const Canvas = () => {
   return (
     <div>
       <CanvasDraw
+        ref={canvasRef}
         color={color}
         canvasWidth={width}
         canvasHeight={height}

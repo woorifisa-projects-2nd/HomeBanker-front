@@ -1,4 +1,4 @@
-import CustomModal from "../../../components/Modal";
+import CustomModal from "../../Modal";
 import {
   Text,
   Stack,
@@ -23,16 +23,6 @@ export const TModal = ({
   successMessage,
   successAction,
 }) => {
-  const options = ["예", "아니오"];
-
-  const { getRootProps, getRadioProps } = useRadioGroup({
-    name: "동의여부",
-
-    onChange: console.log,
-  });
-
-  const group = getRootProps();
-
   return (
     <>
       <CustomModal
