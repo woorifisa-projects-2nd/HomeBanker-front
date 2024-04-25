@@ -14,6 +14,9 @@ import {
   Stack,
   Box,
   Flex,
+  Grid,
+  GridItem,
+  Image,
   Tabs,
   TabList,
   TabPanels,
@@ -32,12 +35,13 @@ import { useNavigate } from "react-router-dom";
 import CounselToolbar from "../../components/CounselToolbar";
 import { event } from "jquery";
 import { IoMdMic, IoMdMicOff } from "react-icons/io";
-import { IoVideocamOff, IoVideocam } from "react-icons/io5";
+import { IoVideocamOff, IoVideocam, IoLogOutOutline } from "react-icons/io5";
 
 import { jwtDecode } from "jwt-decode";
 import Exit from "../../components/counsel/Exit";
 import TransferTab from "../../components/board/admin/TransferTab";
 import { ModalContext } from "../../components/counsel/modal/ModalProvider";
+import WaitImage from "../../assets/image/background.svg";
 
 const SESSION_ID_LIST = [
   "Session1",
@@ -54,11 +58,10 @@ const SESSION_ID_LIST = [
 
 export default function Counsel() {
   const OV = useRef(new OpenVidu());
-  const { transcript, listening, toggleListening } = useSpeechToText();
 
   const [mySessionId, setMySessionId] = useState(SESSION_ID_LIST[0]);
   const [myUserName, setMyUserName] = useState(
-    `Participant${Math.floor(Math.random() * 100)}`,
+    `Participant${Math.floor(Math.random() * 100)}`
   );
   const [session, setSession] = useState(undefined);
   const [publisher, setPublisher] = useState(undefined);
@@ -89,7 +92,6 @@ export default function Counsel() {
           return nextTime;
         });
       }, 1000);
-
       return () => clearInterval(countdown);
     }
   }, [exit]);
@@ -99,6 +101,7 @@ export default function Counsel() {
 
     if (token) {
       const user = jwtDecode(token);
+
       return user.role;
     }
   };
@@ -129,7 +132,7 @@ export default function Counsel() {
       {},
       {
         headers: { "Content-Type": "application/json" },
-      },
+      }
     );
 
     const signalOptions = {
@@ -213,7 +216,7 @@ export default function Counsel() {
         { customSessionId: SESSION_ID_LIST[i], role: role },
         {
           headers: { "Content-Type": "application/json" },
-        },
+        }
       );
       if (response.data !== "full") {
         setMySessionId(SESSION_ID_LIST[i]);
@@ -236,7 +239,7 @@ export default function Counsel() {
       {},
       {
         headers: { "Content-Type": "application/json" },
-      },
+      }
     );
     return response.data; // The token
   };
@@ -270,7 +273,7 @@ export default function Counsel() {
           console.log(
             "There was an error connecting to the session:",
             error.code,
-            error.message,
+            error.message
           );
         }
       });
@@ -319,99 +322,119 @@ export default function Counsel() {
   return (
     <>
       {session !== undefined && publisher !== undefined ? (
-        <>
-          <Header />
-          <Box width="100%" height="100%">
-            {/* <div id="leaveCounsel" style={{position:'absolute', right:'400px', zIndex:'5'}}> */}
-            <Flex style={{ fontFamily: "WooriDaum" }}>
-              {videoStatus === true ? (
-                <Button onClick={camStatusChanged}>
-                  카메라 끄기
-                  <IoVideocamOff />
-                </Button>
-              ) : (
-                <Button onClick={camStatusChanged}>
-                  카메라 켜기
-                  <IoVideocam />
-                </Button>
-              )}
+        <Grid
+          position="relative"
+          height="100vh"
+          width="100vw"
+          templateColumns="repeat(8, 1fr)"
+        >
+          <GridItem colSpan={6} position="relative">
+            <Stack
+              bgColor={"black"}
+              zIndex="99"
+              position="absolute"
+              right="0"
+              space={0}
+            >
+              <Flex
+                width={8}
+                height={8}
+                justifyContent={"center"}
+                alignItems={"center"}
+                onClick={videoStatus ? camStatusChanged : camStatusChanged}
+              >
+                {videoStatus ? (
+                  <IoVideocamOff fontSize="27px" color="white" />
+                ) : (
+                  <IoVideocam fontSize="27px" color="white" />
+                )}
+              </Flex>
 
-              {audioStatus === true ? (
-                <Button onClick={micStatusChanged}>
-                  마이크 끄기 <IoMdMicOff />
-                </Button>
-              ) : (
-                <Button onClick={micStatusChanged}>
-                  마이크 켜기 <IoMdMic />
-                </Button>
-              )}
+              <Flex
+                width={8}
+                height={8}
+                justifyContent={"center"}
+                alignItems={"center"}
+                onClick={audioStatus ? micStatusChanged : micStatusChanged}
+              >
+                {audioStatus ? (
+                  <IoMdMicOff fontSize="30px" color="white" />
+                ) : (
+                  <IoMdMic />
+                )}
+              </Flex>
 
-              <Button onClick={leaveSession}>나가기</Button>
-            </Flex>
-            <Flex justify="center">
-              <div>
-                <Box id="videos" style={{ width: "1000px", height: "562.5px" }}>
-                  {publisher !== undefined ? (
-                    <UserVideoComponent streamManager={publisher} role="me" />
-                  ) : null}
-                  {subscribers.length === 0 ? (
-                    <div
-                      style={{
-                        backgroundColor: "grey",
-                        width: "1000px",
-                        height: "562.5px",
-                      }}
-                    ></div>
-                  ) : (
-                    subscribers.map((sub, i) => (
-                      <Fragment key={sub.id}>
-                        <UserVideoComponent streamManager={sub} role="other" />
-                      </Fragment>
-                    ))
-                  )}
+              <Flex
+                width={8}
+                height={8}
+                justifyContent={"center"}
+                alignItems={"center"}
+                cursor="pointer"
+                onClick={leaveSession}
+              >
+                <IoLogOutOutline fontSize="30px" color="white" />
+              </Flex>
+            </Stack>
+
+            <Box width="100%" position="absolute" top={0}>
+              {publisher !== undefined ? (
+                <UserVideoComponent streamManager={publisher} role="me" />
+              ) : null}
+            </Box>
+
+            {subscribers.length === 0 ? (
+              <>
+                <Image
+                  position="absolute"
+                  bottom={0}
+                  left={0}
+                  objectFit="cover"
+                  src={WaitImage}
+                  width="100%"
+                  maxHeight="100vh"
+                />
+                <Box width="100%" height="100%" bgColor={"#C8DFFA"} />
+              </>
+            ) : (
+              subscribers.map((sub, i) => (
+                <Box key={i}>
+                  <UserVideoComponent streamManager={sub} role="other" />
                 </Box>
-                <div id="subtitle">
-                  <h1>음성인식 자막</h1>
-                  <textarea
-                    className="transcript"
-                    value={transcript}
-                    onChange={() => {}}
-                  />
-                  <button onClick={toggleListening}>
-                    {" "}
-                    {listening ? "음성인식 중지" : "음성인식 시작"}{" "}
-                  </button>
-                </div>
-              </div>
-              <Tabs>
-                <TabList>
-                  <Tab>채팅</Tab>
-                  {getUserRole() === "ROLE_ADMIN" ? <Tab>상품</Tab> : null}
-                </TabList>
-                <TabPanels>
-                  <TabPanel>
-                    {publisher !== undefined ? (
-                      <ChatComponent user={publisher} />
-                    ) : null}
-                  </TabPanel>
-                  <TabPanel>
-                    <TransferTab
-                      session={session}
-                      user={publisher}
-                      productName={productName}
-                      amount={amount}
-                      period={period}
-                      // isModalDisplayed={isModalDisplayed}
-                    />
-                  </TabPanel>
-                </TabPanels>
-              </Tabs>
-            </Flex>
-            <CounselToolbar publisher={publisher} />
-          </Box>
+              ))
+            )}
 
+            <CounselToolbar publisher={publisher} />
+          </GridItem>
+
+          <GridItem colSpan={2}>
+            {/* 여기 안에서 탭 관리 */}
+            <Tabs>
+              <TabList>
+                <Tab>채팅</Tab>
+                {getUserRole() === "ROLE_ADMIN" ? <Tab>상품</Tab> : null}
+              </TabList>
+              <TabPanels>
+                <TabPanel>
+                  {publisher !== undefined ? (
+                    <ChatComponent user={publisher} />
+                  ) : null}
+                </TabPanel>
+                <TabPanel>
+                  <TransferTab
+                    session={session}
+                    user={publisher}
+                    productName={productName}
+                    amount={amount}
+                    period={period}
+                    user={publisher}
+                    // isModalDisplayed={isModalDisplayed}
+                  />
+                </TabPanel>
+              </TabPanels>
+            </Tabs>
+          </GridItem>
           {exit === true ? <Exit time={time} /> : null}
-        </>
+        </Grid>
       ) : (
         <Stack style={{ fontFamily: "WooriDaum" }} alignItems="center">
           <Text>웃는 얼굴로 고객을 맞아주세요</Text>
