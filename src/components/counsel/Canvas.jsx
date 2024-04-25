@@ -40,13 +40,13 @@ const Canvas = () => {
 
   return (
     <div>
-      <button
+      {/* <button
         type="button"
         style={{ backgroundColor: "#0A71F1", color: "white" }}
         onClick={save}
       >
         Export Drawing
-      </button>
+      </button> */}
 
       <SignatureCanvas
         ref={signCanvas}
