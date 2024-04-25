@@ -1,6 +1,7 @@
 import "regenerator-runtime";
 import { api } from "../../api/api";
 import React from "react";
+import { TfiWrite } from "react-icons/tfi";
 import {
   Button,
   useToast,
@@ -16,7 +17,8 @@ import CustomModal from "../../components/Modal";
 import Mic from "../../assets/icon/mic.svg?react";
 import useSpeechToText from "../../hook/useSpeechToText";
 import BoardsTab from "../../components/board/admin/BoardsTab";
-
+import Header from "../../components/Header";
+import "./board.css";
 export default function Board() {
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -53,12 +55,60 @@ export default function Board() {
     onClose();
   };
 
+  const commonCellStyle = {
+    fontFamily: "Noto Sans",
+    fontStyle: "normal",
+    fontSize: "30px",
+    lineHeight: "17px",
+    color: "black",
+    margin: "50px",
+  };
   return (
     <>
-      <Text>유저 상담게시판</Text>
-      <Button onClick={onOpen}>문의 작성</Button>
+      <Header />
+      <Text
+        style={{
+          ...commonCellStyle,
+          fontWeight: 600,
+          width: "250px",
+          height: "25px",
+          padding: "20px",
+          paddingBottom: "30px",
+          borderBottom: "5px solid #3686DF",
+        }}
+      >
+        고객 상담게시판
+      </Text>
+      <Flex
+        alignItems="center"
+        justifyContent="space-between"
+        style={{
+          ...commonCellStyle,
+          marginTop: "-20px",
+        }}
+      >
+        <Text
+          style={{
+            fontWeight: 200,
+            fontSize: "25px",
+          }}
+        >
+          문의하실 내용을 작성하시면 3일 이내로 답변 드리겠습니다.
+        </Text>
+        <Button
+          size="lg"
+          bg="#17CC8B"
+          _hover={{
+            bg: "#15b481",
+          }}
+          onClick={onOpen}
+          style={{ color: "white", fontSize: "1.5rem", marginRight: "30px" }}
+        >
+          <TfiWrite size="24px" color="white" style={{ marginRight: "8px" }} />
+          문의 작성
+        </Button>
+      </Flex>
       <BoardsTab displayChangeStatus={false} />
-
       <CustomModal
         title={"문의 작성"}
         isOpen={isOpen}
