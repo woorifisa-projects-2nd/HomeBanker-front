@@ -1,15 +1,22 @@
-import CanvasDraw from "react-canvas-draw";
-
-import React, { useState, useEffect } from "react";
+import SignatureCanvas from "react-signature-canvas";
+import React, { useState, useEffect, useRef } from "react";
+import axios from "axios";
 
 const Canvas = () => {
-  const [color, setColor] = useState("#FFFFFF");
   const [width, setWidth] = useState(518);
   const [height, setHeight] = useState(250);
-  const [brushRadius, setBrushRadius] = useState(5);
-  const [lazyRadius, setLazyRadius] = useState(5);
   const [backgroundImg, setBackgroundImg] = useState("");
   const [imgs, setImgs] = useState([]);
+
+  const signCanvas = useRef();
+
+  const save = () => {
+    const image = signCanvas.current.toDataURL("image/png");
+    const link = document.createElement("a");
+    link.href = image;
+    link.download = "sign_image.png";
+    link.click();
+  };
 
   useEffect(() => {
     // 2초마다 배경 이미지 변경
@@ -33,14 +40,22 @@ const Canvas = () => {
 
   return (
     <div>
-      <CanvasDraw
-        ref={canvasRef}
-        color={color}
-        canvasWidth={width}
-        canvasHeight={height}
-        brushRadius={brushRadius}
-        lazyRadius={lazyRadius}
-        onChange={() => console.log("onChange")}
+      <button
+        type="button"
+        style={{ backgroundColor: "#0A71F1", color: "white" }}
+        onClick={save}
+      >
+        Export Drawing
+      </button>
+
+      <SignatureCanvas
+        ref={signCanvas}
+        canvasProps={{
+          className: "signature-canvas",
+          width: width,
+          height: height,
+        }}
+        clearOnResize={false}
       />
     </div>
   );
