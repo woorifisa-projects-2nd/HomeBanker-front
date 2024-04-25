@@ -31,11 +31,13 @@ export default function CounselToolbar({ publisher }) {
   const { transcript, listening, toggleListening } = useSpeechToText();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const scrollToEnd = useCallback(() => {
-    if (speechRef.current) {
-      speechRef.current.scrollLeft = speechRef.current.scrollWidth;
-    }
-  }, [speechRef.current]);
+  // NOTE : 음성인식 -> 자막 코드
+  // 음성인식 내용 늘어나면 끝으로 자동 스크롤 시키는 함수
+  // const scrollToEnd = useCallback(() => {
+  //   if (speechRef.current) {
+  //     speechRef.current.scrollLeft = speechRef.current.scrollWidth;
+  //   }
+  // }, [speechRef.current]);
 
   const sendMessage = () => {
     if (publisher) {
@@ -72,16 +74,17 @@ export default function CounselToolbar({ publisher }) {
     }
   });
 
-  useEffect(() => {
-    if (transcript.length > 10) {
-      scrollToEnd();
-    }
-  }, [transcript]);
+  // NOTE : 음성인식 -> 자막 코드
+  // useEffect(() => {
+  //   if (transcript.length > 10){
+  //     scrollEnd();
+  //   }
+  // }, [transcript]);
 
   return (
     <>
       <Flex position="absolute" bottom={0} width={"100%"} bgColor={"black"}>
-        {role === "ROLE_ADMIN" && (
+        {role === "ROLE_ADMIN" ? (
           <HStack spacing={10} p={2} margin={"0 auto"} width={"fit-content"}>
             <HStack>
               <RoundCheck fill={isIdentifiedUser ? "#3686DF" : "#D3D3D3"} />
@@ -111,9 +114,7 @@ export default function CounselToolbar({ publisher }) {
               </Text>
             </HStack>
           </HStack>
-        )}
-
-        {role === "ROLE_CUSTOMER" && (
+        ) : (
           <Box
             width={"100%"}
             height={100}
