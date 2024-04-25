@@ -1,4 +1,5 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import ModalProvider from "./components/counsel/modal/ModalProvider";
 
 const pages = import.meta.glob("./pages/**/*.jsx", { eager: true });
 
@@ -30,7 +31,11 @@ const router = createBrowserRouter(
 );
 
 function App() {
-  return <RouterProvider router={router} />;
+  return (
+    <ModalProvider>
+      <RouterProvider router={router} />
+    </ModalProvider>
+  );
 }
 
 export default App;
