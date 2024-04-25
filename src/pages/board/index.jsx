@@ -18,7 +18,6 @@ import Mic from "../../assets/icon/mic.svg?react";
 import useSpeechToText from "../../hook/useSpeechToText";
 import BoardsTab from "../../components/board/admin/BoardsTab";
 import Header from "../../components/Header";
-import "./board.css";
 export default function Board() {
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
