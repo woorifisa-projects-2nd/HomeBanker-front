@@ -17,7 +17,6 @@ import { BOARD_PAGINATION_SIZE } from "../../../constants/index";
 import { api } from "../../../api/api";
 import NoReply from "../../../assets/icon/NoReply.svg";
 import YesReply from "../../../assets/icon/YesReply.svg";
-
 // 공통으로 사용할 스타일 객체 정의
 const commonCellStyle = {
   fontFamily: "Noto Sans",
@@ -26,7 +25,6 @@ const commonCellStyle = {
   fontSize: "28px",
   lineHeight: "40px",
   color: "black",
-  // textAlign: "center",
 };
 
 export default function BoardsTab({ displayChangeStatus = true }) {
@@ -40,7 +38,7 @@ export default function BoardsTab({ displayChangeStatus = true }) {
   });
   const [boardsData, isLoading, refetchBoards] = useBoardsQuery(
     BOARD_PAGINATION_SIZE,
-    pagination.currentPage,
+    pagination.currentPage
   );
   console.log(boardsData);
   // 상담 처리 완료 API
@@ -119,14 +117,22 @@ export default function BoardsTab({ displayChangeStatus = true }) {
                     <Th style={{ ...commonCellStyle, textAlign: "center" }}>
                       유선 회신 여부
                     </Th>
-                    <Th style={{ ...commonCellStyle, textAlign: "center" }}>
-                      담당자 이름
-                    </Th>
+                    {displayChangeStatus ? (
+                      <Th style={{ ...commonCellStyle, textAlign: "center" }}>
+                        고객 이름
+                      </Th>
+                    ) : (
+                      <Th style={{ ...commonCellStyle, textAlign: "center" }}>
+                        담당자 이름
+                      </Th>
+                    )}
                     <Th style={{ ...commonCellStyle, textAlign: "center" }}>
                       처리일
                     </Th>
                     {displayChangeStatus && (
-                      <Th style={{ ...commonCellStyle }}>처리 완료</Th>
+                      <Th style={{ ...commonCellStyle, textAlign: "center" }}>
+                        관리
+                      </Th>
                     )}
                   </Tr>
                 </Thead>
@@ -153,17 +159,28 @@ export default function BoardsTab({ displayChangeStatus = true }) {
                       </Td>
                       <Td style={{ textAlign: "center" }}>{item.updatedAt}</Td>
                       {displayChangeStatus && (
-                        <Td>
+                        <Td style={{ textAlign: "center" }}>
                           <Button
                             bgColor={item.replyYN === "Y" ? "gray" : "blue"}
                             onClick={() => changeBoardStatus(item.boardId)}
                             isDisabled={item.replyYN === "Y"}
+                            w="120px"
+                            h="50px"
+                            borderRadius="20px"
+                            backgroundColor="#DBF6CC"
+                            color="#006B3A"
+                            marginRight="10px"
                           >
                             처리완료
                           </Button>
                           <Button
                             bgColor="red"
                             onClick={() => deleteBoard(item.boardId)}
+                            w="120px"
+                            h="50px"
+                            borderRadius="20px"
+                            backgroundColor="#FDE2E2"
+                            color="#BD1818"
                           >
                             삭제
                           </Button>

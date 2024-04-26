@@ -28,6 +28,7 @@ import UserVideoComponent from "../../components/UserVideoComponent";
 import { api } from "../../api/api";
 import ChatComponent from "../../components/Chat";
 import useSpeechToText from "../../hook/useSpeechToText";
+import logoLogin from "../../assets/icon/logoLogin.svg";
 import CheckIdentification from "../../components/CheckIdentification";
 import Header from "../../components/Header";
 import "./counsel.css";
@@ -39,6 +40,7 @@ import { IoVideocamOff, IoVideocam, IoLogOutOutline } from "react-icons/io5";
 
 import { jwtDecode } from "jwt-decode";
 import Exit from "../../components/counsel/Exit";
+import Notice from "../../components/counsel/Notice";
 import TransferTab from "../../components/board/admin/TransferTab";
 import { ModalContext } from "../../components/counsel/modal/ModalProvider";
 import WaitImage from "../../assets/image/background.svg";
@@ -447,14 +449,54 @@ export default function Counsel() {
           </GridItem>
           {exit === true ? <Exit time={time} /> : null}
         </Grid>
-      ) : (
-        <Stack style={{ fontFamily: "WooriDaum" }} alignItems="center">
+      ) : getUserRole() === "ROLE_ADMIN" ? (
+        <>
           <Header />
-          <Text>웃는 얼굴로 고객을 맞아주세요</Text>
-          <Button size="lg" onClick={joinSession}>
-            화상 상담 시작
-          </Button>
-        </Stack>
+          <div
+            style={{
+              position: "fixed",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%,-50%)",
+            }}
+          >
+            <Flex
+              style={{ fontFamily: "WooriDaum", fontSize: "30px" }}
+              align="center"
+              direction="column"
+            >
+              <img src={logoLogin} alt="NoImage" style={{ margin: "20px" }} />
+              <Text>웃는 얼굴로 고객을 맞아주세요</Text>
+              <div style={{ height: "50px" }}></div>
+              <Button
+                size="lg"
+                onClick={joinSession}
+                style={{
+                  width: "300px",
+                  height: "80px",
+                  fontSize: "25px",
+                  fontFamily: "WooriDaumR",
+                }}
+              >
+                화상 상담 시작
+              </Button>
+            </Flex>
+          </div>
+        </>
+      ) : (
+        <>
+          <Header />
+          <div
+            style={{
+              position: "fixed",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%,-50%)",
+            }}
+          >
+            <Notice joinSession={joinSession}></Notice>
+          </div>
+        </>
       )}
     </>
   );

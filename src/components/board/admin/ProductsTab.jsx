@@ -23,6 +23,7 @@ const PRODUCT_TYPE = {
   예적금: "deposit",
   대출: "loan",
 };
+
 export default function ProductsTab({
   selectedProduct,
   setSelectedProduct,
@@ -41,7 +42,7 @@ export default function ProductsTab({
   const [productsData, isLoading, refetchProducts] = useProductsQuery(
     selectedCategory,
     pagination.currentPage,
-    BOARD_PAGINATION_SIZE,
+    BOARD_PAGINATION_SIZE
   );
 
   // 상품 노출 변경
@@ -85,6 +86,15 @@ export default function ProductsTab({
     }
   };
 
+  const commonCellStyle = {
+    fontFamily: "Noto Sans",
+    fontStyle: "normal",
+    fontWeight: 700,
+    fontSize: "28px",
+    lineHeight: "40px",
+    color: "black",
+  };
+
   return (
     <>
       {isLoading ? (
@@ -95,8 +105,11 @@ export default function ProductsTab({
             onChange={(e) => {
               setSelectedCategory(e.target.value);
             }}
-            width={"150px"}
+            w="150px"
             variant="outline"
+            marginLeft="50px"
+            marginBottom="20px"
+            border="1px solid black"
           >
             {Object.entries(PRODUCT_TYPE).map((item) => (
               <Fragment key={item[1]}>
@@ -106,20 +119,35 @@ export default function ProductsTab({
           </Select>
 
           {products && (
-            <TableContainer>
+            <TableContainer
+              style={{
+                ...commonCellStyle,
+                marginLeft: "50px",
+                marginRight: "50px",
+              }}
+            >
               <Table variant="simple">
-                {/* 테이블 헤더 */}
                 <Thead>
-                  <Tr>
-                    <Th>상품 분류</Th>
-                    <Th>상품 이름</Th>
-                    <Th>상품 금리</Th>
-                    <Th>상품 설명</Th>
-                    {isDisplayed && <Th>상품 노출</Th>}
+                  <Tr bg="#dcecff">
+                    <Th style={{ ...commonCellStyle, textAlign: "center" }}>
+                      상품 분류
+                    </Th>
+                    <Th style={{ ...commonCellStyle, textAlign: "center" }}>
+                      상품 이름
+                    </Th>
+                    <Th style={{ ...commonCellStyle, textAlign: "center" }}>
+                      상품 금리
+                    </Th>
+                    <Th style={{ ...commonCellStyle, textAlign: "center" }}>
+                      상품 설명
+                    </Th>
+                    {isDisplayed && (
+                      <Th style={{ ...commonCellStyle, textAlign: "center" }}>
+                        상품 노출
+                      </Th>
+                    )}
                   </Tr>
                 </Thead>
-
-                {/* 테이블 바디 */}
                 <Tbody>
                   {products.map((item) => {
                     return (
@@ -135,13 +163,21 @@ export default function ProductsTab({
                         }
                         _hover={{ backgroundColor: "gray.100" }}
                       >
-                        <Td>{item.productCode.typeName ?? ""}</Td>
-                        <Td>{item.productName ?? ""}</Td>
-                        <Td>{item.productInterest ?? 0}</Td>
-                        <Td>{item.productDescription ?? ""}</Td>
+                        <Td style={{ textAlign: "center", lineHeight: "40px" }}>
+                          {item.productCode.typeName}
+                        </Td>
+                        <Td style={{ textAlign: "center" }}>
+                          {item.productName}
+                        </Td>
+                        <Td style={{ textAlign: "center" }}>
+                          {item.productInterest}
+                        </Td>
+                        <Td style={{ textAlign: "center" }}>
+                          {item.productDescription}
+                        </Td>
 
                         {isDisplayed && (
-                          <Td>
+                          <Td style={{ textAlign: "center" }}>
                             <Switch
                               size="lg"
                               isChecked={item.isShown}
@@ -159,16 +195,18 @@ export default function ProductsTab({
             </TableContainer>
           )}
 
-          {pagination.totalItems > 0 && (
-            <Pagination
-              pagination={pagination}
-              setPagination={setPagination}
-              totalItems={pagination.totalItems}
-              itemCountPerPage={pagination.itemCountPerPage}
-              pageCount={pagination.pageCount}
-              currentPage={pagination.currentPage}
-            />
-          )}
+          <div style={{ marginTop: "30px" }}>
+            {pagination.totalItems > 0 && (
+              <Pagination
+                pagination={pagination}
+                setPagination={setPagination}
+                totalItems={pagination.totalItems}
+                itemCountPerPage={pagination.itemCountPerPage}
+                pageCount={pagination.pageCount}
+                currentPage={pagination.currentPage}
+              />
+            )}
+          </div>
         </>
       )}
     </>
