@@ -70,6 +70,15 @@ export default function Counsel() {
   const [exit, setExit] = useState(false);
   const [time, setTime] = useState(5);
 
+  const tabRef = useRef();
+  const tabHeight = useMemo(() => {
+    if (tabRef.current) {
+      return tabRef.current.offsetHeight;
+    } else {
+      return 0;
+    }
+  }, [tabRef.current]);
+
   useEffect(() => {
     if (exit) {
       const countdown = setInterval(() => {
@@ -380,12 +389,16 @@ export default function Counsel() {
               ))
             )}
 
-            <CounselToolbar publisher={publisher} />
+            <CounselToolbar publisher={publisher} subscriber={subscribers[0]} />
           </GridItem>
 
           <GridItem colSpan={2}>
             {/* 여기 안에서 탭 관리 */}
-            <Tabs>
+            <Tabs
+              maxHeight="100vh"
+              ref={tabRef}
+              height={`calc(100vh - ${tabHeight})`}
+            >
               <TabList>
                 <Tab>채팅</Tab>
                 {getUserRole() === "ROLE_ADMIN" ? <Tab>상품</Tab> : null}
@@ -407,6 +420,7 @@ export default function Counsel() {
         </Grid>
       ) : (
         <Stack style={{ fontFamily: "WooriDaum" }} alignItems="center">
+          <Header />
           <Text>웃는 얼굴로 고객을 맞아주세요</Text>
           <Button size="lg" onClick={joinSession}>
             화상 상담 시작
