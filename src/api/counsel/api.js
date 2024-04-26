@@ -59,7 +59,7 @@ const getAuthUser = () => {
 
 export const useAuth = () => {
   return useQuery({
-    queryKey: "authUser",
+    queryKey: ["authUser", document.cookie.split("=")[1]],
     queryFn: () => getAuthUser(),
   });
 };
