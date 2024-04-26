@@ -5,6 +5,7 @@ import React, {
   useMemo,
   useRef,
   useState,
+  useContext,
 } from "react";
 import { OpenVidu } from "openvidu-browser";
 import {
@@ -21,6 +22,7 @@ import {
   TabPanels,
   Tab,
   TabPanel,
+  useDisclosure,
 } from "@chakra-ui/react";
 import UserVideoComponent from "../../components/UserVideoComponent";
 import { api } from "../../api/api";
@@ -38,6 +40,7 @@ import { IoVideocamOff, IoVideocam, IoLogOutOutline } from "react-icons/io5";
 import { jwtDecode } from "jwt-decode";
 import Exit from "../../components/counsel/Exit";
 import TransferTab from "../../components/board/admin/TransferTab";
+import { ModalContext } from "../../components/counsel/modal/ModalProvider";
 import WaitImage from "../../assets/image/background.svg";
 
 const SESSION_ID_LIST = [
@@ -69,6 +72,16 @@ export default function Counsel() {
   const [audioStatus, setAudioStatus] = useState(true);
   const [exit, setExit] = useState(false);
   const [time, setTime] = useState(5);
+
+  // 상품가입정보
+  const [productName, setProductName] = useState();
+  const [amount, setAmount] = useState();
+  const [period, setPeriod] = useState();
+  // const [isModalDisplayed, setIsModalDisplayed] = useState(false);
+
+  const { state, actions } = useContext(ModalContext);
+  const { isModalDisplayed } = state;
+  const { setIsModalDisplayed } = actions;
 
   useEffect(() => {
     if (exit) {
@@ -291,8 +304,18 @@ export default function Counsel() {
   // 상품 가입 정보 수신
   if (publisher !== undefined) {
     session.on("signal:enrollment", (e) => {
+      console.log(isModalDisplayed);
+
       const receivedData = JSON.parse(e.data);
-      console.log("전달받은 데이터 :", receivedData);
+      console.log("상품 이름 :", receivedData.product.productName);
+      console.log("상품 금액 :", receivedData.amount);
+      console.log("가입 기간 :", receivedData.period);
+      console.log("은행원 ID :", receivedData.bankerId);
+      setProductName(receivedData.product.productName);
+      setAmount(receivedData.amount);
+      setPeriod(receivedData.period);
+      setIsModalDisplayed(true);
+      console.log(isModalDisplayed);
     });
   }
 
@@ -397,12 +420,18 @@ export default function Counsel() {
                   ) : null}
                 </TabPanel>
                 <TabPanel>
-                  <TransferTab session={session} user={publisher} />
+                  <TransferTab
+                    session={session}
+                    user={publisher}
+                    productName={productName}
+                    amount={amount}
+                    period={period}
+                    // isModalDisplayed={isModalDisplayed}
+                  />
                 </TabPanel>
               </TabPanels>
             </Tabs>
           </GridItem>
-
           {exit === true ? <Exit time={time} /> : null}
         </Grid>
       ) : (
