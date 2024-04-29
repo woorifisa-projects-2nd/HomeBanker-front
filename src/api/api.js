@@ -5,7 +5,7 @@ const cookies = new Cookies();
 
 export const api = Axios.create({
   //baseURL: `http://localhost:8080`,
-  baseURL: `hhttps://homebanker-f.shop:5173`,
+  baseURL: `https://homebanker-f.shop:5173`,
   headers: {
     "Content-Type": "application/json;charset=UTF-8",
     "Access-Control-Allow-Origin": "https://homebanker-f.shop",
