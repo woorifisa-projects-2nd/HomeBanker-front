@@ -23,7 +23,7 @@ import Capture from "../assets/icon/capture.svg";
 import { IoChatboxEllipses } from "react-icons/io5";
 import useSpeechToText from "../hook/useSpeechToText";
 
-export default function CounselToolbar({ publisher }) {
+export default function CounselToolbar({ publisher, subscriber }) {
   const [isIdentifiedUser, setIdentifyUser] = useState(false);
   const { role } = useCheckRole();
   const speechRef = useRef(null);
@@ -139,7 +139,7 @@ export default function CounselToolbar({ publisher }) {
         onOpen={onOpen}
         setIdentifyUser={setIdentifyUser}
         isIdentifiedUser={isIdentifiedUser}
-        streamManager={publisher}
+        streamManager={role === "ROLE_ADMIN" ? subscriber : publisher}
       />
     </>
   );

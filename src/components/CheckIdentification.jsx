@@ -94,24 +94,41 @@ export default function CheckIdentification({
   };
 
   return (
-    <CustomModal size={"4xl"} isOpen={isOpen} onClose={onClose}>
+    <CustomModal
+      size={"4xl"}
+      width={530}
+      height={511}
+      isOpen={isOpen}
+      onClose={onClose}
+      successAction={role === "ROLE_ADMIN" && onCapture}
+      successMessage={role === "ROLE_ADMIN" && "캡쳐하기"}
+    >
       <>
-        <ModalCloseButton onClose={onClose} />
+        {role === "ROLE_ADMIN" && <ModalCloseButton onClose={onClose} />}
         {isLoading ? <Spinner /> : <></>}
-        <Stack flexDirection="column" alignItems="center">
-          <Text>사각형에 맞게 신분증을 가로로 놓아주세요.</Text>
+        <Stack
+          flexDirection="column"
+          alignItems="center"
+          fontSize={"24px"}
+          spacing={10}
+        >
+          <Stack>
+            <Text textAlign={"center"}>사각형에 맞게 </Text>
+            <Text textAlign={"center"}>신분증을 가로로 놓아주세요.</Text>
+          </Stack>
           {streamManager !== undefined && (
             <Box ref={videoRef}>
               <OpenViduVideoComponent
+                displayMargin={false}
                 size={"100%"}
                 streamManager={streamManager}
               />
             </Box>
           )}
         </Stack>
-        {role === "ROLE_ADMIN" && (
+        {/* {role === "ROLE_ADMIN" && (
           <Button onClick={onCapture}>{"캡쳐하기"}</Button>
-        )}
+        )} */}
       </>
     </CustomModal>
   );
