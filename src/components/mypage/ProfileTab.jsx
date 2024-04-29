@@ -7,7 +7,19 @@ import {
   FormLabel,
   VStack,
   Text,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalCloseButton,
+  useDisclosure,
+  Flex,
+  Image,
+  InputGroup,
+  InputRightElement,
 } from "@chakra-ui/react";
+import DaumPostcode from "react-daum-postcode";
+import logo from "../../assets/icon/logoLogin.svg";
 
 export default function ProfileTab() {
   const [userInfo, setUserInfo] = useState({
@@ -16,6 +28,38 @@ export default function ProfileTab() {
     phone: "",
     address: "",
   });
+
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const handleAddress = (data) => {
+    let fullAddress = data.address;
+    let extraAddress = "";
+
+    if (data.addressType === "R") {
+      if (data.bname !== "") {
+        extraAddress += data.bname;
+      }
+      if (data.buildingName !== "") {
+        extraAddress +=
+          extraAddress !== "" ? `, ${data.buildingName}` : data.buildingName;
+      }
+      fullAddress += extraAddress !== "" ? ` (${extraAddress})` : "";
+    }
+    setUserInfo({ ...userInfo, address: fullAddress });
+    onClose();
+  };
+
+  const addressInput = () => {
+    const themeObj = {
+      postcodeTextColor: "#FA7142",
+      emphTextColor: "#333333",
+    };
+    return (
+      <div>
+        <DaumPostcode theme={themeObj} />
+      </div>
+    );
+  };
 
   const formattedJoinDate = userInfo.joinDate
     ? new Date(userInfo.joinDate).toLocaleDateString("ko-KR", {
@@ -53,41 +97,88 @@ export default function ProfileTab() {
     setUserInfo((prevState) => ({ ...prevState, [field]: value }));
   };
 
+  const commonCellStyle = {
+    fontFamily: "Noto Sans",
+    fontStyle: "normal",
+    fontWeight: 700,
+    fontSize: "28px",
+    lineHeight: "40px",
+    color: "#575757",
+  };
+
   return (
-    <div>
+    <Flex
+      direction="column"
+      alignItems="center"
+      justifyContent="center"
+      marginTop="-50px"
+    >
       <VStack spacing={4}>
-        <FormControl>
-          <FormLabel htmlFor="name">이름</FormLabel>
-          <Input
-            id="name"
-            value={userInfo.name}
-            onChange={(e) => handleChange("name", e.target.value)}
-          />
-        </FormControl>
-        <FormControl>
-          <FormLabel>가입일</FormLabel>
-          <Text>{formattedJoinDate}</Text>
-        </FormControl>
-        <FormControl>
-          <FormLabel htmlFor="phone">전화번호</FormLabel>
+        <Image src={logo} alt="logo" marginBottom="30px" marginTop="100px" />
+        <Flex as={FormControl} alignItems="center" gap="4" marginBottom="20px">
+          <FormLabel htmlFor="name" mb="0" w="100px" sx={commonCellStyle}>
+            이름
+          </FormLabel>
+          <Text id="name" w="800px" sx={commonCellStyle}>
+            {userInfo.name}
+          </Text>
+        </Flex>
+        <Flex as={FormControl} alignItems="center" gap="4" marginBottom="20px">
+          <FormLabel mb="0" w="100px" sx={commonCellStyle}>
+            가입일
+          </FormLabel>
+          <Text w="800px" sx={commonCellStyle}>
+            {formattedJoinDate}
+          </Text>
+        </Flex>
+        <Flex as={FormControl} alignItems="center" gap="4" marginBottom="20px">
+          <FormLabel htmlFor="phone" mb="0" w="100px" sx={commonCellStyle}>
+            전화번호
+          </FormLabel>
           <Input
             id="phone"
             value={userInfo.phone}
+            w="800px"
+            sx={commonCellStyle}
             onChange={(e) => handleChange("phone", e.target.value)}
           />
-        </FormControl>
-        <FormControl>
-          <FormLabel htmlFor="address">주소</FormLabel>
-          <Input
-            id="address"
-            value={userInfo.address}
-            onChange={(e) => handleChange("address", e.target.value)}
-          />
-        </FormControl>
-        <Button colorScheme="teal" size="lg" onClick={handleUpdateAll}>
-          확인
+        </Flex>
+        <Flex as={FormControl} alignItems="center" gap="4" marginBottom="20px">
+          <FormLabel htmlFor="address" mb="0" w="115px" sx={commonCellStyle}>
+            주소
+          </FormLabel>
+          <InputGroup>
+            <Input
+              id="address"
+              value={userInfo.address}
+              w="800px"
+              sx={commonCellStyle}
+              onChange={(e) => handleChange("address", e.target.value)}
+            />
+            <InputRightElement width="4.5rem" marginRight="30px" height="100%">
+              <Button h="1.75rem" size="sm" onClick={onOpen}>
+                주소찾기
+              </Button>
+            </InputRightElement>
+          </InputGroup>
+        </Flex>
+        <Modal isOpen={isOpen} onClose={onClose}>
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader>주소 검색</ModalHeader>
+            <ModalCloseButton />
+            <DaumPostcode onComplete={handleAddress} />
+          </ModalContent>
+        </Modal>
+        <Button
+          colorScheme="teal"
+          size="lg"
+          onClick={handleUpdateAll}
+          style={{ background: "#3686DF", width: "800px", fontSize: "30px" }}
+        >
+          편집하기
         </Button>
       </VStack>
-    </div>
+    </Flex>
   );
 }
