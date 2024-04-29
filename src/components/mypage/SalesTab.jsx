@@ -52,6 +52,15 @@ export default function SalesTab() {
       : "";
   };
 
+  const commonCellStyle = {
+    fontFamily: "Noto Sans",
+    fontStyle: "normal",
+    fontWeight: 700,
+    fontSize: "28px",
+    lineHeight: "40px",
+    color: "black",
+  };
+
   return (
     <>
       {isLoading ? (
@@ -62,23 +71,42 @@ export default function SalesTab() {
             <TableContainer>
               <Table variant="simple">
                 <Thead>
-                  <Tr>
-                    <Th>상품 이름</Th>
-                    <Th>상품 설명</Th>
-                    <Th>가입 날짜</Th>
-                    <Th>상품 금액 (원)</Th>
-                    <Th>상품 기간 (달)</Th>
+                  <Tr bg="#dcecff">
+                    <Th sx={commonCellStyle} textAlign="center">
+                      상품 이름
+                    </Th>
+                    <Th sx={commonCellStyle} textAlign="center">
+                      상품 설명
+                    </Th>
+                    <Th sx={commonCellStyle} textAlign="center">
+                      가입 날짜
+                    </Th>
+                    <Th sx={commonCellStyle} textAlign="center">
+                      상품 금액 (원)
+                    </Th>
+                    <Th sx={commonCellStyle} textAlign="center">
+                      상품 기간 (달)
+                    </Th>
                   </Tr>
                 </Thead>
                 <Tbody>
                   {sales.map((item) => (
                     <Tr key={item.saleId}>
-                      <Td>{item.productName}</Td>
-                      <Td>{item.productDescription}</Td>
-                      <Td>{formatDate(item.createdAt)}</Td>{" "}
-                      {/* 날짜 포맷 적용 */}
-                      <Td>{item.saleAmount}</Td>
-                      <Td>{item.saleMonth}</Td>
+                      <Td sx={commonCellStyle} textAlign="center">
+                        {item.productName}
+                      </Td>
+                      <Td sx={commonCellStyle} textAlign="center">
+                        {item.productDescription}
+                      </Td>
+                      <Td sx={commonCellStyle} textAlign="center">
+                        {formatDate(item.createdAt)}
+                      </Td>
+                      <Td sx={commonCellStyle} textAlign="center">
+                        {item.saleAmount}
+                      </Td>
+                      <Td sx={commonCellStyle} textAlign="center">
+                        {item.saleMonth}
+                      </Td>
                     </Tr>
                   ))}
                 </Tbody>

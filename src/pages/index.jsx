@@ -15,7 +15,7 @@ export default function Index() {
 
   const handleBoardClick = async () => {
     if (user) {
-      if (user.role === "ROLE_ADMIN" || user.role === "ROLE_BANKER") {
+      if (user.role === "ROLE_ADMIN") {
         navigate("/board/admin");
       } else {
         navigate("/board");
