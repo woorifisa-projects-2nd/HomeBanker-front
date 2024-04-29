@@ -22,7 +22,9 @@ export default function Header() {
   };
 
   const goMyPage = () => {
-    navigate("/myPage");
+    if (user && user.role === "ROLE_CUSTOMER") {
+      navigate("/myPage");
+    }
   };
 
   return (
