@@ -155,7 +155,7 @@ export default function BoardsTab({ displayChangeStatus = true }) {
                         </div>
                       </Td>
                       <Td style={{ textAlign: "center" }}>
-                        {item.customerName}
+                        {item.banker.bankerName}
                       </Td>
                       <Td style={{ textAlign: "center" }}>{item.updatedAt}</Td>
                       {displayChangeStatus && (
