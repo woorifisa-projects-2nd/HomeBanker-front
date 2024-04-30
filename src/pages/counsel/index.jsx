@@ -361,13 +361,8 @@ export default function Counsel() {
   return (
     <>
       {session !== undefined && publisher !== undefined ? (
-        <Grid
-          position="relative"
-          height="100vh"
-          width="100vw"
-          templateColumns="repeat(8, 1fr)"
-        >
-          <GridItem colSpan={6} position="relative">
+        <Grid height="100vh" width="100vw" templateColumns="repeat(12, 1fr)">
+          <GridItem colSpan={9} position="relative">
             <Stack
               bgColor={"black"}
               zIndex="99"
@@ -445,20 +440,22 @@ export default function Counsel() {
             <CounselToolbar publisher={publisher} subscriber={subscribers[0]} />
           </GridItem>
 
-          <GridItem colSpan={2}>
+          <GridItem colSpan={3}>
             {/* 여기 안에서 탭 관리 */}
-            <Tabs maxHeight="100vh" ref={tabRef} position={"relative"}>
+            <Tabs ref={tabRef} position={"relative"} height="100vh">
               <TabList>
                 <Tab>채팅</Tab>
                 {getUserRole() === "ROLE_ADMIN" ? <Tab>상품</Tab> : null}
               </TabList>
+
               <TabPanels>
                 <TabPanel padding={0} pt={"10px"} pl={"10px"} pr={"10px"}>
                   {publisher !== undefined ? (
                     <ChatComponent user={publisher} />
                   ) : null}
                 </TabPanel>
-                <TabPanel>
+
+                <TabPanel padding={0}>
                   <TransferTab
                     session={session}
                     user={publisher}
@@ -468,6 +465,7 @@ export default function Counsel() {
                     period={period}
                     bankerId={bankerId}
                     // isModalDisplayed={isModalDisplayed}
+
                   />
                 </TabPanel>
               </TabPanels>

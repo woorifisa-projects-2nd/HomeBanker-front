@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import ProductsTab from "./ProductsTab";
 import EnrollmentTab from "./EnrollmentTab";
+import { Box, Grid, GridItem, Flex } from "@chakra-ui/react";
 
 export const TransferContext = React.createContext();
 
@@ -29,12 +30,19 @@ const Transfer = ({
         setEnrollmentData,
       }}
     >
-      <div>
+      <Flex
+        maxHeight="calc(100vh - 230px)"
+        direction="column"
+        pt="10px"
+        justify="space-between"
+      >
         <ProductsTab
+          isBoxStyle={true}
           selectedProduct={selectedProduct}
           setSelectedProduct={setSelectedProduct}
           isDisplayed={false}
         />
+
         <EnrollmentTab
           session={session}
           user={user}
@@ -45,7 +53,7 @@ const Transfer = ({
           bankerId_={bankerId}
           // isModalDisplayed={isModalDisplayed}
         />
-      </div>
+      </Flex>
     </TransferContext.Provider>
   );
 };
