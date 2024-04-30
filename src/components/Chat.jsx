@@ -42,8 +42,8 @@ export default function ChatComponent({ user }) {
   };
 
   const handlePressKey = (event) => {
-    event.preventDefault();
     if (event.key === "Enter") {
+      event.preventDefault();
       sendMessage();
     }
   };
