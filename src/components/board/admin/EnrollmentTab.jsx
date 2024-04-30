@@ -18,13 +18,15 @@ const EnrollmentTab = ({
   session,
   user,
   productName,
+  productId,
   modalAmount,
   ModalPeriod,
+
   // isModalDisplayed,
 }) => {
   const [amount, setAmount] = useState("");
   const [period, setPeriod] = useState("");
-  const [bankerId, setBankerId] = useState(useCheckId().loginId);
+  const [bankerId, setBankerId] = useState("banker1");
 
   const { selectedProduct } = useContext(TransferContext);
 
@@ -32,7 +34,7 @@ const EnrollmentTab = ({
   const { isModalDisplayed } = state;
   const { setIsModalDisplayed } = actions;
 
-  // const [isDisplayed, setIsDisplayed] = useState(isModalDisplayed);
+  if (useCheckRole() == "ROLE_ADMIN") setBankerId(useCheckId().loginId);
 
   const handleAmountChange = (value) => {
     const cleanValue = value.replace(/[^0-9]/g, "");
@@ -44,8 +46,8 @@ const EnrollmentTab = ({
     if (!selectedProduct || !amount || !period) {
       console.error("데이터 전송 실패: 필수 정보가 누락되었습니다.");
       return;
-    } else {
-      // setIsDisplayed(true);
+    } else if (selectedProduct && amount && period) {
+      setIsModalDisplayed(true);
     }
 
     const numericAmount = +amount.replace(/,/g, "");
@@ -84,16 +86,16 @@ const EnrollmentTab = ({
   };
 
   //모달
-  const [modalMODE, setModalMODE] = useState("F");
+  // const [modalMODE, setModalMODE] = useState("F");
 
-  const changeMode = () => {
-    if (modalMODE === "F") setModalMODE("S");
-    else if (modalMODE === "S") setModalMODE("T");
-    else if (modalMODE === "T") {
-      setIsModalDisplayed(false);
-      setModalMODE("F");
-    }
-  };
+  // const changeMode = () => {
+  //   if (modalMODE === "F") setModalMODE("S");
+  //   else if (modalMODE === "S") setModalMODE("T");
+  //   else if (modalMODE === "T") {
+  //     setIsModalDisplayed(false);
+  //     setModalMODE("F");
+  //   }
+  // };
 
   return (
     <>
@@ -144,15 +146,21 @@ const EnrollmentTab = ({
 
       {isModalDisplayed && (
         <ModalList
-          MODE={modalMODE}
-          isOpen={isModalDisplayed}
-          onClose={changeMode}
+          // MODE={modalMODE}
+          // isOpen={isModalDisplayed}
+          onClose={() => {
+            setIsModalDisplayed(false);
+          }}
           size={"xl"}
           successMessage={"다음"}
-          successAction={changeMode}
+          // successAction={changeMode}
           productName={productName}
+          productId={productId}
           amount={modalAmount}
           period={ModalPeriod}
+          bankerId={bankerId}
+          session={session}
+          user={user}
         ></ModalList>
       )}
     </>
