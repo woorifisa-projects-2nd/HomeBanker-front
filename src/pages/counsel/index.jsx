@@ -419,17 +419,13 @@ export default function Counsel() {
 
           <GridItem colSpan={2}>
             {/* 여기 안에서 탭 관리 */}
-            <Tabs
-              maxHeight="100vh"
-              ref={tabRef}
-              height={`calc(100vh - ${tabHeight})`}
-            >
+            <Tabs maxHeight="100vh" ref={tabRef} position={"relative"}>
               <TabList>
                 <Tab>채팅</Tab>
                 {getUserRole() === "ROLE_ADMIN" ? <Tab>상품</Tab> : null}
               </TabList>
               <TabPanels>
-                <TabPanel>
+                <TabPanel padding={0} pt={"10px"} pl={"10px"} pr={"10px"}>
                   {publisher !== undefined ? (
                     <ChatComponent user={publisher} />
                   ) : null}
@@ -441,7 +437,7 @@ export default function Counsel() {
                     productName={productName}
                     amount={amount}
                     period={period}
-                  // isModalDisplayed={isModalDisplayed}
+                    // isModalDisplayed={isModalDisplayed}
                   />
                 </TabPanel>
               </TabPanels>

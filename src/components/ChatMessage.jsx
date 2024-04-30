@@ -1,27 +1,29 @@
 import React from "react";
+import { Text, Box } from "@chakra-ui/react";
 
 const ChatMessage = ({ message, sender }) => {
   console.log(`message bubble by ${sender}`);
   return (
     <>
       {sender === "me" ? (
-        <div
-          style={{
-            alignSelf: "end",
-            width: "fit-content",
-            display: "inline-block",
-            overflowWrap: "anywhere",
-            borderTopLeftRadius: "30px",
-            borderTopRightRadius: "30px",
-            borderBottomLeftRadius: "30px",
-            backgroundColor: "lightgrey",
-            padding: "15px",
-          }}
+        <Box
+          alignSelf={"end"}
+          width="fit-content"
+          display="inline-block"
+          overflowWrap="anywhere"
+          bgColor="#33C659"
+          borderTopLeftRadius="20"
+          borderTopRightRadius="20"
+          borderBottomLeftRadius="20"
+          padding={4}
         >
-          {message}
-        </div>
+          <Text color={"white"} fontSize={"42px"}>
+            {message}
+          </Text>
+        </Box>
       ) : (
-        <div
+        <Box
+          bgColor={"#D3D3D3"}
           style={{
             width: "fit-content",
             display: "inline-block",
@@ -33,8 +35,8 @@ const ChatMessage = ({ message, sender }) => {
             padding: "15px",
           }}
         >
-          {message}
-        </div>
+          <Text fontSize={"42px"}>{message}</Text>
+        </Box>
       )}
     </>
   );

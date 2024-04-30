@@ -1,0 +1,6 @@
+.textBox {
+  -ms-overflow-style: none;
+}
+.textBox::-webkit-scrollbar {
+  display: none;
+}
