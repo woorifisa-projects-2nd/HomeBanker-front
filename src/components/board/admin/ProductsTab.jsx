@@ -11,14 +11,16 @@ import {
   Switch,
   useToast,
   Select,
+  Box,
 } from "@chakra-ui/react";
 import { useProductsQuery } from "../../../api/counsel/api";
 import { BOARD_PAGINATION_SIZE } from "../../../constants/index";
 import Pagination from "../../Pagination";
 import { api } from "../../../api/api";
+import ProductItem from "../../counsel/ProductItem";
 
 const PRODUCT_TYPE = {
-  전체: "all",
+  전체상품: "all",
   카드: "card",
   예적금: "deposit",
   대출: "loan",
@@ -28,6 +30,7 @@ export default function ProductsTab({
   selectedProduct,
   setSelectedProduct,
   isDisplayed = true,
+  isBoxStyle = false,
 }) {
   const toast = useToast();
   const [products, setProducts] = useState([]);
@@ -42,7 +45,7 @@ export default function ProductsTab({
   const [productsData, isLoading, refetchProducts] = useProductsQuery(
     selectedCategory,
     pagination.currentPage,
-    BOARD_PAGINATION_SIZE
+    BOARD_PAGINATION_SIZE,
   );
 
   // 상품 노출 변경
@@ -96,29 +99,49 @@ export default function ProductsTab({
   };
 
   return (
-    <>
+    <Box>
       {isLoading ? (
         <Spinner />
       ) : (
         <>
-          <Select
-            onChange={(e) => {
-              setSelectedCategory(e.target.value);
-            }}
-            w="150px"
-            variant="outline"
-            marginLeft="50px"
-            marginBottom="20px"
-            border="1px solid black"
-          >
-            {Object.entries(PRODUCT_TYPE).map((item) => (
-              <Fragment key={item[1]}>
-                <option value={item[1]}>{item[0]}</option>
-              </Fragment>
-            ))}
-          </Select>
+          <Box borderBottom={"1px solid #CFCFCF"}>
+            <Select
+              focusBorderColor="#CFCFCF"
+              onChange={(e) => {
+                setSelectedCategory(e.target.value);
+              }}
+              w="150px"
+              variant="outline"
+              marginLeft={isBoxStyle ? "10px" : "50px"}
+              marginBottom={isBoxStyle ? "10px" : "20px"}
+              border="1px solid #CFCFCF"
+            >
+              {Object.entries(PRODUCT_TYPE).map((item) => (
+                <Fragment key={item[1]}>
+                  <option value={item[1]}>{item[0]}</option>
+                </Fragment>
+              ))}
+            </Select>
+          </Box>
 
-          {products && (
+          {products && isBoxStyle ? (
+            <Box paddingLeft={"14px"} paddingRight={"14px"}>
+              {products.map((item, i) => (
+                <Fragment key={i}>
+                  <ProductItem
+                    product={item}
+                    onClick={() => handleProductClick(item)}
+                    bgColor={
+                      selectedProduct != undefined &&
+                      item.productId == selectedProduct.productId
+                        ? "gray.100"
+                        : "white"
+                    }
+                  />
+                </Fragment>
+              ))}
+            </Box>
+          ) : (
             <TableContainer
               style={{
                 ...commonCellStyle,
@@ -209,6 +232,6 @@ export default function ProductsTab({
           </div>
         </>
       )}
-    </>
+    </Box>
   );
 }
