@@ -24,6 +24,8 @@ export default function CheckIdentification({
   const [isLoading, setLoading] = useState(false);
   const { role } = useCheckRole();
 
+  console.log(`NAVER_INVOKE_URL=${NAVER_INVOKE_URL}`);
+
   const onCapture = () => {
     if (videoRef.current) {
       html2canvas(videoRef.current).then((canvas) => {
@@ -34,7 +36,9 @@ export default function CheckIdentification({
   };
 
   const removeDataPrefix = (dataString) => {
-    return dataString.replace(/^data:image\/png;base64,/, "");
+    const data = dataString.replace(/^data:image\/png;base64,/, "");
+    console.log(data);
+    return data;
   };
 
   // 신분증 OCR api
