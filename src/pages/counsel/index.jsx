@@ -57,6 +57,16 @@ const SESSION_ID_LIST = [
   "Session8",
   "Session9",
   "Session10",
+  "Session11",
+  "Session12",
+  "Session13",
+  "Session14",
+  "Session15",
+  "Session16",
+  "Session17",
+  "Session18",
+  "Session19",
+  "Session20",
 ];
 
 export default function Counsel() {
@@ -465,7 +475,6 @@ export default function Counsel() {
                     period={period}
                     bankerId={bankerId}
                     // isModalDisplayed={isModalDisplayed}
-
                   />
                 </TabPanel>
               </TabPanels>
