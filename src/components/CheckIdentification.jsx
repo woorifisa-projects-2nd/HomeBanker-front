@@ -44,6 +44,7 @@ export default function CheckIdentification({
   // 신분증 OCR api
   const checkOCR = (uri) => {
     const uriData = removeDataPrefix(uri);
+    console.log(uriData);
     const message = {
       images: [
         {
@@ -77,6 +78,7 @@ export default function CheckIdentification({
       })
       .catch((e) => {
         console.error("실패", e);
+        alert(NAVER_INVOKE_URL);
         alert("캡처에 실패했습니다.");
         onClose();
       });
