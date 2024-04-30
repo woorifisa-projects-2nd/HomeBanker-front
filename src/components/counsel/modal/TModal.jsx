@@ -33,6 +33,8 @@ export const TModal = ({
   amount,
   period,
   bankerId,
+  session,
+  user,
 }) => {
   const loginId = useCheckId().loginId;
   const datetime = moment().format("YYYY-MM-DD");
@@ -65,12 +67,51 @@ export const TModal = ({
           duration: 1000,
           isClosable: true,
         });
-        setIsModalDisplayed(false);
-        setModalMODE("F");
+
+        buttonAction();
       })
       .catch((e) => {
+        toast({
+          position: "top",
+          title: "상품 가입이 완료되지 않았습니다",
+          status: "error",
+          duration: 1000,
+          isClosable: true,
+        });
+
+        // setModalMODE("F");
+
+        buttonAction();
+
         console.log("error : " + e);
       });
+  };
+
+  const buttonAction = () => {
+    setModalMODE("F");
+    setIsModalDisplayed(false);
+
+    const transferData = {
+      nextModal: "F",
+    };
+
+    const jsonString = JSON.stringify(transferData);
+
+    if (session && user) {
+      // 상품 가입 정보 송신
+      user.stream.session
+        .signal({
+          data: jsonString,
+          to: [],
+          type: "register",
+        })
+        .then(() => {
+          console.log("다음 모달 F로 이동 완료");
+        })
+        .catch((error) => {
+          console.error("다음 모달 F로 이동 불가", error);
+        });
+    }
   };
 
   return (
@@ -81,7 +122,10 @@ export const TModal = ({
         title={"고객 확인"}
         size={size}
         successMessage={"완료"}
-        successAction={() => enrollment(productId, amount, period, bankerId)}
+        successAction={() => {
+          if (role === "ROLE_CUSTOMER")
+            enrollment(productId, amount, period, bankerId);
+        }}
         children={
           <>
             <List spacing={3}>

@@ -44,18 +44,19 @@ import Notice from "../../components/counsel/Notice";
 import TransferTab from "../../components/board/admin/TransferTab";
 import { ModalContext } from "../../components/counsel/modal/ModalProvider";
 import WaitImage from "../../assets/image/background.svg";
+import useCheckRole from "../../hook/useCheckRole";
 
 const SESSION_ID_LIST = [
-  "Session121",
-  "Session2222",
-  "Session3333",
-  "Session4444",
-  "Session5555",
-  "Session666",
-  "Session777",
-  "Session888",
-  "Session989",
-  "Session109",
+  "Session1",
+  "Session2",
+  "Session3",
+  "Session4",
+  "Session5",
+  "Session6",
+  "Session7",
+  "Session8",
+  "Session9",
+  "Session10",
 ];
 
 export default function Counsel() {
@@ -92,13 +93,17 @@ export default function Counsel() {
   const [bankerId, setBankerId] = useState();
 
   // const [isModalDisplayed, setIsModalDisplayed] = useState(false);
-
-  const { state, actions } = useContext(ModalContext);
+  //모달 세팅
+  const { state, actions, setMode, mode } = useContext(ModalContext);
   const { isModalDisplayed } = state;
   const { setIsModalDisplayed } = actions;
+  const { setModalMODE } = setMode;
+  const { modalMODE } = mode;
+  const { role } = useCheckRole();
 
   useEffect(() => {
     if (exit) {
+      setIsModalDisplayed(false); //
       const countdown = setInterval(() => {
         setTime((time) => {
           const nextTime = time - 1;
@@ -122,6 +127,8 @@ export default function Counsel() {
 
   if (publisher !== undefined) {
     session.on("signal:destroy", (event) => {
+      // setIsModalDisplayed(false);
+
       setTimeout(() => {
         session.unpublish(publisher);
         if (session) {
@@ -211,9 +218,11 @@ export default function Counsel() {
       .signal(signalOptions)
       .then(() => {
         console.log("Signal sent");
+        // setIsModalDisplayed(false);
       })
       .catch((error) => {
         console.error(error);
+        // setIsModalDisplayed(false);
       });
   }, [session]);
 
@@ -334,6 +343,18 @@ export default function Counsel() {
       setBankerId(receivedData.bankerId);
       setIsModalDisplayed(true);
       console.log(isModalDisplayed);
+    });
+  }
+
+  // 모달 다음페이지 자동 전환 수신
+  if (publisher !== undefined) {
+    session.on("signal:register", (e) => {
+      const receivedData = JSON.parse(e.data);
+      if (role == "ROLE_ADMIN" && receivedData.nextModal == "F") {
+        setIsModalDisplayed(false);
+        setModalMODE(receivedData.nextModal);
+      } else if (role == "ROLE_ADMIN") setModalMODE(receivedData.nextModal);
+      console.log(receivedData.nextModal);
     });
   }
 

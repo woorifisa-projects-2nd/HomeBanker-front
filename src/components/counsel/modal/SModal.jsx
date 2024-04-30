@@ -1,5 +1,6 @@
 import CustomModal from "../../Modal";
 import { ModalContext } from "./ModalProvider";
+import useCheckRole from "../../../hook/useCheckRole";
 import {
   Text,
   Stack,
@@ -25,10 +26,39 @@ export const SModal = ({
   productName,
   amount,
   period,
+  session,
+  user,
 }) => {
+  const { role } = useCheckRole();
   const { state, setMode } = useContext(ModalContext);
   const { isModalDisplayed } = state;
   const { setModalMODE } = setMode;
+
+  const buttonAction = () => {
+    if (role === "ROLE_CUSTOMER") setModalMODE("T");
+
+    const transferData = {
+      nextModal: "T",
+    };
+
+    const jsonString = JSON.stringify(transferData);
+
+    if (session && user) {
+      // 상품 가입 정보 송신
+      user.stream.session
+        .signal({
+          data: jsonString,
+          to: [],
+          type: "register",
+        })
+        .then(() => {
+          console.log("다음 모달 T로 이동 완료");
+        })
+        .catch((error) => {
+          console.error("다음 모달 T로 이동 불가", error);
+        });
+    }
+  };
 
   return (
     <>
@@ -39,7 +69,7 @@ export const SModal = ({
         size={size}
         successMessage={successMessage}
         successAction={() => {
-          setModalMODE("T");
+          if (role === "ROLE_CUSTOMER") buttonAction();
         }}
         children={
           <>

@@ -126,7 +126,7 @@ const EnrollmentTab = ({
           // MODE={modalMODE}
           // isOpen={isModalDisplayed}
           onClose={() => {
-            setIsModalDisplayed(true);
+            setIsModalDisplayed(false);
           }}
           size={"xl"}
           successMessage={"다음"}
@@ -136,6 +136,8 @@ const EnrollmentTab = ({
           amount={modalAmount}
           period={ModalPeriod}
           bankerId={bankerId}
+          session={session}
+          user={user}
         ></ModalList>
       )}
     </>

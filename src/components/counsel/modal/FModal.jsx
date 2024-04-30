@@ -22,6 +22,8 @@ export const FModal = ({
   title,
   successMessage,
   successAction,
+  session,
+  user,
 }) => {
   const { signState } = useContext(ModalContext);
   const { isSigned } = signState;
@@ -30,8 +32,34 @@ export const FModal = ({
   const { state, actions, mode, setMode } = useContext(ModalContext);
   const { isModalDisplayed } = state;
   // const { setIsModalDisplayed } = actions;
-  // const { modalMODE } = mode;
+  const { modalMODE } = mode;
   const { setModalMODE } = setMode;
+
+  const buttonAction = () => {
+    if (role === "ROLE_CUSTOMER") setModalMODE("S");
+
+    const transferData = {
+      nextModal: "S",
+    };
+
+    const jsonString = JSON.stringify(transferData);
+
+    if (session && user) {
+      // 상품 가입 정보 송신
+      user.stream.session
+        .signal({
+          data: jsonString,
+          to: [],
+          type: "register",
+        })
+        .then(() => {
+          console.log("다음 모달 S로 이동 완료");
+        })
+        .catch((error) => {
+          console.error("다음 모달 S로 이동 불가", error);
+        });
+    }
+  };
 
   return (
     <>
@@ -42,8 +70,11 @@ export const FModal = ({
         size={size}
         successMessage={successMessage}
         successAction={() => {
-          setModalMODE("S");
+          if (role === "ROLE_CUSTOMER") buttonAction();
         }}
+        // successAction={() => {
+        //   if (role === "ROLE_CUSTOMER") setModalMODE("S");
+        // }}
         children={
           <>
             <List spacing={3}>
