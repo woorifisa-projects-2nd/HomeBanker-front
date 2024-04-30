@@ -44,6 +44,7 @@ import Notice from "../../components/counsel/Notice";
 import TransferTab from "../../components/board/admin/TransferTab";
 import { ModalContext } from "../../components/counsel/modal/ModalProvider";
 import WaitImage from "../../assets/image/background.svg";
+import useCheckRole from "../../hook/useCheckRole";
 
 const SESSION_ID_LIST = [
   "Session1",
@@ -63,7 +64,7 @@ export default function Counsel() {
 
   const [mySessionId, setMySessionId] = useState(SESSION_ID_LIST[0]);
   const [myUserName, setMyUserName] = useState(
-    `Participant${Math.floor(Math.random() * 100)}`,
+    `Participant${Math.floor(Math.random() * 100)}`
   );
   const [session, setSession] = useState(undefined);
   const [publisher, setPublisher] = useState(undefined);
@@ -86,16 +87,23 @@ export default function Counsel() {
 
   // 상품가입정보
   const [productName, setProductName] = useState();
+  const [productId, setProductId] = useState();
   const [amount, setAmount] = useState();
   const [period, setPeriod] = useState();
-  // const [isModalDisplayed, setIsModalDisplayed] = useState(false);
+  const [bankerId, setBankerId] = useState();
 
-  const { state, actions } = useContext(ModalContext);
+  // const [isModalDisplayed, setIsModalDisplayed] = useState(false);
+  //모달 세팅
+  const { state, actions, setMode, mode } = useContext(ModalContext);
   const { isModalDisplayed } = state;
   const { setIsModalDisplayed } = actions;
+  const { setModalMODE } = setMode;
+  const { modalMODE } = mode;
+  const { role } = useCheckRole();
 
   useEffect(() => {
     if (exit) {
+      setIsModalDisplayed(false); //
       const countdown = setInterval(() => {
         setTime((time) => {
           const nextTime = time - 1;
@@ -119,6 +127,8 @@ export default function Counsel() {
 
   if (publisher !== undefined) {
     session.on("signal:destroy", (event) => {
+      // setIsModalDisplayed(false);
+
       setTimeout(() => {
         session.unpublish(publisher);
         if (session) {
@@ -143,7 +153,7 @@ export default function Counsel() {
       {},
       {
         headers: { "Content-Type": "application/json" },
-      },
+      }
     );
 
     const signalOptions = {
@@ -208,9 +218,11 @@ export default function Counsel() {
       .signal(signalOptions)
       .then(() => {
         console.log("Signal sent");
+        // setIsModalDisplayed(false);
       })
       .catch((error) => {
         console.error(error);
+        // setIsModalDisplayed(false);
       });
   }, [session]);
 
@@ -227,7 +239,7 @@ export default function Counsel() {
         { customSessionId: SESSION_ID_LIST[i], role: role },
         {
           headers: { "Content-Type": "application/json" },
-        },
+        }
       );
       if (response.data !== "full") {
         setMySessionId(SESSION_ID_LIST[i]);
@@ -250,7 +262,7 @@ export default function Counsel() {
       {},
       {
         headers: { "Content-Type": "application/json" },
-      },
+      }
     );
     return response.data; // The token
   };
@@ -284,7 +296,7 @@ export default function Counsel() {
           console.log(
             "There was an error connecting to the session:",
             error.code,
-            error.message,
+            error.message
           );
         }
       });
@@ -318,15 +330,31 @@ export default function Counsel() {
       console.log(isModalDisplayed);
 
       const receivedData = JSON.parse(e.data);
+      console.log(receivedData.product);
       console.log("상품 이름 :", receivedData.product.productName);
+      console.log("상품 코드 :", receivedData.product.productId);
       console.log("상품 금액 :", receivedData.amount);
       console.log("가입 기간 :", receivedData.period);
       console.log("은행원 ID :", receivedData.bankerId);
       setProductName(receivedData.product.productName);
+      setProductId(receivedData.product.productId);
       setAmount(receivedData.amount);
       setPeriod(receivedData.period);
+      setBankerId(receivedData.bankerId);
       setIsModalDisplayed(true);
       console.log(isModalDisplayed);
+    });
+  }
+
+  // 모달 다음페이지 자동 전환 수신
+  if (publisher !== undefined) {
+    session.on("signal:register", (e) => {
+      const receivedData = JSON.parse(e.data);
+      if (role == "ROLE_ADMIN" && receivedData.nextModal == "F") {
+        setIsModalDisplayed(false);
+        setModalMODE(receivedData.nextModal);
+      } else if (role == "ROLE_ADMIN") setModalMODE(receivedData.nextModal);
+      console.log(receivedData.nextModal);
     });
   }
 
@@ -432,9 +460,12 @@ export default function Counsel() {
                     session={session}
                     user={publisher}
                     productName={productName}
+                    productId={productId}
                     amount={amount}
                     period={period}
-                  // isModalDisplayed={isModalDisplayed}
+                    bankerId={bankerId}
+                    // isModalDisplayed={isModalDisplayed}
+
                   />
                 </TabPanel>
               </TabPanels>
