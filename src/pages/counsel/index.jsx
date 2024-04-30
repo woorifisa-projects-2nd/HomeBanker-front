@@ -434,7 +434,7 @@ export default function Counsel() {
                     productName={productName}
                     amount={amount}
                     period={period}
-                  // isModalDisplayed={isModalDisplayed}
+                    // isModalDisplayed={isModalDisplayed}
                   />
                 </TabPanel>
               </TabPanels>
