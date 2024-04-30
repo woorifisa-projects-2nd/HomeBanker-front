@@ -1,5 +1,13 @@
 import React, { useContext, useState } from "react";
-import { Box, Input, Text, Button } from "@chakra-ui/react";
+import {
+  Box,
+  Input,
+  Text,
+  Button,
+  Stack,
+  Flex,
+  HStack,
+} from "@chakra-ui/react";
 import { TransferContext } from "./TransferTab";
 import useCheckRole from "../../../hook/useCheckRole";
 import { ModalList } from "../../counsel/modal/ModalList";
@@ -89,36 +97,51 @@ const EnrollmentTab = ({
 
   return (
     <>
-      <Box
-        mt={4}
-        p={4}
-        bg="white"
-        borderRadius="md"
-        boxShadow="lg"
-        width="100%"
-      >
-        <Text>상품 금액:</Text>
-        <Input
-          type="text"
-          placeholder="상품 금액을 입력하세요"
-          value={amount}
-          onChange={(e) => handleAmountChange(e.target.value)}
-          mt={2}
-          mb={4}
-        />
-        <Text>가입 기간:</Text>
-        <Input
-          type="number"
-          placeholder="가입 기간을 입력하세요"
-          value={period}
-          onChange={(e) => setPeriod(e.target.value)}
-          mt={2}
-          mb={4}
-        />
-        <Button colorScheme="teal" onClick={handleSend}>
-          전송
+      <Stack mt={8} paddingLeft={"14px"} paddingRight={"14px"}>
+        <HStack spacing={2}>
+          <Flex
+            align="center"
+            borderRadius={5}
+            width={"30%"}
+            textAlign="center"
+          >
+            <Text>금액</Text>
+          </Flex>
+          <Input
+            width={"70%"}
+            type="text"
+            placeholder="금액을 입력하세요"
+            value={amount}
+            onChange={(e) => handleAmountChange(e.target.value)}
+          />
+        </HStack>
+        <HStack spacing={2}>
+          <Flex
+            align="center"
+            borderRadius={5}
+            width={"30%"}
+            textAlign="center"
+          >
+            <Text>가입기간</Text>
+          </Flex>
+          <Input
+            width={"70%"}
+            type="number"
+            placeholder="가입 기간을 입력하세요"
+            value={period}
+            onChange={(e) => setPeriod(e.target.value)}
+          />
+        </HStack>
+        <Button
+          mt={4}
+          isDisabled={!period || !amount}
+          bgColor={!period || !amount ? "#CFCFCF" : "#3686DF"}
+          onClick={handleSend}
+        >
+          <Text color={!period || !amount ? "black" : "white"}>전송</Text>
         </Button>
-      </Box>
+      </Stack>
+
       {isModalDisplayed && (
         <ModalList
           MODE={modalMODE}
