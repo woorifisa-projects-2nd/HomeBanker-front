@@ -42,7 +42,7 @@ export default function ProductsTab({
   const [productsData, isLoading, refetchProducts] = useProductsQuery(
     selectedCategory,
     pagination.currentPage,
-    BOARD_PAGINATION_SIZE
+    BOARD_PAGINATION_SIZE,
   );
 
   // 상품 노출 변경
