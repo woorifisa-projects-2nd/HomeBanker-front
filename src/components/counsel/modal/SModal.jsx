@@ -1,4 +1,5 @@
 import CustomModal from "../../Modal";
+import { ModalContext } from "./ModalProvider";
 import {
   Text,
   Stack,
@@ -10,6 +11,7 @@ import {
   Td,
   TableContainer,
 } from "@chakra-ui/react";
+import { useContext } from "react";
 // import RadioCard from "../../../components/RadioCard";
 
 export const SModal = ({
@@ -24,15 +26,21 @@ export const SModal = ({
   amount,
   period,
 }) => {
+  const { state, setMode } = useContext(ModalContext);
+  const { isModalDisplayed } = state;
+  const { setModalMODE } = setMode;
+
   return (
     <>
       <CustomModal
-        isOpen={isOpen}
+        isOpen={isModalDisplayed}
         onClose={onClose}
         title={"고객 신청사항"}
         size={size}
         successMessage={successMessage}
-        successAction={successAction}
+        successAction={() => {
+          setModalMODE("T");
+        }}
         children={
           <>
             <TableContainer>
@@ -56,16 +64,6 @@ export const SModal = ({
 
             <Stack spacing={[1, 5]} direction={["column", "row"]}>
               <Text fontSize="2xl">※ 위의 신청내용을 확인합니다. </Text>
-              {/* <HStack {...group}>
-                {options.map((value) => {
-                  const radio = getRadioProps({ value });
-                  return (
-                    <RadioCard key={value} {...radio}>
-                      {value}
-                    </RadioCard>
-                  );
-                })}
-              </HStack> */}
             </Stack>
           </>
         }

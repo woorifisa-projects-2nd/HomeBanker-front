@@ -46,16 +46,16 @@ import { ModalContext } from "../../components/counsel/modal/ModalProvider";
 import WaitImage from "../../assets/image/background.svg";
 
 const SESSION_ID_LIST = [
-  "Session1",
-  "Session2",
-  "Session3",
-  "Session4",
-  "Session5",
-  "Session6",
-  "Session7",
-  "Session8",
-  "Session9",
-  "Session10",
+  "Session121",
+  "Session2222",
+  "Session3333",
+  "Session4444",
+  "Session5555",
+  "Session666",
+  "Session777",
+  "Session888",
+  "Session989",
+  "Session109",
 ];
 
 export default function Counsel() {
@@ -63,7 +63,7 @@ export default function Counsel() {
 
   const [mySessionId, setMySessionId] = useState(SESSION_ID_LIST[0]);
   const [myUserName, setMyUserName] = useState(
-    `Participant${Math.floor(Math.random() * 100)}`,
+    `Participant${Math.floor(Math.random() * 100)}`
   );
   const [session, setSession] = useState(undefined);
   const [publisher, setPublisher] = useState(undefined);
@@ -86,8 +86,11 @@ export default function Counsel() {
 
   // 상품가입정보
   const [productName, setProductName] = useState();
+  const [productId, setProductId] = useState();
   const [amount, setAmount] = useState();
   const [period, setPeriod] = useState();
+  const [bankerId, setBankerId] = useState();
+
   // const [isModalDisplayed, setIsModalDisplayed] = useState(false);
 
   const { state, actions } = useContext(ModalContext);
@@ -143,7 +146,7 @@ export default function Counsel() {
       {},
       {
         headers: { "Content-Type": "application/json" },
-      },
+      }
     );
 
     const signalOptions = {
@@ -227,7 +230,7 @@ export default function Counsel() {
         { customSessionId: SESSION_ID_LIST[i], role: role },
         {
           headers: { "Content-Type": "application/json" },
-        },
+        }
       );
       if (response.data !== "full") {
         setMySessionId(SESSION_ID_LIST[i]);
@@ -250,7 +253,7 @@ export default function Counsel() {
       {},
       {
         headers: { "Content-Type": "application/json" },
-      },
+      }
     );
     return response.data; // The token
   };
@@ -284,7 +287,7 @@ export default function Counsel() {
           console.log(
             "There was an error connecting to the session:",
             error.code,
-            error.message,
+            error.message
           );
         }
       });
@@ -318,13 +321,17 @@ export default function Counsel() {
       console.log(isModalDisplayed);
 
       const receivedData = JSON.parse(e.data);
+      console.log(receivedData.product);
       console.log("상품 이름 :", receivedData.product.productName);
+      console.log("상품 코드 :", receivedData.product.productId);
       console.log("상품 금액 :", receivedData.amount);
       console.log("가입 기간 :", receivedData.period);
       console.log("은행원 ID :", receivedData.bankerId);
       setProductName(receivedData.product.productName);
+      setProductId(receivedData.product.productId);
       setAmount(receivedData.amount);
       setPeriod(receivedData.period);
+      setBankerId(receivedData.bankerId);
       setIsModalDisplayed(true);
       console.log(isModalDisplayed);
     });
@@ -435,8 +442,10 @@ export default function Counsel() {
                     session={session}
                     user={publisher}
                     productName={productName}
+                    productId={productId}
                     amount={amount}
                     period={period}
+                    bankerId={bankerId}
                     // isModalDisplayed={isModalDisplayed}
                   />
                 </TabPanel>

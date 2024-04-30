@@ -1,16 +1,18 @@
 import CustomModal from "../../Modal";
-import {
-  Text,
-  Stack,
-  List,
-  ListItem,
-  ListIcon,
-  useRadioGroup,
-  Box,
-} from "@chakra-ui/react";
+import { Text, Stack, List, ListItem, ListIcon } from "@chakra-ui/react";
+import { useContext } from "react";
 
 import { TbSquareRoundedFilled } from "react-icons/tb";
 import Canvas from "../Canvas";
+import { ModalContext } from "./ModalProvider";
+import useCheckRole from "../../../hook/useCheckRole";
+
+// const signchecker =() => {
+//   if(isSigned)
+
+//   else
+
+// }
 
 export const FModal = ({
   isOpen,
@@ -21,15 +23,27 @@ export const FModal = ({
   successMessage,
   successAction,
 }) => {
+  const { signState } = useContext(ModalContext);
+  const { isSigned } = signState;
+  const { role } = useCheckRole();
+
+  const { state, actions, mode, setMode } = useContext(ModalContext);
+  const { isModalDisplayed } = state;
+  // const { setIsModalDisplayed } = actions;
+  // const { modalMODE } = mode;
+  const { setModalMODE } = setMode;
+
   return (
     <>
       <CustomModal
-        isOpen={isOpen}
+        isOpen={isModalDisplayed}
         onClose={onClose}
         title={"일괄 기명 및 서명"}
         size={size}
         successMessage={successMessage}
-        successAction={successAction}
+        successAction={() => {
+          setModalMODE("S");
+        }}
         children={
           <>
             <List spacing={3}>
@@ -59,21 +73,13 @@ export const FModal = ({
               </ListItem>
             </List>
             <Stack spacing={[1, 5]} direction={["column", "row"]}>
-              <Text fontSize="2xl">※ 위 내용에 대하여 동의합니다. </Text>
-              {/* <HStack {...group}>
-                {options.map((value) => {
-                  const radio = getRadioProps({ value });
-                  return (
-                    <RadioCard key={value} {...radio}>
-                      {value}
-                    </RadioCard>
-                  );
-                })}
-              </HStack> */}
+              {role == "ROLE_ADMIN" ? (
+                <Text fontSize="2xl">※ 고객님에게 서명하도록 안내하세요. </Text>
+              ) : (
+                <Text fontSize="2xl">※ 위 내용에 대하여 동의합니다. </Text>
+              )}
             </Stack>
-            <Box borderWidth="5px">
-              <Canvas></Canvas>
-            </Box>
+            {role == "ROLE_ADMIN" ? null : <Canvas></Canvas>}
           </>
         }
       ></CustomModal>

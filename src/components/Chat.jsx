@@ -77,7 +77,6 @@ export default function ChatComponent({ user }) {
     return sender === nickname ? "me" : "other";
   };
 
-
   useEffect(() => {
     messageEndRef.current.scrollIntoView({ behavior: "smooth" });
   }, [messageList]);
