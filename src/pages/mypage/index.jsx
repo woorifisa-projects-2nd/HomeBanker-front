@@ -49,9 +49,11 @@ export default function MyPage() {
               padding: "20px",
               paddingBottom: "30px",
             }}
+            data-cy="my-products"
           >
             나의 상품가입
           </Tab>
+          <Tab>나의 프로필</Tab>
         </TabList>
         <TabIndicator
           mt="-1.3px"
