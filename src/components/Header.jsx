@@ -1,7 +1,7 @@
 import React from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { Flex, Spacer, Button, ButtonGroup } from "@chakra-ui/react";
+import { Flex, Spacer, Button, ButtonGroup, Box } from "@chakra-ui/react";
 import logo from "../assets/icon/logo.svg";
 import { MdLogout, MdLogin } from "react-icons/md";
 import { FaHouseUser } from "react-icons/fa";
@@ -39,7 +39,15 @@ export default function Header() {
       }}
     >
       <Flex alignItems="center" style={{ height: "100%" }}>
-        <img src={logo} onClick={goMainPage}></img>
+        <Box
+          _hover={{
+            transform: "scale(1.1)",
+            transition: "transform .15s ease-in",
+          }}
+        >
+          <img src={logo} onClick={goMainPage}></img>
+        </Box>
+        {/* <img src={logo} onClick={goMainPage}></img> */}
         <Spacer />
         <Flex>
           <ButtonGroup

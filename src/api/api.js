@@ -4,7 +4,6 @@ import { Cookies } from "react-cookie";
 const cookies = new Cookies();
 
 export const api = Axios.create({
-
   //baseURL: `http://localhost:8080`,
   baseURL: `https://homebanker-b.shop:443`,
   headers: {

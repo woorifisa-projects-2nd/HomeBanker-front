@@ -9,6 +9,7 @@ import {
   ListIcon,
   Box,
   useToast,
+  ModalCloseButton,
 } from "@chakra-ui/react";
 // import RadioCard from "../../../components/RadioCard";
 import { TbSquareRoundedFilled } from "react-icons/tb";
@@ -32,36 +33,46 @@ export const TModal = ({
   productId,
   amount,
   period,
-  bankerId,
   session,
   user,
 }) => {
-  const loginId = useCheckId().loginId;
+  const { loginId } = useCheckId;
   const datetime = moment().format("YYYY-MM-DD");
   const { role } = useCheckRole();
   const toast = useToast();
 
-  const { state, actions, setMode } = useContext(ModalContext);
+  const { state, actions, setMode, id, idAction, CIdAction, cId } =
+    useContext(ModalContext);
   const { isModalDisplayed } = state;
   const { setIsModalDisplayed } = actions;
   const { setModalMODE } = setMode;
+  const { bankerId } = id;
+  const { setCustomerId } = CIdAction;
+  const { customerId } = cId;
 
-  const enrollment = (productId, amount, period, bankerId) => {
+  const enrollment = () => {
+    console.log("제발" + customerId);
+    // setCustomerId(loginId);
     const message = {
-      customerLoginId: loginId,
+      customerLoginId: customerId,
       bankerLoginId: bankerId,
       productId: productId,
       saleMonth: period,
       saleAmount: amount,
       createdAt: datetime,
     };
-    console.log(message);
+
+    console.log("==========가입완료===========");
+    console.log("상품 코드 :", productId);
+    console.log("상품 금액 :", amount);
+    console.log("가입 기간 :", period);
+    console.log("은행원 ID :", bankerId);
+    console.log("고객 ID :", customerId);
 
     api
       .post(`/api/product/register`, message)
       .then(() => {
         toast({
-          position: "top",
           title: "상품 가입이 완료되었습니다",
           status: "success",
           duration: 1000,
@@ -72,7 +83,6 @@ export const TModal = ({
       })
       .catch((e) => {
         toast({
-          position: "top",
           title: "상품 가입이 완료되지 않았습니다",
           status: "error",
           duration: 1000,
@@ -123,11 +133,11 @@ export const TModal = ({
         size={size}
         successMessage={"완료"}
         successAction={() => {
-          if (role === "ROLE_CUSTOMER")
-            enrollment(productId, amount, period, bankerId);
+          if (role === "ROLE_CUSTOMER") enrollment();
         }}
         children={
           <>
+            <ModalCloseButton />
             <List spacing={3}>
               <ListItem>
                 <ListIcon as={TbSquareRoundedFilled} color="blue.600" />

@@ -22,7 +22,7 @@ import {
   TabPanels,
   Tab,
   TabPanel,
-  useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
 import UserVideoComponent from "../../components/UserVideoComponent";
 import { api } from "../../api/api";
@@ -45,18 +45,19 @@ import TransferTab from "../../components/board/admin/TransferTab";
 import { ModalContext } from "../../components/counsel/modal/ModalProvider";
 import WaitImage from "../../assets/image/background.svg";
 import useCheckRole from "../../hook/useCheckRole";
+import useCheckId from "../../hook/useCheckId";
 
 const SESSION_ID_LIST = [
-  "Session1",
-  "Session2",
-  "Session3",
-  "Session4",
-  "Session5",
-  "Session6",
-  "Session7",
-  "Session8",
-  "Session9",
-  "Session10",
+  "Session11",
+  "Session22",
+  "Session33",
+  "Session44",
+  "Session55",
+  "Session66",
+  "Session77",
+  "Session88",
+  "Session99",
+  "Session100",
 ];
 
 export default function Counsel() {
@@ -90,16 +91,26 @@ export default function Counsel() {
   const [productId, setProductId] = useState();
   const [amount, setAmount] = useState();
   const [period, setPeriod] = useState();
-  const [bankerId, setBankerId] = useState();
+  // const [bankerId, setBankerId] = useState();
+  const [productDescription, setProductDescription] = useState();
+  const [openToast, setOpenToast] = useState();
 
   // const [isModalDisplayed, setIsModalDisplayed] = useState(false);
   //모달 세팅
-  const { state, actions, setMode, mode } = useContext(ModalContext);
+  const { state, actions, setMode, mode, id, idAction, CIdAction, cId } =
+    useContext(ModalContext);
   const { isModalDisplayed } = state;
   const { setIsModalDisplayed } = actions;
   const { setModalMODE } = setMode;
   const { modalMODE } = mode;
+  const { bankerId } = id;
+  const { setBankerId } = idAction;
+  const { setCustomerId } = CIdAction;
+  const { customerId } = cId;
+
   const { role } = useCheckRole();
+  const { loginId } = useCheckId();
+  const toast = useToast();
 
   useEffect(() => {
     if (exit) {
@@ -326,6 +337,7 @@ export default function Counsel() {
 
   // 상품 가입 정보 수신
   if (publisher !== undefined) {
+    setCustomerId(loginId);
     session.on("signal:enrollment", (e) => {
       console.log(isModalDisplayed);
 
@@ -333,16 +345,19 @@ export default function Counsel() {
       console.log(receivedData.product);
       console.log("상품 이름 :", receivedData.product.productName);
       console.log("상품 코드 :", receivedData.product.productId);
+      console.log("상품 설명 :", receivedData.product.productDescription);
       console.log("상품 금액 :", receivedData.amount);
       console.log("가입 기간 :", receivedData.period);
       console.log("은행원 ID :", receivedData.bankerId);
       setProductName(receivedData.product.productName);
       setProductId(receivedData.product.productId);
+      setProductDescription(receivedData.product.productDescription);
       setAmount(receivedData.amount);
       setPeriod(receivedData.period);
       setBankerId(receivedData.bankerId);
       setIsModalDisplayed(true);
       console.log(isModalDisplayed);
+      console.log("은행원-ID :", bankerId);
     });
   }
 
@@ -350,9 +365,27 @@ export default function Counsel() {
   if (publisher !== undefined) {
     session.on("signal:register", (e) => {
       const receivedData = JSON.parse(e.data);
-      if (role == "ROLE_ADMIN" && receivedData.nextModal == "F") {
+      if (role === "ROLE_ADMIN" && receivedData.nextModal === "F") {
         setIsModalDisplayed(false);
         setModalMODE(receivedData.nextModal);
+        // setOpenToast(true);
+        // useEffect(() => {
+        //   toast({
+        //     title: "상품 가입이 완료되었습니다",
+        //     status: "success",
+        //     duration: 1000,
+        //     isClosable: true,
+        //   });
+        // }, openToast);
+
+        // if (openToast === true) {
+        //   toast({
+        //     title: "상품 가입이 완료되었습니다",
+        //     status: "success",
+        //     duration: 1000,
+        //     isClosable: true,
+        //   });
+        // }
       } else if (role == "ROLE_ADMIN") setModalMODE(receivedData.nextModal);
       console.log(receivedData.nextModal);
     });
@@ -461,11 +494,12 @@ export default function Counsel() {
                     user={publisher}
                     productName={productName}
                     productId={productId}
+                    productDescription={productDescription}
                     amount={amount}
                     period={period}
                     bankerId={bankerId}
-                    // isModalDisplayed={isModalDisplayed}
 
+                    // isModalDisplayed={isModalDisplayed}
                   />
                 </TabPanel>
               </TabPanels>

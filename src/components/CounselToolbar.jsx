@@ -84,7 +84,6 @@ export default function CounselToolbar({ publisher, subscriber }) {
         });
       }
     }
-
   }, [transcript]);
 
   // 자막 받는 부분
