@@ -45,6 +45,7 @@ import TransferTab from "../../components/board/admin/TransferTab";
 import { ModalContext } from "../../components/counsel/modal/ModalProvider";
 import WaitImage from "../../assets/image/background.svg";
 import useCheckRole from "../../hook/useCheckRole";
+import { createBrowserHistory } from "history";
 
 const SESSION_ID_LIST = [
   "Session1",
@@ -85,6 +86,7 @@ export default function Counsel() {
   const [audioStatus, setAudioStatus] = useState(true);
   const [exit, setExit] = useState(false);
   const [time, setTime] = useState(5);
+  const history = createBrowserHistory();
 
   const tabRef = useRef();
   const tabHeight = useMemo(() => {
@@ -110,6 +112,13 @@ export default function Counsel() {
   const { setModalMODE } = setMode;
   const { modalMODE } = mode;
   const { role } = useCheckRole();
+  const [locationKeys, setLocationKeys] = useState([]);
+
+  const unlistenHistoryEvent = history.listen(({ action }) => {
+    if (action === "POP") {
+      leaveSession();
+    }
+  });
 
   useEffect(() => {
     if (exit) {
@@ -151,7 +160,7 @@ export default function Counsel() {
 
   if (publisher !== undefined) {
     session.on("signal:exit", (event) => {
-      console.log("received");
+      //console.log("received");
       setExit(true);
       destroySession();
     });
