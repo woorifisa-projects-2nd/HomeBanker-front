@@ -103,10 +103,17 @@ function SignupPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    for (const key in formData) {
+      if (formData[key].trim() === "") {
+        alert("모든 항목을 입력해주세요.");
+        return;
+      }
+    }
     if (formData.loginPw !== formData.confirmPassword) {
       alert("비밀번호와 비밀번호 확인이 일치하지 않습니다.");
       return;
     }
+
     try {
       const response = await api.post("/register", formData);
       navigate("/login");
