@@ -15,6 +15,8 @@ import {
   Button,
   HStack,
   Input,
+  Stack,
+  useToast,
 } from "@chakra-ui/react";
 import CheckIdentification from "./CheckIdentification";
 import useCheckRole from "../hook/useCheckRole";
@@ -28,6 +30,8 @@ export default function CounselToolbar({ publisher, subscriber }) {
   const { role } = useCheckRole();
   const speechRef = useRef(null);
 
+  const toast = useToast();
+
   const { transcript, listening, toggleListening } = useSpeechToText();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -40,6 +44,18 @@ export default function CounselToolbar({ publisher, subscriber }) {
     }
   }, [speechRef.current]);
 
+  useEffect(() => {
+    if (listening && role === "ROLE_ADMIN") {
+      toast({
+        position: "top",
+        title: "음성인식을 시작합니다. 자막을 고객에게 노출합니다",
+        status: "success",
+        duration: 1000,
+        isClosable: true,
+      });
+    }
+  }, [listening]);
+
   const sendMessage = () => {
     if (publisher) {
       publisher.stream.session.signal({
@@ -50,7 +66,7 @@ export default function CounselToolbar({ publisher, subscriber }) {
   };
 
   // 양쪽 다 닫히는 메세지 전송
-  const closeModalMessage = () => {
+  const closeModalAction = () => {
     if (publisher && role === "ROLE_ADMIN") {
       publisher.stream.session.signal({
         data: JSON.stringify("close"),
@@ -93,6 +109,60 @@ export default function CounselToolbar({ publisher, subscriber }) {
     scrollToEnd();
   });
 
+  publisher.stream.session.on("signal:success", (event) => {
+    const data = JSON.parse(event.data);
+    if (data === "request") {
+      onOpen();
+    }
+  });
+
+  useEffect(() => {
+    if (isIdentifiedUser && role === "ROLE_ADMIN") {
+      toast({
+        position: "top",
+        title: "신분증 인증이 완료되었습니다",
+        status: "success",
+        duration: 1500,
+        isClosable: true,
+      });
+    }
+  }, [isIdentifiedUser]);
+
+  const comfirmSignal = () => {
+    publisher.stream.session.signal({
+      data: JSON.stringify("confirm"),
+      type: "confirm",
+    });
+  };
+
+  const [isConfirm, setConfirm] = useState(false);
+
+  publisher.stream.session.on("signal:confirm", (event) => {
+    const data = JSON.parse(event.data);
+    if (data === "confirm") {
+      if (role === "ROLE_CUSTOMER") {
+        setConfirm(true);
+      }
+    }
+  });
+
+  // 신분증 검증 완료 알림 (고객)
+  useEffect(() => {
+    if (isConfirm && role === "ROLE_CUSTOMER") {
+      toast({
+        duration: 2000,
+        position: "top",
+        render: () => (
+          <Stack color="white" p={6} bg="#3686DF" borderRadius={20}>
+            <Text textAlign="center" fontSize="30">
+              신분증 검증이 완료되었습니다
+            </Text>
+          </Stack>
+        ),
+      });
+    }
+  }, [isConfirm]);
+
   return (
     <>
       <Flex position="absolute" bottom={0} width={"100%"} bgColor={"black"}>
@@ -110,7 +180,7 @@ export default function CounselToolbar({ publisher, subscriber }) {
             ) : (
               <HStack onClick={sendMessage} cursor="pointer">
                 <Image src={Capture} />
-                <Text color="white">캡쳐</Text>
+                <Text color="white">신분증 검증하기</Text>
               </HStack>
             )}
 
@@ -147,11 +217,12 @@ export default function CounselToolbar({ publisher, subscriber }) {
         isOpen={isOpen}
         onClose={() => {
           onClose();
-          closeModalMessage();
+          closeModalAction();
         }}
         onOpen={onOpen}
         setIdentifyUser={setIdentifyUser}
         isIdentifiedUser={isIdentifiedUser}
+        comfirmSignal={comfirmSignal}
         streamManager={role === "ROLE_ADMIN" ? subscriber : publisher}
       />
     </>
