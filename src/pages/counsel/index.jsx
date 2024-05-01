@@ -74,7 +74,7 @@ export default function Counsel() {
 
   const [mySessionId, setMySessionId] = useState(SESSION_ID_LIST[0]);
   const [myUserName, setMyUserName] = useState(
-    `Participant${Math.floor(Math.random() * 100)}`
+    `Participant${Math.floor(Math.random() * 100)}`,
   );
   const [session, setSession] = useState(undefined);
   const [publisher, setPublisher] = useState(undefined);
@@ -163,7 +163,7 @@ export default function Counsel() {
       {},
       {
         headers: { "Content-Type": "application/json" },
-      }
+      },
     );
 
     const signalOptions = {
@@ -249,7 +249,7 @@ export default function Counsel() {
         { customSessionId: SESSION_ID_LIST[i], role: role },
         {
           headers: { "Content-Type": "application/json" },
-        }
+        },
       );
       if (response.data !== "full") {
         setMySessionId(SESSION_ID_LIST[i]);
@@ -272,7 +272,7 @@ export default function Counsel() {
       {},
       {
         headers: { "Content-Type": "application/json" },
-      }
+      },
     );
     return response.data; // The token
   };
@@ -306,7 +306,7 @@ export default function Counsel() {
           console.log(
             "There was an error connecting to the session:",
             error.code,
-            error.message
+            error.message,
           );
         }
       });
