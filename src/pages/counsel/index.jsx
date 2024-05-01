@@ -23,6 +23,7 @@ import {
   Tab,
   TabPanel,
   useDisclosure,
+  Tooltip
 } from "@chakra-ui/react";
 import UserVideoComponent from "../../components/UserVideoComponent";
 import { api } from "../../api/api";
@@ -381,42 +382,44 @@ export default function Counsel() {
               space={0}
             >
               <Flex
-                width={8}
-                height={8}
-                justifyContent={"center"}
-                alignItems={"center"}
-                onClick={videoStatus ? camStatusChanged : camStatusChanged}
-              >
-                {videoStatus ? (
-                  <IoVideocamOff fontSize="27px" color="white" />
-                ) : (
-                  <IoVideocam fontSize="27px" color="white" />
-                )}
-              </Flex>
-
-              <Flex
-                width={8}
-                height={8}
-                justifyContent={"center"}
-                alignItems={"center"}
-                onClick={audioStatus ? micStatusChanged : micStatusChanged}
-              >
-                {audioStatus ? (
-                  <IoMdMicOff fontSize="30px" color="white" />
-                ) : (
-                  <IoMdMic />
-                )}
-              </Flex>
-
-              <Flex
-                width={8}
-                height={8}
+                width={10}
+                height={10}
                 justifyContent={"center"}
                 alignItems={"center"}
                 cursor="pointer"
+                onClick={videoStatus ? camStatusChanged : camStatusChanged}
+              >
+                {videoStatus ? (
+                  <IoVideocam fontSize="34px" color="#C8DFFA" />
+                ) : (
+                  <IoVideocamOff fontSize="34px" color="white" />
+                )}
+              </Flex>
+
+              <Flex
+                width={10}
+                height={10}
+                justifyContent={"center"}
+                alignItems={"center"}
+                cursor="pointer"
+                onClick={audioStatus ? micStatusChanged : micStatusChanged}
+              >
+                {audioStatus ? (
+                  <IoMdMic fontSize="37px" color="#C8DFFA" />
+                ) : (
+                  <IoMdMicOff fontSize="37px" color="white" />
+                )}
+              </Flex>
+
+              <Flex
+                width={10}
+                height={10}
+                justify={"center"}
+                align={"center"}
+                cursor="pointer"
                 onClick={leaveSession}
               >
-                <IoLogOutOutline fontSize="30px" color="white" />
+                <IoLogOutOutline fontSize="37px" color="#C8DFFA" />
               </Flex>
             </Stack>
 
@@ -474,7 +477,7 @@ export default function Counsel() {
                     amount={amount}
                     period={period}
                     bankerId={bankerId}
-                    // isModalDisplayed={isModalDisplayed}
+                  // isModalDisplayed={isModalDisplayed}
                   />
                 </TabPanel>
               </TabPanels>
