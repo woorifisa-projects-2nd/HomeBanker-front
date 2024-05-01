@@ -1,6 +1,6 @@
 import "regenerator-runtime";
 import { api } from "../../api/api";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { TfiWrite } from "react-icons/tfi";
 import {
   Button,
@@ -19,8 +19,24 @@ import Mic from "../../assets/icon/mic.svg?react";
 import useSpeechToText from "../../hook/useSpeechToText";
 import BoardsTab from "../../components/board/admin/BoardsTab";
 import Header from "../../components/Header";
+import { useBoardsQuery } from "../../api/counsel/api";
+import { BOARD_PAGINATION_SIZE } from "../../constants/index";
+
 export default function Board() {
   const toast = useToast();
+  const [boards, setBoards] = useState([]);
+  const [pagination, setPagination] = useState({
+    totalItems: 0,
+    itemCountPerPage: 0,
+    pageCount: 0,
+    currentPage: 0,
+  });
+
+  const [boardsData, isLoading, refetchBoards] = useBoardsQuery(
+    BOARD_PAGINATION_SIZE,
+    pagination.currentPage
+  );
+
   const { isOpen, onOpen, onClose } = useDisclosure();
   const {
     transcript,
@@ -30,7 +46,6 @@ export default function Board() {
     resetTranscript,
   } = useSpeechToText();
 
-  // 문의 작성 API
   const createBoard = () => {
     if (transcript.length === 0) {
       alert("문의 내용을 음성 인식으로 입력해주세요");
@@ -40,6 +55,7 @@ export default function Board() {
           content: transcript,
         })
         .then(() => {
+          refetchBoards();
           toast({
             position: "top",
             title: "문의가 등록되었습니다",
@@ -52,6 +68,28 @@ export default function Board() {
         });
     }
   };
+
+  useEffect(() => {
+    if (isOpen) {
+      resetTranscript(); // 모달이 열릴 때마다 이전에 입력한 내용을 초기화합니다.
+    }
+  }, [isOpen]);
+
+  useEffect(() => {
+    if (boardsData) {
+      setBoards(boardsData.data.boardItems);
+      setPagination({
+        totalItems: boardsData.data.pagination.totalElements,
+        itemCountPerPage: BOARD_PAGINATION_SIZE,
+        pageCount: boardsData.data.pagination.totalPages,
+        currentPage: boardsData.data.pagination.pageNumber,
+      });
+    }
+  }, [boardsData]);
+
+  useEffect(() => {
+    refetchBoards();
+  }, [pagination.currentPage]);
 
   // 문의 작성 모달 종료
   const onModalClose = () => {
