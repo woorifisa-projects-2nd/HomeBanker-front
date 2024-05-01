@@ -366,26 +366,15 @@ export default function Counsel() {
     session.on("signal:register", (e) => {
       const receivedData = JSON.parse(e.data);
       if (role === "ROLE_ADMIN" && receivedData.nextModal === "F") {
+        // toast({
+        //   position: "top",
+        //   title: "상품 가입이 완료되었습니다",
+        //   status: "success",
+        //   duration: 1000,
+        //   isClosable: true,
+        // });
         setIsModalDisplayed(false);
         setModalMODE(receivedData.nextModal);
-        // setOpenToast(true);
-        // useEffect(() => {
-        //   toast({
-        //     title: "상품 가입이 완료되었습니다",
-        //     status: "success",
-        //     duration: 1000,
-        //     isClosable: true,
-        //   });
-        // }, openToast);
-
-        // if (openToast === true) {
-        //   toast({
-        //     title: "상품 가입이 완료되었습니다",
-        //     status: "success",
-        //     duration: 1000,
-        //     isClosable: true,
-        //   });
-        // }
       } else if (role == "ROLE_ADMIN") setModalMODE(receivedData.nextModal);
       console.log(receivedData.nextModal);
     });

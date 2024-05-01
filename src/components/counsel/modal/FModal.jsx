@@ -43,7 +43,7 @@ export const FModal = ({
     const jsonString = JSON.stringify(transferData);
 
     if (session && user) {
-      // 상품 가입 정보 송신
+      // 모달 송신
       user.stream.session
         .signal({
           data: jsonString,

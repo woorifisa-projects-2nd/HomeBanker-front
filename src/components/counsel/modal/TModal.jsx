@@ -51,7 +51,6 @@ export const TModal = ({
   const { customerId } = cId;
 
   const enrollment = () => {
-    console.log("제발" + customerId);
     // setCustomerId(loginId);
     const message = {
       customerLoginId: customerId,
@@ -108,7 +107,7 @@ export const TModal = ({
     const jsonString = JSON.stringify(transferData);
 
     if (session && user) {
-      // 상품 가입 정보 송신
+      // 모달 송신
       user.stream.session
         .signal({
           data: jsonString,
