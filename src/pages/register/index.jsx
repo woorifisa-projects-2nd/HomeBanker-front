@@ -220,8 +220,6 @@ function SignupPage() {
                 as={FormControl}
                 alignItems="center"
                 gap="4"
-                marginTop={0}
-                marginBottom={0}
                 marginBottom="20px"
               >
                 <FormLabel

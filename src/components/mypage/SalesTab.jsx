@@ -7,6 +7,7 @@ import {
   Tr,
   Th,
   Td,
+  Box,
   TableContainer,
 } from "@chakra-ui/react";
 import { useSalesQuery } from "../../api/mypage/api";
@@ -23,7 +24,7 @@ export default function SalesTab() {
   });
   const [salesData, isLoading, refetchSales] = useSalesQuery(
     SALE_PAGINATION_SIZE,
-    pagination.currentPage,
+    pagination.currentPage
   );
   useEffect(() => {
     if (salesData) {
@@ -62,13 +63,19 @@ export default function SalesTab() {
   };
 
   return (
-    <>
+    <Box>
       {isLoading ? (
         <Spinner />
       ) : (
         <>
           {sales && (
-            <TableContainer>
+            <TableContainer
+              style={{
+                ...commonCellStyle,
+                marginLeft: "50px",
+                marginRight: "50px",
+              }}
+            >
               <Table variant="simple">
                 <Thead>
                   <Tr bg="#dcecff">
@@ -114,18 +121,20 @@ export default function SalesTab() {
             </TableContainer>
           )}
 
-          {pagination.totalItems > 0 && (
-            <Pagination
-              pagination={pagination}
-              setPagination={setPagination}
-              totalItems={pagination.totalItems}
-              itemCountPerPage={pagination.itemCountPerPage}
-              pageCount={pagination.pageCount}
-              currentPage={pagination.currentPage}
-            />
-          )}
+          <div style={{ marginTop: "30px" }}>
+            {pagination.totalItems > 0 && (
+              <Pagination
+                pagination={pagination}
+                setPagination={setPagination}
+                totalItems={pagination.totalItems}
+                itemCountPerPage={pagination.itemCountPerPage}
+                pageCount={pagination.pageCount}
+                currentPage={pagination.currentPage}
+              />
+            )}
+          </div>
         </>
       )}
-    </>
+    </Box>
   );
 }
