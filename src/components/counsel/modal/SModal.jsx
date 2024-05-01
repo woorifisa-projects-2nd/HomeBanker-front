@@ -1,4 +1,6 @@
 import CustomModal from "../../Modal";
+import { ModalContext } from "./ModalProvider";
+import useCheckRole from "../../../hook/useCheckRole";
 import {
   Text,
   Stack,
@@ -10,6 +12,7 @@ import {
   Td,
   TableContainer,
 } from "@chakra-ui/react";
+import { useContext } from "react";
 // import RadioCard from "../../../components/RadioCard";
 
 export const SModal = ({
@@ -23,16 +26,51 @@ export const SModal = ({
   productName,
   amount,
   period,
+  session,
+  user,
 }) => {
+  const { role } = useCheckRole();
+  const { state, setMode } = useContext(ModalContext);
+  const { isModalDisplayed } = state;
+  const { setModalMODE } = setMode;
+
+  const buttonAction = () => {
+    if (role === "ROLE_CUSTOMER") setModalMODE("T");
+
+    const transferData = {
+      nextModal: "T",
+    };
+
+    const jsonString = JSON.stringify(transferData);
+
+    if (session && user) {
+      // 상품 가입 정보 송신
+      user.stream.session
+        .signal({
+          data: jsonString,
+          to: [],
+          type: "register",
+        })
+        .then(() => {
+          console.log("다음 모달 T로 이동 완료");
+        })
+        .catch((error) => {
+          console.error("다음 모달 T로 이동 불가", error);
+        });
+    }
+  };
+
   return (
     <>
       <CustomModal
-        isOpen={isOpen}
+        isOpen={isModalDisplayed}
         onClose={onClose}
         title={"고객 신청사항"}
         size={size}
         successMessage={successMessage}
-        successAction={successAction}
+        successAction={() => {
+          if (role === "ROLE_CUSTOMER") buttonAction();
+        }}
         children={
           <>
             <TableContainer>
@@ -56,16 +94,6 @@ export const SModal = ({
 
             <Stack spacing={[1, 5]} direction={["column", "row"]}>
               <Text fontSize="2xl">※ 위의 신청내용을 확인합니다. </Text>
-              {/* <HStack {...group}>
-                {options.map((value) => {
-                  const radio = getRadioProps({ value });
-                  return (
-                    <RadioCard key={value} {...radio}>
-                      {value}
-                    </RadioCard>
-                  );
-                })}
-              </HStack> */}
             </Stack>
           </>
         }

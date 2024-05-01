@@ -38,7 +38,7 @@ export default function BoardsTab({ displayChangeStatus = true }) {
   });
   const [boardsData, isLoading, refetchBoards] = useBoardsQuery(
     BOARD_PAGINATION_SIZE,
-    pagination.currentPage
+    pagination.currentPage,
   );
   console.log(boardsData);
   // 상담 처리 완료 API
@@ -155,7 +155,7 @@ export default function BoardsTab({ displayChangeStatus = true }) {
                         </div>
                       </Td>
                       <Td style={{ textAlign: "center" }}>
-                        {item.customerName}
+                        {item.banker.bankerName}
                       </Td>
                       <Td style={{ textAlign: "center" }}>{item.updatedAt}</Td>
                       {displayChangeStatus && (

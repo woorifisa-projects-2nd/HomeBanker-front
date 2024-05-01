@@ -12,6 +12,7 @@ import {
   Circle,
   Flex,
   Text,
+  Alert,
 } from "@chakra-ui/react";
 import CustomModal from "../../components/Modal";
 import Mic from "../../assets/icon/mic.svg?react";
@@ -31,21 +32,25 @@ export default function Board() {
 
   // 문의 작성 API
   const createBoard = () => {
-    api
-      .post(`/api/board`, {
-        content: transcript,
-      })
-      .then(() => {
-        toast({
-          position: "top",
-          title: "문의가 등록되었습니다",
-          status: "success",
-          duration: 1000,
-          isClosable: true,
+    if (transcript.length === 0) {
+      alert("문의 내용을 음성 인식으로 입력해주세요");
+    } else {
+      api
+        .post(`/api/board`, {
+          content: transcript,
+        })
+        .then(() => {
+          toast({
+            position: "top",
+            title: "문의가 등록되었습니다",
+            status: "success",
+            duration: 1000,
+            isClosable: true,
+          });
+          onClose();
+          quitSpeechToText();
         });
-        onClose();
-        quitSpeechToText();
-      });
+    }
   };
 
   // 문의 작성 모달 종료
@@ -92,7 +97,7 @@ export default function Board() {
             fontSize: "25px",
           }}
         >
-          문의하실 내용을 작성하시면 3일 이내로 답변 드리겠습니다.
+          문의하실 내용을 작성하시면 유선상으로 3일 이내에 답변 드리겠습니다.
         </Text>
         <Button
           size="lg"
@@ -116,7 +121,10 @@ export default function Board() {
         successMessage={"작성 완료"}
         successAction={createBoard}
       >
-        <Button onClick={resetTranscript}>초기화</Button>
+        <Flex justify="space-between">
+          <Button onClick={resetTranscript}>초기화</Button>
+          <Button onClick={onModalClose}>X</Button>
+        </Flex>
         <Flex
           direction="column"
           minHeight={500}

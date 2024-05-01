@@ -1,24 +1,26 @@
 import React, { useRef, useEffect } from "react";
 import { useState } from "react";
 import {
-  Flex,
   Button,
   Stack,
   Spacer,
-  Input,
-  Box,
+  Grid,
+  GridItem,
+  Textarea,
   Text,
 } from "@chakra-ui/react";
 import ChatMessage from "./ChatMessage";
-import { IoMdChatbubbles } from "react-icons/io";
+import "./chat.css";
 
 export default function ChatComponent({ user }) {
   const [messageList, setMessageList] = useState([]);
-  const [message, setMessage] = useState();
+  const [message, setMessage] = useState("");
   const nickname = JSON.parse(user.stream.connection.data).clientData;
 
   const chatScroll = useRef();
   const inputRef = useRef();
+
+  const messageEndRef = useRef();
 
   user.stream.session.on("signal:chat", (event) => {
     const data = JSON.parse(event.data);
@@ -41,6 +43,7 @@ export default function ChatComponent({ user }) {
 
   const handlePressKey = (event) => {
     if (event.key === "Enter") {
+      event.preventDefault();
       sendMessage();
     }
   };
@@ -76,76 +79,56 @@ export default function ChatComponent({ user }) {
     return sender === nickname ? "me" : "other";
   };
 
-  const scrollToBottom = () => {
-    chatScroll.current?.scrollIntoView({ behavior: "smooth" });
-  };
-
   useEffect(() => {
-    scrollToBottom();
+    messageEndRef.current.scrollIntoView({ behavior: "smooth" });
   }, [messageList]);
 
   return (
-    <Flex direction="column">
-      <div
-        style={{
-          marginTop: "10px",
-          marginBottom: "10px",
-          marginLeft: "30px",
-          padding: "5px",
-        }}
-      >
-        <Flex>
-          <IoMdChatbubbles style={{ display: "inline" }} size="2rem" />
-          <div style={{ marginLeft: "10px" }}>채팅방</div>
-        </Flex>
-      </div>
-      <div
-        id="chatComponent"
-        style={{
-          marginLeft: "30px",
-          marginRight: "30px",
-          marginBottom: "30px",
-          backgroundColor: "white",
-          padding: "20px",
-          borderRadius: "20px",
-        }}
-      >
-        <div
-          style={{
-            width: "auto",
-            overflowY: "auto",
-            paddingBottom: "30px",
-          }}
-        >
-          <Flex direction="column">
-            <Stack>
-              {Array.from(messageList).map((m, index) => (
-                <ChatMessage
-                  ref={chatScroll}
-                  key={index}
-                  message={m.message}
-                  sender={findMessageSender(m.nickname)}
-                />
-              ))}
-            </Stack>
-          </Flex>
-        </div>
-        <Flex>
-          <Input
-            width="75%"
+    <Grid
+      maxHeight="calc(100vh - 230px)"
+      templateRows="repeat(12, 1fr)"
+      width={"100%"}
+      gap={"10px"}
+    >
+      <GridItem rowSpan={10} overflowY={"auto"} className={"textBox"}>
+        <Stack width={"100%"}>
+          {Array.from(messageList).map((m, index) => (
+            <ChatMessage
+              ref={chatScroll}
+              key={index}
+              message={m.message}
+              sender={findMessageSender(m.nickname)}
+            />
+          ))}
+        </Stack>
+        <Stack ref={messageEndRef}></Stack>
+      </GridItem>
+
+      <GridItem rowSpan={2}>
+        <Stack>
+          <Textarea
+            height={214}
+            width={"100%"}
+            fontSize={"42px"}
+            borderColor="#0067AC"
             focusBorderColor="#0067AC"
-            placeholder="채팅 메세지를 입력해보세요"
+            placeholder="채팅 메세지를 입력하세요"
             ref={inputRef}
             value={message}
             onChange={handleChange}
             onKeyPress={handlePressKey}
           />
           <Spacer />
-          <Button id="sendButton" onClick={sendMessage}>
-            보내기
+          <Button
+            bgColor={!message ? "#CFCFCF" : "#3686DF"}
+            isDisabled={!message}
+            id="sendButton"
+            onClick={sendMessage}
+          >
+            <Text color={!message ? "black" : "white"}>보내기</Text>
           </Button>
-        </Flex>
-      </div>
-    </Flex>
+        </Stack>
+      </GridItem>
+    </Grid>
   );
 }

@@ -4,10 +4,19 @@ export const ModalContext = React.createContext();
 
 const ModalProvider = ({ children }) => {
   const [isModalDisplayed, setIsModalDisplayed] = useState(false);
+  const [isSigned, setIsSigned] = useState(false);
+  const [sign, setSign] = useState("");
+  const [modalMODE, setModalMODE] = useState("F");
 
   const value = {
     state: { isModalDisplayed },
     actions: { setIsModalDisplayed },
+    signState: { isSigned }, //서명 여부
+    signAction: { setIsSigned },
+    signImg: { sign }, //서명이미지(base64)
+    signImgAction: { setSign },
+    mode: { modalMODE },
+    setMode: { setModalMODE },
   };
 
   return (

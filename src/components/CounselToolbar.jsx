@@ -31,13 +31,14 @@ export default function CounselToolbar({ publisher, subscriber }) {
   const { transcript, listening, toggleListening } = useSpeechToText();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  // NOTE : 음성인식 -> 자막 코드
+  const [subtileText, setSubtileText] = useState("");
+
   // 음성인식 내용 늘어나면 끝으로 자동 스크롤 시키는 함수
-  // const scrollToEnd = useCallback(() => {
-  //   if (speechRef.current) {
-  //     speechRef.current.scrollLeft = speechRef.current.scrollWidth;
-  //   }
-  // }, [speechRef.current]);
+  const scrollToEnd = useCallback(() => {
+    if (speechRef.current) {
+      speechRef.current.scrollLeft = speechRef.current.scrollWidth;
+    }
+  }, [speechRef.current]);
 
   const sendMessage = () => {
     if (publisher) {
@@ -74,12 +75,23 @@ export default function CounselToolbar({ publisher, subscriber }) {
     }
   });
 
-  // NOTE : 음성인식 -> 자막 코드
-  // useEffect(() => {
-  //   if (transcript.length > 10){
-  //     scrollEnd();
-  //   }
-  // }, [transcript]);
+  useEffect(() => {
+    if (listening) {
+      if (transcript.length > 0) {
+        publisher.stream.session.signal({
+          data: JSON.stringify(transcript),
+          type: "subtitle",
+        });
+      }
+    }
+  }, [transcript]);
+
+  // 자막 받는 부분
+  publisher.stream.session.on("signal:subtitle", (event) => {
+    const dataTest = JSON.parse(event.data);
+    setSubtileText(dataTest);
+    scrollToEnd();
+  });
 
   return (
     <>
@@ -115,18 +127,19 @@ export default function CounselToolbar({ publisher, subscriber }) {
             </HStack>
           </HStack>
         ) : (
-          <Box
+          <Flex
             width={"100%"}
             height={100}
             bgColor="black"
             whiteSpace="noWrap"
             overflow="auto"
             ref={speechRef}
+            align="center"
           >
             <Text color="white" fontSize={40}>
-              {transcript}
+              {subtileText}
             </Text>
-          </Box>
+          </Flex>
         )}
       </Flex>
 
