@@ -87,11 +87,18 @@ function SignupPage() {
     const value = e.target.value;
     let formattedValue = value;
 
+    if (
+      value.length === formData.identificationNum.length - 1 &&
+      value.endsWith("-")
+    ) {
+      formattedValue = value.slice(0, -1);
+    }
+
     if (value.length === 6 && !value.includes("-")) {
       formattedValue += "-";
     }
 
-    if (value.length > 14) {
+    if (formattedValue.length > 14) {
       formattedValue = formattedValue.slice(0, 14);
     }
 
