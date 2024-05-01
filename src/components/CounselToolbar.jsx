@@ -24,6 +24,7 @@ import RoundCheck from "../assets/icon/round-check.svg?react";
 import Capture from "../assets/icon/capture.svg";
 import { IoChatboxEllipses } from "react-icons/io5";
 import useSpeechToText from "../hook/useSpeechToText";
+import "./chat.css";
 
 export default function CounselToolbar({ publisher, subscriber }) {
   const [isIdentifiedUser, setIdentifyUser] = useState(false);
@@ -197,6 +198,7 @@ export default function CounselToolbar({ publisher, subscriber }) {
             </HStack>
           </HStack>
         ) : (
+          // 고객에게만 보이는 자막
           <Flex
             width={"100%"}
             height={100}
@@ -205,6 +207,7 @@ export default function CounselToolbar({ publisher, subscriber }) {
             overflow="auto"
             ref={speechRef}
             align="center"
+            className={"textBox"}
           >
             <Text color="white" fontSize={40}>
               {subtileText}
