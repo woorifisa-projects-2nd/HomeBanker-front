@@ -8,11 +8,17 @@ import {
   ListItem,
   ListIcon,
   Box,
-  Button,
   useToast,
 } from "@chakra-ui/react";
 // import RadioCard from "../../../components/RadioCard";
 import { TbSquareRoundedFilled } from "react-icons/tb";
+import useCheckId from "../../../hook/useCheckId";
+import { api } from "../../../api/api";
+import moment from "moment";
+import "moment/locale/ko";
+import useCheckRole from "../../../hook/useCheckRole";
+import { ModalContext } from "./ModalProvider";
+import { useContext } from "react";
 
 export const TModal = ({
   isOpen,
@@ -22,16 +28,104 @@ export const TModal = ({
   title,
   successMessage,
   successAction,
+  productName,
+  productId,
+  amount,
+  period,
+  bankerId,
+  session,
+  user,
 }) => {
+  const loginId = useCheckId().loginId;
+  const datetime = moment().format("YYYY-MM-DD");
+  const { role } = useCheckRole();
+  const toast = useToast();
+
+  const { state, actions, setMode } = useContext(ModalContext);
+  const { isModalDisplayed } = state;
+  const { setIsModalDisplayed } = actions;
+  const { setModalMODE } = setMode;
+
+  const enrollment = (productId, amount, period, bankerId) => {
+    const message = {
+      customerLoginId: loginId,
+      bankerLoginId: bankerId,
+      productId: productId,
+      saleMonth: period,
+      saleAmount: amount,
+      createdAt: datetime,
+    };
+    console.log(message);
+
+    api
+      .post(`/api/product/register`, message)
+      .then(() => {
+        toast({
+          position: "top",
+          title: "상품 가입이 완료되었습니다",
+          status: "success",
+          duration: 1000,
+          isClosable: true,
+        });
+
+        buttonAction();
+      })
+      .catch((e) => {
+        toast({
+          position: "top",
+          title: "상품 가입이 완료되지 않았습니다",
+          status: "error",
+          duration: 1000,
+          isClosable: true,
+        });
+
+        // setModalMODE("F");
+
+        buttonAction();
+
+        console.log("error : " + e);
+      });
+  };
+
+  const buttonAction = () => {
+    setModalMODE("F");
+    setIsModalDisplayed(false);
+
+    const transferData = {
+      nextModal: "F",
+    };
+
+    const jsonString = JSON.stringify(transferData);
+
+    if (session && user) {
+      // 상품 가입 정보 송신
+      user.stream.session
+        .signal({
+          data: jsonString,
+          to: [],
+          type: "register",
+        })
+        .then(() => {
+          console.log("다음 모달 F로 이동 완료");
+        })
+        .catch((error) => {
+          console.error("다음 모달 F로 이동 불가", error);
+        });
+    }
+  };
+
   return (
     <>
       <CustomModal
-        isOpen={isOpen}
+        isOpen={isModalDisplayed}
         onClose={onClose}
         title={"고객 확인"}
         size={size}
         successMessage={"완료"}
-        successAction={successAction}
+        successAction={() => {
+          if (role === "ROLE_CUSTOMER")
+            enrollment(productId, amount, period, bankerId);
+        }}
         children={
           <>
             <List spacing={3}>
@@ -74,17 +168,11 @@ export const TModal = ({
               </ListItem>
             </List>
             <Stack spacing={[1, 5]} direction={["column", "row"]}>
-              <Text fontSize="2xl">※ 위 내용을 설명들었음. </Text>
-              {/* <HStack {...group}>
-                {options.map((value) => {
-                  const radio = getRadioProps({ value });
-                  return (
-                    <RadioCard key={value} {...radio}>
-                      {value}
-                    </RadioCard>
-                  );
-                })}
-              </HStack> */}
+              {role == "ROLE_ADMIN" ? (
+                <Text fontSize="2xl">※ 위 내용을 설명하세요. </Text>
+              ) : (
+                <Text fontSize="2xl">※ 위 내용을 설명들었음. </Text>
+              )}
             </Stack>
           </>
         }

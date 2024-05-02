@@ -164,6 +164,14 @@ export default function Login() {
         >
           로그인하기
         </Button>
+        <Button
+          colorScheme="blue"
+          variant="link"
+          onClick={() => navigate("/register")}
+          style={{ ...loginText, marginBottom: "20px" }}
+        >
+          회원가입하시겠어요?
+        </Button>
       </Flex>
     </>
   );

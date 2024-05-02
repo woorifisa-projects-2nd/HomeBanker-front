@@ -7,13 +7,14 @@ import {
   Grid,
   GridItem,
   Textarea,
+  Text,
 } from "@chakra-ui/react";
 import ChatMessage from "./ChatMessage";
 import "./chat.css";
 
 export default function ChatComponent({ user }) {
   const [messageList, setMessageList] = useState([]);
-  const [message, setMessage] = useState();
+  const [message, setMessage] = useState("");
   const nickname = JSON.parse(user.stream.connection.data).clientData;
 
   const chatScroll = useRef();
@@ -42,6 +43,7 @@ export default function ChatComponent({ user }) {
 
   const handlePressKey = (event) => {
     if (event.key === "Enter") {
+      event.preventDefault();
       sendMessage();
     }
   };
@@ -117,8 +119,13 @@ export default function ChatComponent({ user }) {
             onKeyPress={handlePressKey}
           />
           <Spacer />
-          <Button id="sendButton" onClick={sendMessage}>
-            보내기
+          <Button
+            bgColor={!message ? "#CFCFCF" : "#3686DF"}
+            isDisabled={!message}
+            id="sendButton"
+            onClick={sendMessage}
+          >
+            <Text color={!message ? "black" : "white"}>보내기</Text>
           </Button>
         </Stack>
       </GridItem>

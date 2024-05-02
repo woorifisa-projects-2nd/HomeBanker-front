@@ -1,6 +1,6 @@
-import React, { useCallback, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import CustomModal from "./Modal";
-import { Button, Spinner, ModalCloseButton } from "@chakra-ui/react";
+import { Spinner, ModalCloseButton } from "@chakra-ui/react";
 import { Stack, Box, Text } from "@chakra-ui/react";
 import OpenViduVideoComponent from "./OpenViduVideoComponent";
 import { v4 as uuidV4 } from "uuid";
@@ -19,6 +19,7 @@ export default function CheckIdentification({
   onClose,
   streamManager,
   setIdentifyUser,
+  comfirmSignal,
 }) {
   const videoRef = useRef(null);
   const [isLoading, setLoading] = useState(false);
@@ -34,7 +35,9 @@ export default function CheckIdentification({
   };
 
   const removeDataPrefix = (dataString) => {
-    return dataString.replace(/^data:image\/png;base64,/, "");
+    const data = dataString.replace(/^data:image\/png;base64,/, "");
+    console.log(data);
+    return data;
   };
 
   // 신분증 OCR api
@@ -73,6 +76,7 @@ export default function CheckIdentification({
       })
       .catch((e) => {
         console.error("실패", e);
+        alert(NAVER_INVOKE_URL);
         alert("캡처에 실패했습니다.");
         onClose();
       });
@@ -88,6 +92,7 @@ export default function CheckIdentification({
       })
       .then(() => {
         setIdentifyUser(true);
+        comfirmSignal();
         onClose();
       })
       .catch();
@@ -104,7 +109,13 @@ export default function CheckIdentification({
       successMessage={role === "ROLE_ADMIN" && "캡쳐하기"}
     >
       <>
-        {role === "ROLE_ADMIN" && <ModalCloseButton onClose={onClose} />}
+        {role === "ROLE_ADMIN" && (
+          <ModalCloseButton
+            onClose={() => {
+              onClose();
+            }}
+          />
+        )}
         {isLoading ? <Spinner /> : <></>}
         <Stack
           flexDirection="column"
@@ -126,9 +137,6 @@ export default function CheckIdentification({
             </Box>
           )}
         </Stack>
-        {/* {role === "ROLE_ADMIN" && (
-          <Button onClick={onCapture}>{"캡쳐하기"}</Button>
-        )} */}
       </>
     </CustomModal>
   );

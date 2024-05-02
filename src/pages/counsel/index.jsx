@@ -23,6 +23,7 @@ import {
   Tab,
   TabPanel,
   useDisclosure,
+  Tooltip
 } from "@chakra-ui/react";
 import UserVideoComponent from "../../components/UserVideoComponent";
 import { api } from "../../api/api";
@@ -44,6 +45,8 @@ import Notice from "../../components/counsel/Notice";
 import TransferTab from "../../components/board/admin/TransferTab";
 import { ModalContext } from "../../components/counsel/modal/ModalProvider";
 import WaitImage from "../../assets/image/background.svg";
+import useCheckRole from "../../hook/useCheckRole";
+import { createBrowserHistory } from "history";
 
 const SESSION_ID_LIST = [
   "Session1",
@@ -56,6 +59,16 @@ const SESSION_ID_LIST = [
   "Session8",
   "Session9",
   "Session10",
+  "Session11",
+  "Session12",
+  "Session13",
+  "Session14",
+  "Session15",
+  "Session16",
+  "Session17",
+  "Session18",
+  "Session19",
+  "Session20",
 ];
 
 export default function Counsel() {
@@ -74,6 +87,7 @@ export default function Counsel() {
   const [audioStatus, setAudioStatus] = useState(true);
   const [exit, setExit] = useState(false);
   const [time, setTime] = useState(5);
+  const history = createBrowserHistory();
 
   const tabRef = useRef();
   const tabHeight = useMemo(() => {
@@ -86,16 +100,30 @@ export default function Counsel() {
 
   // 상품가입정보
   const [productName, setProductName] = useState();
+  const [productId, setProductId] = useState();
   const [amount, setAmount] = useState();
   const [period, setPeriod] = useState();
-  // const [isModalDisplayed, setIsModalDisplayed] = useState(false);
+  const [bankerId, setBankerId] = useState();
 
-  const { state, actions } = useContext(ModalContext);
+  // const [isModalDisplayed, setIsModalDisplayed] = useState(false);
+  //모달 세팅
+  const { state, actions, setMode, mode } = useContext(ModalContext);
   const { isModalDisplayed } = state;
   const { setIsModalDisplayed } = actions;
+  const { setModalMODE } = setMode;
+  const { modalMODE } = mode;
+  const { role } = useCheckRole();
+  const [locationKeys, setLocationKeys] = useState([]);
+
+  const unlistenHistoryEvent = history.listen(({ action }) => {
+    if (action === "POP") {
+      leaveSession();
+    }
+  });
 
   useEffect(() => {
     if (exit) {
+      setIsModalDisplayed(false); //
       const countdown = setInterval(() => {
         setTime((time) => {
           const nextTime = time - 1;
@@ -119,6 +147,8 @@ export default function Counsel() {
 
   if (publisher !== undefined) {
     session.on("signal:destroy", (event) => {
+      // setIsModalDisplayed(false);
+
       setTimeout(() => {
         session.unpublish(publisher);
         if (session) {
@@ -131,7 +161,7 @@ export default function Counsel() {
 
   if (publisher !== undefined) {
     session.on("signal:exit", (event) => {
-      console.log("received");
+      //console.log("received");
       setExit(true);
       destroySession();
     });
@@ -208,9 +238,11 @@ export default function Counsel() {
       .signal(signalOptions)
       .then(() => {
         console.log("Signal sent");
+        // setIsModalDisplayed(false);
       })
       .catch((error) => {
         console.error(error);
+        // setIsModalDisplayed(false);
       });
   }, [session]);
 
@@ -318,28 +350,39 @@ export default function Counsel() {
       console.log(isModalDisplayed);
 
       const receivedData = JSON.parse(e.data);
+      console.log(receivedData.product);
       console.log("상품 이름 :", receivedData.product.productName);
+      console.log("상품 코드 :", receivedData.product.productId);
       console.log("상품 금액 :", receivedData.amount);
       console.log("가입 기간 :", receivedData.period);
       console.log("은행원 ID :", receivedData.bankerId);
       setProductName(receivedData.product.productName);
+      setProductId(receivedData.product.productId);
       setAmount(receivedData.amount);
       setPeriod(receivedData.period);
+      setBankerId(receivedData.bankerId);
       setIsModalDisplayed(true);
       console.log(isModalDisplayed);
+    });
+  }
+
+  // 모달 다음페이지 자동 전환 수신
+  if (publisher !== undefined) {
+    session.on("signal:register", (e) => {
+      const receivedData = JSON.parse(e.data);
+      if (role == "ROLE_ADMIN" && receivedData.nextModal == "F") {
+        setIsModalDisplayed(false);
+        setModalMODE(receivedData.nextModal);
+      } else if (role == "ROLE_ADMIN") setModalMODE(receivedData.nextModal);
+      console.log(receivedData.nextModal);
     });
   }
 
   return (
     <>
       {session !== undefined && publisher !== undefined ? (
-        <Grid
-          position="relative"
-          height="100vh"
-          width="100vw"
-          templateColumns="repeat(8, 1fr)"
-        >
-          <GridItem colSpan={6} position="relative">
+        <Grid height="100vh" width="100vw" templateColumns="repeat(12, 1fr)">
+          <GridItem colSpan={9} position="relative">
             <Stack
               bgColor={"black"}
               zIndex="99"
@@ -348,42 +391,44 @@ export default function Counsel() {
               space={0}
             >
               <Flex
-                width={8}
-                height={8}
-                justifyContent={"center"}
-                alignItems={"center"}
-                onClick={videoStatus ? camStatusChanged : camStatusChanged}
-              >
-                {videoStatus ? (
-                  <IoVideocamOff fontSize="27px" color="white" />
-                ) : (
-                  <IoVideocam fontSize="27px" color="white" />
-                )}
-              </Flex>
-
-              <Flex
-                width={8}
-                height={8}
-                justifyContent={"center"}
-                alignItems={"center"}
-                onClick={audioStatus ? micStatusChanged : micStatusChanged}
-              >
-                {audioStatus ? (
-                  <IoMdMicOff fontSize="30px" color="white" />
-                ) : (
-                  <IoMdMic />
-                )}
-              </Flex>
-
-              <Flex
-                width={8}
-                height={8}
+                width={10}
+                height={10}
                 justifyContent={"center"}
                 alignItems={"center"}
                 cursor="pointer"
+                onClick={videoStatus ? camStatusChanged : camStatusChanged}
+              >
+                {videoStatus ? (
+                  <IoVideocam fontSize="34px" color="#C8DFFA" />
+                ) : (
+                  <IoVideocamOff fontSize="34px" color="white" />
+                )}
+              </Flex>
+
+              <Flex
+                width={10}
+                height={10}
+                justifyContent={"center"}
+                alignItems={"center"}
+                cursor="pointer"
+                onClick={audioStatus ? micStatusChanged : micStatusChanged}
+              >
+                {audioStatus ? (
+                  <IoMdMic fontSize="37px" color="#C8DFFA" />
+                ) : (
+                  <IoMdMicOff fontSize="37px" color="white" />
+                )}
+              </Flex>
+
+              <Flex
+                width={10}
+                height={10}
+                justify={"center"}
+                align={"center"}
+                cursor="pointer"
                 onClick={leaveSession}
               >
-                <IoLogOutOutline fontSize="30px" color="white" />
+                <IoLogOutOutline fontSize="37px" color="#C8DFFA" />
               </Flex>
             </Stack>
 
@@ -417,27 +462,31 @@ export default function Counsel() {
             <CounselToolbar publisher={publisher} subscriber={subscribers[0]} />
           </GridItem>
 
-          <GridItem colSpan={2}>
+          <GridItem colSpan={3}>
             {/* 여기 안에서 탭 관리 */}
-            <Tabs maxHeight="100vh" ref={tabRef} position={"relative"}>
+            <Tabs ref={tabRef} position={"relative"} height="100vh">
               <TabList>
                 <Tab>채팅</Tab>
                 {getUserRole() === "ROLE_ADMIN" ? <Tab>상품</Tab> : null}
               </TabList>
+
               <TabPanels>
                 <TabPanel padding={0} pt={"10px"} pl={"10px"} pr={"10px"}>
                   {publisher !== undefined ? (
                     <ChatComponent user={publisher} />
                   ) : null}
                 </TabPanel>
-                <TabPanel>
+
+                <TabPanel padding={0}>
                   <TransferTab
                     session={session}
                     user={publisher}
                     productName={productName}
+                    productId={productId}
                     amount={amount}
                     period={period}
-                    // isModalDisplayed={isModalDisplayed}
+                    bankerId={bankerId}
+                  // isModalDisplayed={isModalDisplayed}
                   />
                 </TabPanel>
               </TabPanels>

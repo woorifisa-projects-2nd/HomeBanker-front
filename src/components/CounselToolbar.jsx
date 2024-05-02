@@ -15,6 +15,8 @@ import {
   Button,
   HStack,
   Input,
+  Stack,
+  useToast,
 } from "@chakra-ui/react";
 import CheckIdentification from "./CheckIdentification";
 import useCheckRole from "../hook/useCheckRole";
@@ -22,22 +24,38 @@ import RoundCheck from "../assets/icon/round-check.svg?react";
 import Capture from "../assets/icon/capture.svg";
 import { IoChatboxEllipses } from "react-icons/io5";
 import useSpeechToText from "../hook/useSpeechToText";
+import "./chat.css";
 
 export default function CounselToolbar({ publisher, subscriber }) {
   const [isIdentifiedUser, setIdentifyUser] = useState(false);
   const { role } = useCheckRole();
   const speechRef = useRef(null);
 
+  const toast = useToast();
+
   const { transcript, listening, toggleListening } = useSpeechToText();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  // NOTE : 음성인식 -> 자막 코드
+  const [subtileText, setSubtileText] = useState("");
+
   // 음성인식 내용 늘어나면 끝으로 자동 스크롤 시키는 함수
-  // const scrollToEnd = useCallback(() => {
-  //   if (speechRef.current) {
-  //     speechRef.current.scrollLeft = speechRef.current.scrollWidth;
-  //   }
-  // }, [speechRef.current]);
+  const scrollToEnd = useCallback(() => {
+    if (speechRef.current) {
+      speechRef.current.scrollLeft = speechRef.current.scrollWidth;
+    }
+  }, [speechRef.current]);
+
+  useEffect(() => {
+    if (listening && role === "ROLE_ADMIN") {
+      toast({
+        position: "top",
+        title: "음성인식을 시작합니다. 자막을 고객에게 노출합니다",
+        status: "success",
+        duration: 1000,
+        isClosable: true,
+      });
+    }
+  }, [listening]);
 
   const sendMessage = () => {
     if (publisher) {
@@ -49,7 +67,7 @@ export default function CounselToolbar({ publisher, subscriber }) {
   };
 
   // 양쪽 다 닫히는 메세지 전송
-  const closeModalMessage = () => {
+  const closeModalAction = () => {
     if (publisher && role === "ROLE_ADMIN") {
       publisher.stream.session.signal({
         data: JSON.stringify("close"),
@@ -74,12 +92,77 @@ export default function CounselToolbar({ publisher, subscriber }) {
     }
   });
 
-  // NOTE : 음성인식 -> 자막 코드
-  // useEffect(() => {
-  //   if (transcript.length > 10){
-  //     scrollEnd();
-  //   }
-  // }, [transcript]);
+  useEffect(() => {
+    if (listening) {
+      if (transcript.length > 0) {
+        publisher.stream.session.signal({
+          data: JSON.stringify(transcript),
+          type: "subtitle",
+        });
+      }
+    }
+  }, [transcript]);
+
+  // 자막 받는 부분
+  publisher.stream.session.on("signal:subtitle", (event) => {
+    const dataTest = JSON.parse(event.data);
+    setSubtileText(dataTest);
+    scrollToEnd();
+  });
+
+  publisher.stream.session.on("signal:success", (event) => {
+    const data = JSON.parse(event.data);
+    if (data === "request") {
+      onOpen();
+    }
+  });
+
+  useEffect(() => {
+    if (isIdentifiedUser && role === "ROLE_ADMIN") {
+      toast({
+        position: "top",
+        title: "신분증 인증이 완료되었습니다",
+        status: "success",
+        duration: 1500,
+        isClosable: true,
+      });
+    }
+  }, [isIdentifiedUser]);
+
+  const comfirmSignal = () => {
+    publisher.stream.session.signal({
+      data: JSON.stringify("confirm"),
+      type: "confirm",
+    });
+  };
+
+  const [isConfirm, setConfirm] = useState(false);
+
+  publisher.stream.session.on("signal:confirm", (event) => {
+    const data = JSON.parse(event.data);
+    if (data === "confirm") {
+      if (role === "ROLE_CUSTOMER") {
+        setConfirm(true);
+      }
+    }
+  });
+
+  // 신분증 검증 완료 알림 (고객)
+  useEffect(() => {
+    if (isConfirm && role === "ROLE_CUSTOMER") {
+      toast({
+        duration: 2000,
+        position: "top",
+        render: () => (
+          <Stack color="white" p={6} bg="#3686DF" borderRadius={20}>
+            <Text textAlign="center" fontSize="30">
+              신분증 검증이 완료되었습니다
+            </Text>
+          </Stack>
+        ),
+      });
+    }
+  }, [isConfirm]);
 
   return (
     <>
@@ -98,7 +181,7 @@ export default function CounselToolbar({ publisher, subscriber }) {
             ) : (
               <HStack onClick={sendMessage} cursor="pointer">
                 <Image src={Capture} />
-                <Text color="white">캡쳐</Text>
+                <Text color="white">신분증 검증하기</Text>
               </HStack>
             )}
 
@@ -115,18 +198,21 @@ export default function CounselToolbar({ publisher, subscriber }) {
             </HStack>
           </HStack>
         ) : (
-          <Box
+          // 고객에게만 보이는 자막
+          <Flex
             width={"100%"}
             height={100}
             bgColor="black"
             whiteSpace="noWrap"
             overflow="auto"
             ref={speechRef}
+            align="center"
+            className={"textBox"}
           >
             <Text color="white" fontSize={40}>
-              {transcript}
+              {subtileText}
             </Text>
-          </Box>
+          </Flex>
         )}
       </Flex>
 
@@ -134,11 +220,12 @@ export default function CounselToolbar({ publisher, subscriber }) {
         isOpen={isOpen}
         onClose={() => {
           onClose();
-          closeModalMessage();
+          closeModalAction();
         }}
         onOpen={onOpen}
         setIdentifyUser={setIdentifyUser}
         isIdentifiedUser={isIdentifiedUser}
+        comfirmSignal={comfirmSignal}
         streamManager={role === "ROLE_ADMIN" ? subscriber : publisher}
       />
     </>

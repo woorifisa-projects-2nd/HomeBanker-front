@@ -1,23 +1,22 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { FModal } from "./FModal";
 import { SModal } from "./SModal";
 import { TModal } from "./TModal";
-
-// export const ModalListContext = React.createContext({
-//   visible: false,
-//   setVisible: () => {},
-// });
-
-// const { isModalDisplayed } = useContext(TransferContext);
+import { ModalContext } from "./ModalProvider";
 
 let content = null;
 
-export const ModalList = ({ MODE, ...props }) => {
-  if (MODE === "F") {
+export const ModalList = ({ ...props }) => {
+  const { state, actions, mode, setMode } = useContext(ModalContext);
+  // const { isModalDisplayed } = state;
+  // const { setIsModalDisplayed } = actions;
+  const { modalMODE } = mode;
+
+  if (modalMODE === "F") {
     content = <FModal {...props} />;
-  } else if (MODE === "S") {
+  } else if (modalMODE === "S") {
     content = <SModal {...props} />;
-  } else if (MODE === "T") {
+  } else if (modalMODE === "T") {
     content = <TModal {...props} />;
   }
 
