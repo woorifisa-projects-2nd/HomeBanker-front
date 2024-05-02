@@ -107,12 +107,7 @@ export default function ProfileTab() {
   };
 
   return (
-    <Flex
-      direction="column"
-      alignItems="center"
-      justifyContent="center"
-      marginTop="-50px"
-    >
+    <Flex direction="column" alignItems="center" justifyContent="center">
       <VStack spacing={4}>
         <Image src={logo} alt="logo" marginBottom="30px" marginTop="100px" />
         <Flex as={FormControl} alignItems="center" gap="4" marginBottom="20px">
