@@ -110,6 +110,7 @@ const EnrollmentTab = ({
             <Text>금액</Text>
           </Flex>
           <Input
+            isDisabled={selectedProduct?.productCode.typeName === "카드"}
             width={"70%"}
             type="text"
             placeholder="금액을 입력하세요"
@@ -127,6 +128,7 @@ const EnrollmentTab = ({
             <Text>가입기간</Text>
           </Flex>
           <Input
+            isDisabled={selectedProduct?.productCode.typeName === "카드"}
             width={"70%"}
             type="number"
             placeholder="가입 기간을 입력하세요"
@@ -134,13 +136,20 @@ const EnrollmentTab = ({
             onChange={(e) => setPeriod(e.target.value)}
           />
         </HStack>
+
         <Button
           mt={4}
-          isDisabled={!period || !amount}
-          bgColor={!period || !amount ? "#CFCFCF" : "#3686DF"}
+          isDisabled={(!period || !amount) && !selectedProduct}
+          bgColor={
+            (!period || !amount) && !selectedProduct ? "#CFCFCF" : "#3686DF"
+          }
           onClick={handleSend}
         >
-          <Text color={!period || !amount ? "black" : "white"}>전송</Text>
+          <Text
+            color={(!period || !amount) && !selectedProduct ? "black" : "white"}
+          >
+            전송
+          </Text>
         </Button>
       </Stack>
 
