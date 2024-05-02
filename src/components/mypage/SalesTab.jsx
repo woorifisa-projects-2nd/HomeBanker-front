@@ -68,7 +68,7 @@ export default function SalesTab() {
         <Spinner />
       ) : (
         <>
-          {sales && (
+          {sales && sales.length > 0 ? (
             <TableContainer
               style={{
                 ...commonCellStyle,
@@ -119,6 +119,10 @@ export default function SalesTab() {
                 </Tbody>
               </Table>
             </TableContainer>
+          ) : (
+            <Box textAlign="center" marginTop="50px">
+              <p style={{ ...commonCellStyle }}>가입한 상품이 없습니다.</p>
+            </Box>
           )}
 
           <div style={{ marginTop: "30px" }}>
