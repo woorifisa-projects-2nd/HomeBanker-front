@@ -10,6 +10,7 @@ const Transfer = ({
   user,
   productName,
   productId,
+  productDescription,
   amount,
   period,
   bankerId,
@@ -48,6 +49,7 @@ const Transfer = ({
           user={user}
           productName={productName}
           productId={productId}
+          productDescription={productDescription}
           modalAmount={amount}
           ModalPeriod={period}
           bankerId_={bankerId}
