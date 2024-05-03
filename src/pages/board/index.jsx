@@ -34,7 +34,7 @@ export default function Board() {
 
   const [boardsData, isLoading, refetchBoards] = useBoardsQuery(
     BOARD_PAGINATION_SIZE,
-    pagination.currentPage,
+    pagination.currentPage
   );
 
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -112,7 +112,7 @@ export default function Board() {
         style={{
           ...commonCellStyle,
           fontWeight: 600,
-          width: "250px",
+          width: "280px",
           height: "25px",
           padding: "20px",
           paddingBottom: "30px",
