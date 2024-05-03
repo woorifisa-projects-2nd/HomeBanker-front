@@ -1,5 +1,5 @@
 import React from "react";
-import { Flex, Box, Button, Spacer } from "@chakra-ui/react";
+import { Flex, Box, Button, Spacer, Text, Stack } from "@chakra-ui/react";
 
 const BoardDetail = ({ selected, onClose }) => {
   // 공통으로 사용할 스타일 객체 정의
@@ -7,7 +7,7 @@ const BoardDetail = ({ selected, onClose }) => {
     fontFamily: "Noto Sans",
     fontStyle: "normal",
 
-    fontSize: "20px",
+    fontSize: "30px",
     lineHeight: "30px",
     color: "black",
   };
@@ -16,12 +16,24 @@ const BoardDetail = ({ selected, onClose }) => {
     <>
       <Flex direction="column" style={{ ...commonStyle }}>
         <Flex justify="space-between" style={{ marginBottom: "30px" }}>
-          <Box>작성 날짜 : {selected.createdAt}</Box>
-          <Box>작성 고객 : {selected.customerName}</Box>
+          <Box>
+            <Stack>
+              <Text style={{ fontWeight: "700" }}>작성 날짜 </Text>
+              <Text>{selected.createdAt}</Text>
+            </Stack>
+          </Box>
+          <Box>
+            <Stack>
+              <Text style={{ fontWeight: "700" }}>작성 고객</Text>
+              <Text>{selected.customerName}</Text>
+            </Stack>
+          </Box>
         </Flex>
 
         <Box
           style={{
+            width: "auto",
+            height: "250px",
             padding: "10px",
             border: "solid black",
             borderRadius: "5px",
@@ -32,27 +44,47 @@ const BoardDetail = ({ selected, onClose }) => {
         </Box>
 
         <Box style={{ marginBottom: "30px" }}>
-          고객 전화번호 : {selected.telephone}
+          <Stack>
+            <Text style={{ fontWeight: "700" }}>고객 전화번호</Text>
+            <Text>{selected.telephone}</Text>
+          </Stack>
         </Box>
 
         <Box style={{ marginBottom: "30px" }}>
-          처리 완료 여부 : {selected.replyYN}
+          <Stack>
+            <Text style={{ fontWeight: "700" }}>처리 완료 여부</Text>
+            <Text>{selected.replyYN === "Y" ? "완료" : "미완료"}</Text>
+          </Stack>
         </Box>
 
         {selected.replyYN === "Y" ? (
           <>
             <Box style={{ marginBottom: "30px" }}>
-              처리 날짜 : {selected.updatedAt}
+              <Stack>
+                <Text style={{ fontWeight: "700" }}>처리 날짜</Text>
+                <Text>{selected.updatedAt}</Text>
+              </Stack>
             </Box>
+
             <Box style={{ marginBottom: "30px" }}>
-              처리 담당자 : {selected.banker.bankerName}
+              <Stack>
+                <Text style={{ fontWeight: "700" }}>처리 담당자</Text>
+                <Text>{selected.banker.bankerName}</Text>
+              </Stack>
             </Box>
           </>
         ) : null}
       </Flex>
-      <Button colorScheme="blue" mr={3} onClick={onClose}>
-        닫기
-      </Button>
+      <Flex justify="end">
+        <Button
+          colorScheme="blue"
+          mr={3}
+          onClick={onClose}
+          style={{ marginBottom: "30px" }}
+        >
+          닫기
+        </Button>
+      </Flex>
     </>
   );
 };

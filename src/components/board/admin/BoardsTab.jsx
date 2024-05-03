@@ -230,7 +230,7 @@ export default function BoardsTab({ displayChangeStatus = true }) {
             )}
           </div>
           {isOpen === true ? (
-            <Modal isOpen={isOpen} size="xl" title="문의 게시글 상세">
+            <Modal isOpen={isOpen} size="xl">
               <BoardDetail selected={selected} onClose={onClose} />
             </Modal>
           ) : null}

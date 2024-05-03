@@ -28,28 +28,33 @@ export default function Index() {
   };
 
   const handleCounselClick = (counselType) => {
-    let storageValue;
-    switch (counselType) {
-      case "예/적금 상담":
-        storageValue = "deposit";
-        break;
-      case "카드 상담":
-        storageValue = "card";
-        break;
-      case "대출 상담":
-        storageValue = "loan";
-        break;
-      default:
-        storageValue = "all";
-        break;
-    }
+    if (user) {
+      let storageValue;
+      switch (counselType) {
+        case "예/적금 상담":
+          storageValue = "deposit";
+          break;
+        case "카드 상담":
+          storageValue = "card";
+          break;
+        case "대출 상담":
+          storageValue = "loan";
+          break;
+        default:
+          storageValue = "all";
+          break;
+      }
 
-    if (user.role === "ROLE_CUSTOMER") {
-      localStorage.setItem("counselType", storageValue);
-      navigate("/counsel");
+      if (user.role === "ROLE_CUSTOMER") {
+        localStorage.setItem("counselType", storageValue);
+        navigate("/counsel");
+      } else {
+        localStorage.removeItem("counselType");
+        navigate("/counsel");
+      }
     } else {
-      localStorage.removeItem("counselType");
-      navigate("/counsel");
+      alert("로그인이 필요한 기능입니다");
+      navigate("/login");
     }
   };
 
