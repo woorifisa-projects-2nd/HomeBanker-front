@@ -9,6 +9,7 @@ const ModalProvider = ({ children }) => {
   const [modalMODE, setModalMODE] = useState("F");
   const [bankerId, setBankerId] = useState("");
   const [customerId, setCustomerId] = useState("");
+  const [counselType, setCounsetType] = useState("");
 
   const value = {
     state: { isModalDisplayed },
@@ -23,6 +24,8 @@ const ModalProvider = ({ children }) => {
     idAction: { setBankerId },
     cId: { customerId },
     CIdAction: { setCustomerId },
+    counseltype: { counselType },
+    setCounseltype: { setCounsetType },
   };
 
   return (

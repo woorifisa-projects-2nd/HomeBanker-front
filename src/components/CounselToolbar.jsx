@@ -26,7 +26,12 @@ import { IoChatboxEllipses } from "react-icons/io5";
 import useSpeechToText from "../hook/useSpeechToText";
 import "./chat.css";
 
-export default function CounselToolbar({ publisher, subscriber }) {
+export default function CounselToolbar({
+  subtileText,
+  setSubtileText,
+  publisher,
+  subscriber,
+}) {
   const [isIdentifiedUser, setIdentifyUser] = useState(false);
   const { role } = useCheckRole();
   const speechRef = useRef(null);
@@ -35,8 +40,6 @@ export default function CounselToolbar({ publisher, subscriber }) {
 
   const { transcript, listening, toggleListening } = useSpeechToText();
   const { isOpen, onOpen, onClose } = useDisclosure();
-
-  const [subtileText, setSubtileText] = useState("");
 
   // 음성인식 내용 늘어나면 끝으로 자동 스크롤 시키는 함수
   const scrollToEnd = useCallback(() => {

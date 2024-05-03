@@ -1,5 +1,4 @@
-import React, {
-  Fragment,
+import {
   useCallback,
   useEffect,
   useMemo,
@@ -23,21 +22,15 @@ import {
   Tab,
   TabPanel,
   useToast,
-  useDisclosure,
-  Tooltip
-
 } from "@chakra-ui/react";
 import UserVideoComponent from "../../components/UserVideoComponent";
 import { api } from "../../api/api";
 import ChatComponent from "../../components/Chat";
-import useSpeechToText from "../../hook/useSpeechToText";
 import logoLogin from "../../assets/icon/logoLogin.svg";
-import CheckIdentification from "../../components/CheckIdentification";
 import Header from "../../components/Header";
 import "./counsel.css";
 import { useNavigate } from "react-router-dom";
 import CounselToolbar from "../../components/CounselToolbar";
-import { event } from "jquery";
 import { IoMdMic, IoMdMicOff } from "react-icons/io";
 import { IoVideocamOff, IoVideocam, IoLogOutOutline } from "react-icons/io5";
 
@@ -51,6 +44,7 @@ import useCheckRole from "../../hook/useCheckRole";
 
 import useCheckId from "../../hook/useCheckId";
 import { createBrowserHistory } from "history";
+import { formatDate } from "../../util/counsel";
 
 const SESSION_ID_LIST = [
   "Session1",
@@ -73,7 +67,6 @@ const SESSION_ID_LIST = [
   "Session18",
   "Session19",
   "Session20",
-
 ];
 
 export default function Counsel() {
@@ -95,48 +88,40 @@ export default function Counsel() {
   const history = createBrowserHistory();
 
   const tabRef = useRef();
-  const tabHeight = useMemo(() => {
-    if (tabRef.current) {
-      return tabRef.current.offsetHeight;
-    } else {
-      return 0;
-    }
-  }, [tabRef.current]);
 
   // 상품가입정보
   const [productName, setProductName] = useState();
   const [productId, setProductId] = useState();
   const [amount, setAmount] = useState();
   const [period, setPeriod] = useState();
-  // const [bankerId, setBankerId] = useState();
   const [productDescription, setProductDescription] = useState();
-  const [openToast, setOpenToast] = useState();
 
-  // const [isModalDisplayed, setIsModalDisplayed] = useState(false);
-  //모달 세팅
-  const { state, actions, setMode, mode, id, idAction, CIdAction, cId } =
-    useContext(ModalContext);
+  const {
+    state,
+    actions,
+    setMode,
+    id,
+    idAction,
+    cId,
+    CIdAction,
+    counseltype,
+    setCounseltype,
+  } = useContext(ModalContext);
   const { isModalDisplayed } = state;
   const { setIsModalDisplayed } = actions;
   const { setModalMODE } = setMode;
-  const { modalMODE } = mode;
   const { bankerId } = id;
   const { setBankerId } = idAction;
   const { setCustomerId } = CIdAction;
   const { customerId } = cId;
+  const { counselType } = counseltype;
+  const { setCounselType } = setCounseltype;
 
   const { role } = useCheckRole();
-
   const { loginId } = useCheckId();
-  const toast = useToast();
 
-  const [locationKeys, setLocationKeys] = useState([]);
+  const [subtileText, setSubtileText] = useState("");
 
-  const unlistenHistoryEvent = history.listen(({ action }) => {
-    if (action === "POP") {
-      leaveSession();
-    }
-  });
 
 
   useEffect(() => {
@@ -149,7 +134,11 @@ export default function Counsel() {
           return nextTime;
         });
       }, 1000);
-      return () => clearInterval(countdown);
+      return () => {
+        registerCounsel();
+
+        clearInterval(countdown);
+      };
     }
   }, [exit]);
 
@@ -179,11 +168,27 @@ export default function Counsel() {
 
   if (publisher !== undefined) {
     session.on("signal:exit", (event) => {
-      //console.log("received");
       setExit(true);
       destroySession();
     });
   }
+
+  // 상담기록 저장하는 api 연동
+  const registerCounsel = () => {
+    api
+      .post(`/api/counsel/register`, {
+        customerId: customerId,
+        bankerId: bankerId,
+        startedAt: localStorage.getItem("startedAt"),
+        endedAt: formatDate(new Date()),
+        content: subtileText,
+        counselType: counselType,
+      })
+      .then(() => {
+        console.log("성공");
+      })
+      .catch((e) => console.log("실패", e));
+  };
 
   const destroySession = () => {
     api.post(
@@ -241,6 +246,7 @@ export default function Counsel() {
     });
 
     setSession(mySession);
+    localStorage.setItem("startedAt", formatDate(new Date()));
   }, [mySessionId]);
 
   /**
@@ -407,6 +413,7 @@ export default function Counsel() {
     });
   }
 
+
   return (
     <>
       {session !== undefined && publisher !== undefined ? (
@@ -488,7 +495,12 @@ export default function Counsel() {
               ))
             )}
 
-            <CounselToolbar publisher={publisher} subscriber={subscribers[0]} />
+            <CounselToolbar
+              subtileText={subtileText}
+              setSubtileText={setSubtileText}
+              publisher={publisher}
+              subscriber={subscribers[0]}
+            />
           </GridItem>
 
           <GridItem colSpan={3}>
@@ -517,10 +529,7 @@ export default function Counsel() {
                     period={period}
                     bankerId={bankerId}
 
-
-                    // isModalDisplayed={isModalDisplayed}
-
-
+                  // isModalDisplayed={isModalDisplayed}
                   />
                 </TabPanel>
               </TabPanels>
