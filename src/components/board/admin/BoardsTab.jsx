@@ -10,6 +10,16 @@ import {
   TableContainer,
   Button,
   useToast,
+  // Modal,
+  // ModalOverlay,
+  // ModalContent,
+  // ModalHeader,
+  // ModalFooter,
+  // ModalBody,
+  // ModalCloseButton,
+  useDisclosure,
+  Flex,
+  Box,
 } from "@chakra-ui/react";
 import Pagination from "../../Pagination";
 import { useBoardsQuery } from "../../../api/counsel/api";
@@ -17,6 +27,9 @@ import { BOARD_PAGINATION_SIZE } from "../../../constants/index";
 import { api } from "../../../api/api";
 import NoReply from "../../../assets/icon/NoReply.svg";
 import YesReply from "../../../assets/icon/YesReply.svg";
+import Modal from "../../Modal.jsx";
+import BoardDetail from "../BoardDetail";
+
 // 공통으로 사용할 스타일 객체 정의
 const commonCellStyle = {
   fontFamily: "Noto Sans",
@@ -30,6 +43,7 @@ const commonCellStyle = {
 export default function BoardsTab({ displayChangeStatus = true }) {
   const toast = useToast();
   const [boards, setBoards] = useState([]);
+  const [selected, select] = useState();
   const [pagination, setPagination] = useState({
     totalItems: 0,
     itemCountPerPage: 0,
@@ -40,7 +54,8 @@ export default function BoardsTab({ displayChangeStatus = true }) {
     BOARD_PAGINATION_SIZE,
     pagination.currentPage,
   );
-  console.log(boardsData);
+
+  const { isOpen, onOpen, onClose } = useDisclosure();
   // 상담 처리 완료 API
   const changeBoardStatus = (boardId) => {
     api.put(`/api/banker/board/${boardId}`).then(() => {
@@ -91,6 +106,11 @@ export default function BoardsTab({ displayChangeStatus = true }) {
     refetchBoards();
   }, [pagination.currentPage]);
 
+  const openDetailModal = (item) => {
+    select(item);
+    onOpen();
+  };
+
   return (
     <>
       {isLoading ? (
@@ -138,7 +158,10 @@ export default function BoardsTab({ displayChangeStatus = true }) {
                 </Thead>
                 <Tbody>
                   {boards.map((item) => (
-                    <Tr key={item.boardId}>
+                    <Tr
+                      key={item.boardId}
+                      onClick={() => openDetailModal(item)}
+                    >
                       <Td style={{ paddingLeft: "50px" }}>
                         {truncateString(item.content, 15)}
                       </Td>
@@ -155,7 +178,9 @@ export default function BoardsTab({ displayChangeStatus = true }) {
                         </div>
                       </Td>
                       <Td style={{ textAlign: "center" }}>
-                        {item.banker.bankerName}
+                        {displayChangeStatus
+                          ? item.customerName
+                          : item.banker.bankerName}
                       </Td>
                       <Td style={{ textAlign: "center" }}>{item.updatedAt}</Td>
                       {displayChangeStatus && (
@@ -204,6 +229,11 @@ export default function BoardsTab({ displayChangeStatus = true }) {
               />
             )}
           </div>
+          {isOpen === true ? (
+            <Modal isOpen={isOpen} size="xl">
+              <BoardDetail selected={selected} onClose={onClose} />
+            </Modal>
+          ) : null}
         </>
       )}
     </>

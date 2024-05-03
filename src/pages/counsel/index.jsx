@@ -24,8 +24,7 @@ import {
   TabPanel,
   useToast,
   useDisclosure,
-  Tooltip
-
+  Tooltip,
 } from "@chakra-ui/react";
 import UserVideoComponent from "../../components/UserVideoComponent";
 import { api } from "../../api/api";
@@ -73,7 +72,6 @@ const SESSION_ID_LIST = [
   "Session18",
   "Session19",
   "Session20",
-
 ];
 
 export default function Counsel() {
@@ -137,7 +135,6 @@ export default function Counsel() {
       leaveSession();
     }
   });
-
 
   useEffect(() => {
     if (exit) {
@@ -517,10 +514,7 @@ export default function Counsel() {
                     period={period}
                     bankerId={bankerId}
 
-
                     // isModalDisplayed={isModalDisplayed}
-
-
                   />
                 </TabPanel>
               </TabPanels>
