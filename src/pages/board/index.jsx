@@ -1,6 +1,6 @@
 import "regenerator-runtime";
 import { api } from "../../api/api";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { TfiWrite } from "react-icons/tfi";
 import {
   Button,
@@ -12,14 +12,31 @@ import {
   Circle,
   Flex,
   Text,
+  Alert,
 } from "@chakra-ui/react";
 import CustomModal from "../../components/Modal";
 import Mic from "../../assets/icon/mic.svg?react";
 import useSpeechToText from "../../hook/useSpeechToText";
 import BoardsTab from "../../components/board/admin/BoardsTab";
 import Header from "../../components/Header";
+import { useBoardsQuery } from "../../api/counsel/api";
+import { BOARD_PAGINATION_SIZE } from "../../constants/index";
+
 export default function Board() {
   const toast = useToast();
+  const [boards, setBoards] = useState([]);
+  const [pagination, setPagination] = useState({
+    totalItems: 0,
+    itemCountPerPage: 0,
+    pageCount: 0,
+    currentPage: 0,
+  });
+
+  const [boardsData, isLoading, refetchBoards] = useBoardsQuery(
+    BOARD_PAGINATION_SIZE,
+    pagination.currentPage,
+  );
+
   const { isOpen, onOpen, onClose } = useDisclosure();
   const {
     transcript,
@@ -29,24 +46,50 @@ export default function Board() {
     resetTranscript,
   } = useSpeechToText();
 
-  // 문의 작성 API
   const createBoard = () => {
-    api
-      .post(`/api/board`, {
-        content: transcript,
-      })
-      .then(() => {
-        toast({
-          position: "top",
-          title: "문의가 등록되었습니다",
-          status: "success",
-          duration: 1000,
-          isClosable: true,
+    if (transcript.length === 0) {
+      alert("문의 내용을 음성 인식으로 입력해주세요");
+    } else {
+      api
+        .post(`/api/board`, {
+          content: transcript,
+        })
+        .then(() => {
+          refetchBoards();
+          toast({
+            position: "top",
+            title: "문의가 등록되었습니다",
+            status: "success",
+            duration: 1000,
+            isClosable: true,
+          });
+          onClose();
+          quitSpeechToText();
         });
-        onClose();
-        quitSpeechToText();
-      });
+    }
   };
+
+  useEffect(() => {
+    if (isOpen) {
+      resetTranscript(); // 모달이 열릴 때마다 이전에 입력한 내용을 초기화합니다.
+    }
+  }, [isOpen]);
+
+  useEffect(() => {
+    if (boardsData) {
+      setBoards(boardsData.data.boardItems);
+      setPagination({
+        totalItems: boardsData.data.pagination.totalElements,
+        itemCountPerPage: BOARD_PAGINATION_SIZE,
+        pageCount: boardsData.data.pagination.totalPages,
+        currentPage: boardsData.data.pagination.pageNumber,
+      });
+    }
+  }, [boardsData]);
+
+  useEffect(() => {
+    refetchBoards();
+  }, [pagination.currentPage]);
 
   // 문의 작성 모달 종료
   const onModalClose = () => {
@@ -92,7 +135,7 @@ export default function Board() {
             fontSize: "25px",
           }}
         >
-          문의하실 내용을 작성하시면 3일 이내로 답변 드리겠습니다.
+          문의하실 내용을 작성하시면 유선상으로 3일 이내에 답변 드리겠습니다.
         </Text>
         <Button
           size="lg"
@@ -116,7 +159,10 @@ export default function Board() {
         successMessage={"작성 완료"}
         successAction={createBoard}
       >
-        <Button onClick={resetTranscript}>초기화</Button>
+        <Flex justify="space-between">
+          <Button onClick={resetTranscript}>초기화</Button>
+          <Button onClick={onModalClose}>X</Button>
+        </Flex>
         <Flex
           direction="column"
           minHeight={500}

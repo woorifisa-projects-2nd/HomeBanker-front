@@ -1,5 +1,6 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import ModalProvider from "./components/counsel/modal/ModalProvider";
+import NotFoundPage from "./components/NotFoundPage.jsx";
 
 const pages = import.meta.glob("./pages/**/*.jsx", { eager: true });
 
@@ -22,6 +23,12 @@ for (const path of Object.keys(pages)) {
     ErrorBoundary: pages[path]?.ErrorBoundary,
   });
 }
+
+routes.push({
+  path: "*",
+  Element: NotFoundPage,
+});
+
 const router = createBrowserRouter(
   routes.map(({ Element, ErrorBoundary, ...rest }) => ({
     ...rest,

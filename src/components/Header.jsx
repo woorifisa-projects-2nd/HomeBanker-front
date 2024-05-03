@@ -67,10 +67,14 @@ export default function Header() {
                 로그인
               </Button>
             )}
-            <Button leftIcon={<FaHouseUser />} onClick={goMyPage}>
-              {" "}
-              내 정보
-            </Button>
+            {user ? (
+              user.role === "ROLE_CUSTOMER" ? (
+                <Button leftIcon={<FaHouseUser />} onClick={goMyPage}>
+                  {" "}
+                  내 정보
+                </Button>
+              ) : null
+            ) : null}
           </ButtonGroup>
         </Flex>
       </Flex>

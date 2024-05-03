@@ -23,6 +23,9 @@ import {
   Tab,
   TabPanel,
   useToast,
+  useDisclosure,
+  Tooltip
+
 } from "@chakra-ui/react";
 import UserVideoComponent from "../../components/UserVideoComponent";
 import { api } from "../../api/api";
@@ -45,19 +48,32 @@ import TransferTab from "../../components/board/admin/TransferTab";
 import { ModalContext } from "../../components/counsel/modal/ModalProvider";
 import WaitImage from "../../assets/image/background.svg";
 import useCheckRole from "../../hook/useCheckRole";
+
 import useCheckId from "../../hook/useCheckId";
+import { createBrowserHistory } from "history";
 
 const SESSION_ID_LIST = [
+  "Session1",
+  "Session2",
+  "Session3",
+  "Session4",
+  "Session5",
+  "Session6",
+  "Session7",
+  "Session8",
+  "Session9",
+  "Session10",
   "Session11",
-  "Session22",
-  "Session33",
-  "Session44",
-  "Session55",
-  "Session66",
-  "Session77",
-  "Session88",
-  "Session99",
-  "Session100",
+  "Session12",
+  "Session13",
+  "Session14",
+  "Session15",
+  "Session16",
+  "Session17",
+  "Session18",
+  "Session19",
+  "Session20",
+
 ];
 
 export default function Counsel() {
@@ -65,7 +81,7 @@ export default function Counsel() {
 
   const [mySessionId, setMySessionId] = useState(SESSION_ID_LIST[0]);
   const [myUserName, setMyUserName] = useState(
-    `Participant${Math.floor(Math.random() * 100)}`
+    `Participant${Math.floor(Math.random() * 100)}`,
   );
   const [session, setSession] = useState(undefined);
   const [publisher, setPublisher] = useState(undefined);
@@ -76,6 +92,7 @@ export default function Counsel() {
   const [audioStatus, setAudioStatus] = useState(true);
   const [exit, setExit] = useState(false);
   const [time, setTime] = useState(5);
+  const history = createBrowserHistory();
 
   const tabRef = useRef();
   const tabHeight = useMemo(() => {
@@ -109,8 +126,18 @@ export default function Counsel() {
   const { customerId } = cId;
 
   const { role } = useCheckRole();
+
   const { loginId } = useCheckId();
   const toast = useToast();
+
+  const [locationKeys, setLocationKeys] = useState([]);
+
+  const unlistenHistoryEvent = history.listen(({ action }) => {
+    if (action === "POP") {
+      leaveSession();
+    }
+  });
+
 
   useEffect(() => {
     if (exit) {
@@ -152,7 +179,7 @@ export default function Counsel() {
 
   if (publisher !== undefined) {
     session.on("signal:exit", (event) => {
-      console.log("received");
+      //console.log("received");
       setExit(true);
       destroySession();
     });
@@ -164,7 +191,7 @@ export default function Counsel() {
       {},
       {
         headers: { "Content-Type": "application/json" },
-      }
+      },
     );
 
     const signalOptions = {
@@ -250,7 +277,7 @@ export default function Counsel() {
         { customSessionId: SESSION_ID_LIST[i], role: role },
         {
           headers: { "Content-Type": "application/json" },
-        }
+        },
       );
       if (response.data !== "full") {
         setMySessionId(SESSION_ID_LIST[i]);
@@ -273,7 +300,7 @@ export default function Counsel() {
       {},
       {
         headers: { "Content-Type": "application/json" },
-      }
+      },
     );
     return response.data; // The token
   };
@@ -307,7 +334,7 @@ export default function Counsel() {
           console.log(
             "There was an error connecting to the session:",
             error.code,
-            error.message
+            error.message,
           );
         }
       });
@@ -393,42 +420,44 @@ export default function Counsel() {
               space={0}
             >
               <Flex
-                width={8}
-                height={8}
-                justifyContent={"center"}
-                alignItems={"center"}
-                onClick={videoStatus ? camStatusChanged : camStatusChanged}
-              >
-                {videoStatus ? (
-                  <IoVideocamOff fontSize="27px" color="white" />
-                ) : (
-                  <IoVideocam fontSize="27px" color="white" />
-                )}
-              </Flex>
-
-              <Flex
-                width={8}
-                height={8}
-                justifyContent={"center"}
-                alignItems={"center"}
-                onClick={audioStatus ? micStatusChanged : micStatusChanged}
-              >
-                {audioStatus ? (
-                  <IoMdMicOff fontSize="30px" color="white" />
-                ) : (
-                  <IoMdMic />
-                )}
-              </Flex>
-
-              <Flex
-                width={8}
-                height={8}
+                width={10}
+                height={10}
                 justifyContent={"center"}
                 alignItems={"center"}
                 cursor="pointer"
+                onClick={videoStatus ? camStatusChanged : camStatusChanged}
+              >
+                {videoStatus ? (
+                  <IoVideocam fontSize="34px" color="#C8DFFA" />
+                ) : (
+                  <IoVideocamOff fontSize="34px" color="white" />
+                )}
+              </Flex>
+
+              <Flex
+                width={10}
+                height={10}
+                justifyContent={"center"}
+                alignItems={"center"}
+                cursor="pointer"
+                onClick={audioStatus ? micStatusChanged : micStatusChanged}
+              >
+                {audioStatus ? (
+                  <IoMdMic fontSize="37px" color="#C8DFFA" />
+                ) : (
+                  <IoMdMicOff fontSize="37px" color="white" />
+                )}
+              </Flex>
+
+              <Flex
+                width={10}
+                height={10}
+                justify={"center"}
+                align={"center"}
+                cursor="pointer"
                 onClick={leaveSession}
               >
-                <IoLogOutOutline fontSize="30px" color="white" />
+                <IoLogOutOutline fontSize="37px" color="#C8DFFA" />
               </Flex>
             </Stack>
 
@@ -488,7 +517,10 @@ export default function Counsel() {
                     period={period}
                     bankerId={bankerId}
 
+
                     // isModalDisplayed={isModalDisplayed}
+
+
                   />
                 </TabPanel>
               </TabPanels>

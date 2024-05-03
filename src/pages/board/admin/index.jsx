@@ -40,6 +40,7 @@ export default function Board() {
             상담 게시판
           </Tab>
           <Tab
+            data-cy="products"
             style={{
               ...commonCellStyle,
               fontWeight: 600,
