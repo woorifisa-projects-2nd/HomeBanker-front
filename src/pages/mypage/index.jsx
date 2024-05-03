@@ -53,7 +53,6 @@ export default function MyPage() {
           >
             나의 상품가입
           </Tab>
-          <Tab>나의 프로필</Tab>
         </TabList>
         <TabIndicator
           mt="-1.3px"
