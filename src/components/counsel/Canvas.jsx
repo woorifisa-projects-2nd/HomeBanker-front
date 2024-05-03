@@ -62,9 +62,6 @@ const Canvas = () => {
       </Box>
 
       <ButtonGroup variant="outline" spacing="6">
-        {/* <Button colorScheme="blue" variant="outline" size="md" onClick={save1}>
-          저장
-        </Button> */}
         <Button colorScheme="blue" size="md" onClick={clearSignature}>
           초기화
         </Button>
