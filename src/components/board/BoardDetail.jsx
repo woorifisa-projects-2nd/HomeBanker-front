@@ -33,7 +33,7 @@ const BoardDetail = ({ selected, onClose }) => {
         <Box
           style={{
             width: "auto",
-            height: "250px",
+            minHeight: "250px",
             padding: "10px",
             border: "solid black",
             borderRadius: "5px",
