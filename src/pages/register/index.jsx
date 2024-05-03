@@ -192,6 +192,7 @@ function SignupPage() {
                   name="birth"
                   value={formData.birth}
                   max={new Date().toISOString().split("T")[0]}
+                  sx={commonCellStyle}
                   onChange={handleChange}
                 />
               </Flex>
@@ -207,12 +208,13 @@ function SignupPage() {
                   w="190px"
                   sx={commonCellStyle}
                 >
-                  전화번호:
+                  전화번호
                 </FormLabel>
                 <Input
                   type="tel"
                   name="phone"
                   value={formData.phone}
+                  sx={commonCellStyle}
                   onChange={handleChange}
                 />
               </Flex>
@@ -220,8 +222,6 @@ function SignupPage() {
                 as={FormControl}
                 alignItems="center"
                 gap="4"
-                marginTop={0}
-                marginBottom={0}
                 marginBottom="20px"
               >
                 <FormLabel
@@ -236,7 +236,7 @@ function SignupPage() {
                   <Input
                     id="address"
                     value={formData.address}
-                    w="800px"
+                    w="900px"
                     sx={commonCellStyle}
                     onChange={(e) =>
                       handleChange({
@@ -244,7 +244,7 @@ function SignupPage() {
                       })
                     }
                   />
-                  <InputRightElement width="100px" marginRight="30px">
+                  <InputRightElement width="100px" marginRight="25px">
                     <Button size="sm" onClick={onOpen}>
                       주소찾기
                     </Button>
@@ -279,6 +279,7 @@ function SignupPage() {
                   type="text"
                   name="loginId"
                   value={formData.loginId}
+                  sx={commonCellStyle}
                   onChange={handleChange}
                 />
               </Flex>
@@ -300,6 +301,7 @@ function SignupPage() {
                   type="password"
                   name="loginPw"
                   value={formData.loginPw}
+                  sx={commonCellStyle}
                   onChange={handleChange}
                 />
               </Flex>
@@ -321,6 +323,7 @@ function SignupPage() {
                   type="password"
                   name="confirmPassword"
                   value={formData.confirmPassword}
+                  sx={commonCellStyle}
                   onChange={handleChange}
                 />
               </Flex>
@@ -336,16 +339,26 @@ function SignupPage() {
                   w="190px"
                   sx={commonCellStyle}
                 >
-                  주민등록번호:
+                  주민등록번호
                 </FormLabel>
                 <Input
                   type="text"
                   name="identificationNum"
                   value={formData.identificationNum}
+                  sx={commonCellStyle}
                   onChange={handleIdentificationNumChange}
                 />
               </Flex>
-              <Button type="submit" colorScheme="blue" size="lg" mt={4}>
+              <Button
+                type="submit"
+                colorScheme="blue"
+                size="lg"
+                mt={4}
+                style={{
+                  ...commonCellStyle,
+                  color: "white",
+                }}
+              >
                 회원가입
               </Button>
             </VStack>

@@ -19,6 +19,7 @@ const EnrollmentTab = ({
   user,
   productName,
   productId,
+  productDescription,
   modalAmount,
   ModalPeriod,
 
@@ -26,15 +27,18 @@ const EnrollmentTab = ({
 }) => {
   const [amount, setAmount] = useState("");
   const [period, setPeriod] = useState("");
-  const [bankerId, setBankerId] = useState("banker1");
 
   const { selectedProduct } = useContext(TransferContext);
 
-  const { state, actions } = useContext(ModalContext);
+  const { state, actions, id, idAction } = useContext(ModalContext);
   const { isModalDisplayed } = state;
   const { setIsModalDisplayed } = actions;
+  const { bankerId } = id;
+  const { setBankerId } = idAction;
 
-  if (useCheckRole() == "ROLE_ADMIN") setBankerId(useCheckId().loginId);
+  const { loginId } = useCheckId();
+
+  // if (useCheckRole() == "ROLE_ADMIN") setBankerId(useCheckId().loginId);
 
   const handleAmountChange = (value) => {
     const cleanValue = value.replace(/[^0-9]/g, "");
@@ -43,12 +47,16 @@ const EnrollmentTab = ({
   };
 
   const handleSend = async () => {
+    setBankerId(loginId);
+    // console.log("은행원-ID " + bankerId);
     if (!selectedProduct || !amount || !period) {
       console.error("데이터 전송 실패: 필수 정보가 누락되었습니다.");
       return;
     } else if (selectedProduct && amount && period) {
       setIsModalDisplayed(true);
     }
+    // setBankerId(loginId);
+    // console.log(" ---------------------->", bankerId);
 
     const numericAmount = +amount.replace(/,/g, "");
     const numericPeriod = +period;
@@ -57,7 +65,7 @@ const EnrollmentTab = ({
       product: selectedProduct,
       amount: numericAmount,
       period: numericPeriod,
-      bankerId: bankerId,
+      bankerId: loginId,
     };
 
     const jsonString = JSON.stringify(transferData);
@@ -110,6 +118,7 @@ const EnrollmentTab = ({
             <Text>금액</Text>
           </Flex>
           <Input
+            isDisabled={selectedProduct?.productCode.typeName === "카드"}
             width={"70%"}
             type="text"
             placeholder="금액을 입력하세요"
@@ -127,6 +136,7 @@ const EnrollmentTab = ({
             <Text>가입기간</Text>
           </Flex>
           <Input
+            isDisabled={selectedProduct?.productCode.typeName === "카드"}
             width={"70%"}
             type="number"
             placeholder="가입 기간을 입력하세요"
@@ -134,13 +144,20 @@ const EnrollmentTab = ({
             onChange={(e) => setPeriod(e.target.value)}
           />
         </HStack>
+
         <Button
           mt={4}
-          isDisabled={!period || !amount}
-          bgColor={!period || !amount ? "#CFCFCF" : "#3686DF"}
+          isDisabled={(!period || !amount) && !selectedProduct}
+          bgColor={
+            (!period || !amount) && !selectedProduct ? "#CFCFCF" : "#3686DF"
+          }
           onClick={handleSend}
         >
-          <Text color={!period || !amount ? "black" : "white"}>전송</Text>
+          <Text
+            color={(!period || !amount) && !selectedProduct ? "black" : "white"}
+          >
+            전송
+          </Text>
         </Button>
       </Stack>
 
@@ -156,9 +173,10 @@ const EnrollmentTab = ({
           // successAction={changeMode}
           productName={productName}
           productId={productId}
+          productDescription={productDescription}
           amount={modalAmount}
           period={ModalPeriod}
-          bankerId={bankerId}
+          // bankerId={bankerId}
           session={session}
           user={user}
         ></ModalList>

@@ -49,6 +49,7 @@ export default function MyPage() {
               padding: "20px",
               paddingBottom: "30px",
             }}
+            data-cy="my-products"
           >
             나의 상품가입
           </Tab>

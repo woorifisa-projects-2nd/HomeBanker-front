@@ -7,6 +7,8 @@ const ModalProvider = ({ children }) => {
   const [isSigned, setIsSigned] = useState(false);
   const [sign, setSign] = useState("");
   const [modalMODE, setModalMODE] = useState("F");
+  const [bankerId, setBankerId] = useState("");
+  const [customerId, setCustomerId] = useState("");
 
   const value = {
     state: { isModalDisplayed },
@@ -17,6 +19,10 @@ const ModalProvider = ({ children }) => {
     signImgAction: { setSign },
     mode: { modalMODE },
     setMode: { setModalMODE },
+    id: { bankerId },
+    idAction: { setBankerId },
+    cId: { customerId },
+    CIdAction: { setCustomerId },
   };
 
   return (

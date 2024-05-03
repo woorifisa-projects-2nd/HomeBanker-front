@@ -1,6 +1,6 @@
-import React, { useCallback, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import CustomModal from "./Modal";
-import { Button, Spinner, ModalCloseButton } from "@chakra-ui/react";
+import { Spinner, ModalCloseButton } from "@chakra-ui/react";
 import { Stack, Box, Text } from "@chakra-ui/react";
 import OpenViduVideoComponent from "./OpenViduVideoComponent";
 import { v4 as uuidV4 } from "uuid";
@@ -19,12 +19,11 @@ export default function CheckIdentification({
   onClose,
   streamManager,
   setIdentifyUser,
+  comfirmSignal,
 }) {
   const videoRef = useRef(null);
   const [isLoading, setLoading] = useState(false);
   const { role } = useCheckRole();
-
-  console.log(`NAVER_INVOKE_URL=${NAVER_INVOKE_URL}`);
 
   const onCapture = () => {
     if (videoRef.current) {
@@ -44,7 +43,6 @@ export default function CheckIdentification({
   // 신분증 OCR api
   const checkOCR = (uri) => {
     const uriData = removeDataPrefix(uri);
-    console.log(uriData);
     const message = {
       images: [
         {
@@ -94,6 +92,7 @@ export default function CheckIdentification({
       })
       .then(() => {
         setIdentifyUser(true);
+        comfirmSignal();
         onClose();
       })
       .catch();
@@ -110,7 +109,13 @@ export default function CheckIdentification({
       successMessage={role === "ROLE_ADMIN" && "캡쳐하기"}
     >
       <>
-        {role === "ROLE_ADMIN" && <ModalCloseButton onClose={onClose} />}
+        {role === "ROLE_ADMIN" && (
+          <ModalCloseButton
+            onClose={() => {
+              onClose();
+            }}
+          />
+        )}
         {isLoading ? <Spinner /> : <></>}
         <Stack
           flexDirection="column"
@@ -132,9 +137,6 @@ export default function CheckIdentification({
             </Box>
           )}
         </Stack>
-        {/* {role === "ROLE_ADMIN" && (
-          <Button onClick={onCapture}>{"캡쳐하기"}</Button>
-        )} */}
       </>
     </CustomModal>
   );

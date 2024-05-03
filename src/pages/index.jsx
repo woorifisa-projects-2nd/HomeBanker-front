@@ -7,6 +7,7 @@ import { api } from "../api/api";
 import Header from "../components/Header";
 import useLogout from "../hook/useLogout";
 import { useAuth } from "../api/counsel/api.js";
+import useCheckRole from "../hook/useCheckRole";
 
 export default function Index() {
   const navigate = useNavigate();
@@ -26,12 +27,29 @@ export default function Index() {
     }
   };
 
-  const handleCounselClick = () => {
-    if (user) {
+  const handleCounselClick = (counselType) => {
+    let storageValue;
+    switch (counselType) {
+      case "예/적금 상담":
+        storageValue = "deposit";
+        break;
+      case "카드 상담":
+        storageValue = "card";
+        break;
+      case "대출 상담":
+        storageValue = "loan";
+        break;
+      default:
+        storageValue = "all";
+        break;
+    }
+
+    if (user.role === "ROLE_CUSTOMER") {
+      localStorage.setItem("counselType", storageValue);
       navigate("/counsel");
     } else {
-      alert("로그인이 필요한 기능입니다.");
-      navigate("/login");
+      localStorage.removeItem("counselType");
+      navigate("/counsel");
     }
   };
 
@@ -57,7 +75,7 @@ export default function Index() {
               height="10rem"
               width="30rem"
               color="#F1F1F1"
-              onClick={handleCounselClick}
+              onClick={() => handleCounselClick("예/적금 상담")}
             >
               <div style={{ width: "25rem", height: "5rem" }}>
                 <Text
@@ -77,7 +95,7 @@ export default function Index() {
               height="10rem"
               width="30rem"
               color="#F1F1F1"
-              onClick={handleCounselClick}
+              onClick={() => handleCounselClick("카드 상담")}
             >
               <div style={{ width: "25rem", height: "5rem" }}>
                 <Text
@@ -99,7 +117,7 @@ export default function Index() {
               height="10rem"
               width="30rem"
               color="#F1F1F1"
-              onClick={handleCounselClick}
+              onClick={() => handleCounselClick("대출 상담")}
             >
               <div style={{ width: "25rem", height: "5rem" }}>
                 <Text

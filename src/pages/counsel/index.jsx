@@ -22,7 +22,10 @@ import {
   TabPanels,
   Tab,
   TabPanel,
+  useToast,
   useDisclosure,
+  Tooltip
+
 } from "@chakra-ui/react";
 import UserVideoComponent from "../../components/UserVideoComponent";
 import { api } from "../../api/api";
@@ -46,6 +49,9 @@ import { ModalContext } from "../../components/counsel/modal/ModalProvider";
 import WaitImage from "../../assets/image/background.svg";
 import useCheckRole from "../../hook/useCheckRole";
 
+import useCheckId from "../../hook/useCheckId";
+import { createBrowserHistory } from "history";
+
 const SESSION_ID_LIST = [
   "Session1",
   "Session2",
@@ -67,6 +73,7 @@ const SESSION_ID_LIST = [
   "Session18",
   "Session19",
   "Session20",
+
 ];
 
 export default function Counsel() {
@@ -85,6 +92,7 @@ export default function Counsel() {
   const [audioStatus, setAudioStatus] = useState(true);
   const [exit, setExit] = useState(false);
   const [time, setTime] = useState(5);
+  const history = createBrowserHistory();
 
   const tabRef = useRef();
   const tabHeight = useMemo(() => {
@@ -100,16 +108,36 @@ export default function Counsel() {
   const [productId, setProductId] = useState();
   const [amount, setAmount] = useState();
   const [period, setPeriod] = useState();
-  const [bankerId, setBankerId] = useState();
+  // const [bankerId, setBankerId] = useState();
+  const [productDescription, setProductDescription] = useState();
+  const [openToast, setOpenToast] = useState();
 
   // const [isModalDisplayed, setIsModalDisplayed] = useState(false);
   //모달 세팅
-  const { state, actions, setMode, mode } = useContext(ModalContext);
+  const { state, actions, setMode, mode, id, idAction, CIdAction, cId } =
+    useContext(ModalContext);
   const { isModalDisplayed } = state;
   const { setIsModalDisplayed } = actions;
   const { setModalMODE } = setMode;
   const { modalMODE } = mode;
+  const { bankerId } = id;
+  const { setBankerId } = idAction;
+  const { setCustomerId } = CIdAction;
+  const { customerId } = cId;
+
   const { role } = useCheckRole();
+
+  const { loginId } = useCheckId();
+  const toast = useToast();
+
+  const [locationKeys, setLocationKeys] = useState([]);
+
+  const unlistenHistoryEvent = history.listen(({ action }) => {
+    if (action === "POP") {
+      leaveSession();
+    }
+  });
+
 
   useEffect(() => {
     if (exit) {
@@ -151,7 +179,7 @@ export default function Counsel() {
 
   if (publisher !== undefined) {
     session.on("signal:exit", (event) => {
-      console.log("received");
+      //console.log("received");
       setExit(true);
       destroySession();
     });
@@ -336,6 +364,7 @@ export default function Counsel() {
 
   // 상품 가입 정보 수신
   if (publisher !== undefined) {
+    setCustomerId(loginId);
     session.on("signal:enrollment", (e) => {
       console.log(isModalDisplayed);
 
@@ -343,16 +372,19 @@ export default function Counsel() {
       console.log(receivedData.product);
       console.log("상품 이름 :", receivedData.product.productName);
       console.log("상품 코드 :", receivedData.product.productId);
+      console.log("상품 설명 :", receivedData.product.productDescription);
       console.log("상품 금액 :", receivedData.amount);
       console.log("가입 기간 :", receivedData.period);
       console.log("은행원 ID :", receivedData.bankerId);
       setProductName(receivedData.product.productName);
       setProductId(receivedData.product.productId);
+      setProductDescription(receivedData.product.productDescription);
       setAmount(receivedData.amount);
       setPeriod(receivedData.period);
       setBankerId(receivedData.bankerId);
       setIsModalDisplayed(true);
       console.log(isModalDisplayed);
+      console.log("은행원-ID :", bankerId);
     });
   }
 
@@ -360,7 +392,14 @@ export default function Counsel() {
   if (publisher !== undefined) {
     session.on("signal:register", (e) => {
       const receivedData = JSON.parse(e.data);
-      if (role == "ROLE_ADMIN" && receivedData.nextModal == "F") {
+      if (role === "ROLE_ADMIN" && receivedData.nextModal === "F") {
+        // toast({
+        //   position: "top",
+        //   title: "상품 가입이 완료되었습니다",
+        //   status: "success",
+        //   duration: 1000,
+        //   isClosable: true,
+        // });
         setIsModalDisplayed(false);
         setModalMODE(receivedData.nextModal);
       } else if (role == "ROLE_ADMIN") setModalMODE(receivedData.nextModal);
@@ -381,42 +420,44 @@ export default function Counsel() {
               space={0}
             >
               <Flex
-                width={8}
-                height={8}
-                justifyContent={"center"}
-                alignItems={"center"}
-                onClick={videoStatus ? camStatusChanged : camStatusChanged}
-              >
-                {videoStatus ? (
-                  <IoVideocamOff fontSize="27px" color="white" />
-                ) : (
-                  <IoVideocam fontSize="27px" color="white" />
-                )}
-              </Flex>
-
-              <Flex
-                width={8}
-                height={8}
-                justifyContent={"center"}
-                alignItems={"center"}
-                onClick={audioStatus ? micStatusChanged : micStatusChanged}
-              >
-                {audioStatus ? (
-                  <IoMdMicOff fontSize="30px" color="white" />
-                ) : (
-                  <IoMdMic />
-                )}
-              </Flex>
-
-              <Flex
-                width={8}
-                height={8}
+                width={10}
+                height={10}
                 justifyContent={"center"}
                 alignItems={"center"}
                 cursor="pointer"
+                onClick={videoStatus ? camStatusChanged : camStatusChanged}
+              >
+                {videoStatus ? (
+                  <IoVideocam fontSize="34px" color="#C8DFFA" />
+                ) : (
+                  <IoVideocamOff fontSize="34px" color="white" />
+                )}
+              </Flex>
+
+              <Flex
+                width={10}
+                height={10}
+                justifyContent={"center"}
+                alignItems={"center"}
+                cursor="pointer"
+                onClick={audioStatus ? micStatusChanged : micStatusChanged}
+              >
+                {audioStatus ? (
+                  <IoMdMic fontSize="37px" color="#C8DFFA" />
+                ) : (
+                  <IoMdMicOff fontSize="37px" color="white" />
+                )}
+              </Flex>
+
+              <Flex
+                width={10}
+                height={10}
+                justify={"center"}
+                align={"center"}
+                cursor="pointer"
                 onClick={leaveSession}
               >
-                <IoLogOutOutline fontSize="30px" color="white" />
+                <IoLogOutOutline fontSize="37px" color="#C8DFFA" />
               </Flex>
             </Stack>
 
@@ -471,10 +512,15 @@ export default function Counsel() {
                     user={publisher}
                     productName={productName}
                     productId={productId}
+                    productDescription={productDescription}
                     amount={amount}
                     period={period}
                     bankerId={bankerId}
+
+
                     // isModalDisplayed={isModalDisplayed}
+
+
                   />
                 </TabPanel>
               </TabPanels>
