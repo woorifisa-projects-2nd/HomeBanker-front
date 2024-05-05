@@ -98,7 +98,7 @@ export default function Board() {
   };
 
   const commonCellStyle = {
-    fontFamily: "Noto Sans",
+    fontFamily: "WooriDaumR",
     fontStyle: "normal",
     fontSize: "30px",
     lineHeight: "17px",

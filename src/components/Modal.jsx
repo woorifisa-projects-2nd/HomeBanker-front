@@ -37,7 +37,8 @@ export default function CustomModal({
       size={size}
     >
       <ModalOverlay />
-      <ModalContent>
+
+      <ModalContent maxW="1000px">
         <ModalHeader>{title}</ModalHeader>
         <ModalBody>{children}</ModalBody>
         {successAction && (

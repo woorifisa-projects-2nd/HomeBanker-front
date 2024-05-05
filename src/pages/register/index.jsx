@@ -37,7 +37,7 @@ function SignupPage() {
   });
 
   const commonCellStyle = {
-    fontFamily: "Noto Sans",
+    fontFamily: "WooriDaumR",
     fontStyle: "normal",
     fontWeight: 700,
     fontSize: "28px",

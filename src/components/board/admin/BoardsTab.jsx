@@ -32,7 +32,7 @@ import BoardDetail from "../BoardDetail";
 
 // 공통으로 사용할 스타일 객체 정의
 const commonCellStyle = {
-  fontFamily: "Noto Sans",
+  fontFamily: "WooriDaumR",
   fontStyle: "normal",
   fontWeight: 700,
   fontSize: "28px",

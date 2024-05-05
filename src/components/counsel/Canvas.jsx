@@ -3,11 +3,10 @@ import React, { useState, useEffect, useRef, useContext } from "react";
 import axios from "axios";
 import { Button, ButtonGroup, Box } from "@chakra-ui/react";
 import { ModalContext } from "./modal/ModalProvider";
-import { Buffer } from "buffer";
 
 const Canvas = () => {
-  const [width, setWidth] = useState(518);
-  const [height, setHeight] = useState(250);
+  const [width, setWidth] = useState(940);
+  const [height, setHeight] = useState(300);
 
   const { signAction, signImg, signImgAction } = useContext(ModalContext);
   const { setIsSigned } = signAction;

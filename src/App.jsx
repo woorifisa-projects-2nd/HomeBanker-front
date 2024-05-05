@@ -39,9 +39,11 @@ const router = createBrowserRouter(
 
 function App() {
   return (
-    <ModalProvider>
-      <RouterProvider router={router} />
-    </ModalProvider>
+    <div style={{ fontFamily: "WooriDaumR" }}>
+      <ModalProvider>
+        <RouterProvider router={router} />
+      </ModalProvider>
+    </div>
   );
 }
 

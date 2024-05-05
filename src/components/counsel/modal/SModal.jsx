@@ -39,6 +39,7 @@ export const SModal = ({
   // const { setIsModalDisplayed } = actions;
   const { modalMODE } = mode;
   const { setModalMODE } = setMode;
+  // const { setSign } = signImgAction;
 
   const buttonAction = () => {
     if (role === "ROLE_CUSTOMER") setModalMODE("T");
@@ -71,7 +72,7 @@ export const SModal = ({
       <CustomModal
         isOpen={isModalDisplayed}
         onClose={onClose}
-        title={"일괄 기명 및 서명"}
+        title={<Text fontSize="4xl">일괄 기명 및 서명</Text>}
         size={size}
         successMessage={successMessage}
         successAction={() => {
@@ -80,9 +81,10 @@ export const SModal = ({
         // successAction={() => {
         //   if (role === "ROLE_CUSTOMER") setModalMODE("S");
         // }}
-        children={
-          <>
-            <ModalCloseButton />
+      >
+        <>
+          <ModalCloseButton />
+          <Text fontSize="3xl">
             <List spacing={3}>
               <ListItem>
                 <ListIcon as={TbSquareRoundedFilled} color="blue.600" />
@@ -109,17 +111,22 @@ export const SModal = ({
                 확인합니다.
               </ListItem>
             </List>
-            <Stack spacing={[1, 5]} direction={["column", "row"]}>
-              {role == "ROLE_ADMIN" ? (
-                <Text fontSize="2xl">※ 고객님에게 서명하도록 안내하세요. </Text>
-              ) : (
-                <Text fontSize="2xl">※ 위 내용에 대하여 동의합니다. </Text>
-              )}
-            </Stack>
-            {role == "ROLE_ADMIN" ? null : <Canvas></Canvas>}
-          </>
-        }
-      ></CustomModal>
+          </Text>
+          <Stack
+            mt="60px"
+            ml="10px"
+            spacing={[1, 5]}
+            direction={["column", "row"]}
+          >
+            {role == "ROLE_ADMIN" ? (
+              <Text fontSize="4xl">※ 고객님에게 서명하도록 안내하세요. </Text>
+            ) : (
+              <Text fontSize="4xl">※ 위 내용에 대하여 동의합니다. </Text>
+            )}
+          </Stack>
+          {role == "ROLE_ADMIN" ? null : <Canvas></Canvas>}
+        </>
+      </CustomModal>
     </>
   );
 };
