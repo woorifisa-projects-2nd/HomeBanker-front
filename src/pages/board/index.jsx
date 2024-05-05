@@ -34,7 +34,7 @@ export default function Board() {
 
   const [boardsData, isLoading, refetchBoards] = useBoardsQuery(
     BOARD_PAGINATION_SIZE,
-    pagination.currentPage
+    pagination.currentPage,
   );
 
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -112,7 +112,7 @@ export default function Board() {
         style={{
           ...commonCellStyle,
           fontWeight: 600,
-          width: "280px",
+          width: "300px",
           height: "25px",
           padding: "20px",
           paddingBottom: "30px",
@@ -169,12 +169,22 @@ export default function Board() {
           justifyContent="center"
           alignItems="bottom"
         >
-          <Textarea
-            focus="none"
-            value={transcript}
-            border="none"
-            onChange={() => {}}
-          ></Textarea>
+          <Box
+            style={{
+              padding: "20px",
+              border: "solid black",
+              borderRadius: "10px",
+              marginBottom: "35px",
+            }}
+          >
+            <Textarea
+              focus="none"
+              value={transcript}
+              border="none"
+              onChange={() => {}}
+              style={{ fontSize: "27px", height: "220px" }}
+            ></Textarea>
+          </Box>
 
           {/* 음성인식 버튼 */}
           <Flex width="size='68px">
@@ -191,13 +201,13 @@ export default function Board() {
               >
                 <Circle
                   cursor="pointer"
-                  size="68px"
+                  size="140px"
                   bg={listening ? "green" : "#D9D9D9"}
                   opacity="100%"
                 >
                   <Mic
-                    width="35"
-                    height="35"
+                    width="80"
+                    height="80"
                     fill={listening ? "white" : "black"}
                   />
                 </Circle>
