@@ -67,7 +67,7 @@ export default function Login() {
   };
 
   const loginText = {
-    fontFamily: "Noto Sans",
+    fontFamily: "WooriDaumR",
     fontStyle: "normal",
     fontWeight: "600",
     color: "#A9A9A9",
@@ -88,7 +88,6 @@ export default function Login() {
         <img src={logoLogin} alt="NoImage" />
         <Text
           style={{
-            fontFamily: "Noto Sans",
             fontStyle: "normal",
             fontWeight: "600",
             width: "600px",

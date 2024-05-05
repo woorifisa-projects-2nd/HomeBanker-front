@@ -14,7 +14,7 @@ import Header from "../../components/Header";
 
 export default function MyPage() {
   const commonCellStyle = {
-    fontFamily: "Noto Sans",
+    fontFamily: "WooriDaumR",
     fontStyle: "normal",
     fontSize: "30px",
     lineHeight: "17px",

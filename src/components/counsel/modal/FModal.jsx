@@ -87,14 +87,15 @@ export const FModal = ({
       <CustomModal
         isOpen={isModalDisplayed}
         onClose={onClose}
-        title={"고객 신청사항"}
+        title={<Text fontSize="4xl">고객 신청사항</Text>}
         size={size}
         successMessage={successMessage}
         successAction={() => {
           if (role === "ROLE_CUSTOMER") buttonAction();
         }}
-        children={
-          <>
+      >
+        <>
+          <Text fontSize="3xl">
             <ModalCloseButton />
             <TableContainer>
               <Table variant="simple" size="lg">
@@ -118,13 +119,18 @@ export const FModal = ({
                 </Tbody>
               </Table>
             </TableContainer>
+          </Text>
 
-            <Stack spacing={[1, 5]} direction={["column", "row"]}>
-              <Text fontSize="2xl">※ 위의 신청내용을 확인합니다. </Text>
-            </Stack>
-          </>
-        }
-      ></CustomModal>
+          <Stack
+            mt="60px"
+            ml="10px"
+            spacing={[1, 5]}
+            direction={["column", "row"]}
+          >
+            <Text fontSize="4xl">※ 위의 신청내용을 확인합니다. </Text>
+          </Stack>
+        </>
+      </CustomModal>
     </>
   );
 };

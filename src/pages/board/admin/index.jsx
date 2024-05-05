@@ -13,7 +13,6 @@ import BoardsTab from "../../../components/board/admin/BoardsTab";
 import Header from "../../../components/Header";
 export default function Board() {
   const commonCellStyle = {
-    fontFamily: "Noto Sans",
     fontStyle: "normal",
     fontSize: "30px",
     lineHeight: "17px",

@@ -14,6 +14,17 @@ export const api = Axios.create({
   },
 });
 
+export const apiImg = Axios.create({
+  //baseURL: `http://localhost:8080`,
+  baseURL: `https://homebanker-b.shop:443`,
+
+  headers: {
+    "Content-Type": "multipart/form-data",
+    "Access-Control-Allow-Origin": "https://homebanker-f.shop:5173",
+    //"Access-Control-Allow-Origin": "https://localhost:5173",
+  },
+});
+
 api.interceptors.request.use(
   (config) => {
     const token = cookies.get("token");

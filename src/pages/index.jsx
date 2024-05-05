@@ -67,7 +67,7 @@ export default function Index() {
           top: "50%",
           left: "50%",
           transform: "translate(-50%,-50%)",
-          fontFamily: "WooriDaum",
+          fontFamily: "WooriDaumR",
         }}
       >
         <Flex direction="column" alignItems="baseline">

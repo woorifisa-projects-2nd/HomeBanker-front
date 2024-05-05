@@ -108,7 +108,7 @@ export default function Counsel() {
   const [period, setPeriod] = useState();
   // const [bankerId, setBankerId] = useState();
   const [productDescription, setProductDescription] = useState();
-  const [openToast, setOpenToast] = useState();
+  const [openToast, setOpenToast] = useState(false);
 
   // const [isModalDisplayed, setIsModalDisplayed] = useState(false);
   //모달 세팅
@@ -388,15 +388,15 @@ export default function Counsel() {
   // 모달 다음페이지 자동 전환 수신
   if (publisher !== undefined) {
     session.on("signal:register", (e) => {
+      setOpenToast;
+      // useEffect(() => {
+
+      // }, [openToast]);
       const receivedData = JSON.parse(e.data);
+
       if (role === "ROLE_ADMIN" && receivedData.nextModal === "F") {
-        // toast({
-        //   position: "top",
-        //   title: "상품 가입이 완료되었습니다",
-        //   status: "success",
-        //   duration: 1000,
-        //   isClosable: true,
-        // });
+        // useEffect(() => {
+
         setIsModalDisplayed(false);
         setModalMODE(receivedData.nextModal);
       } else if (role == "ROLE_ADMIN") setModalMODE(receivedData.nextModal);
@@ -534,7 +534,7 @@ export default function Counsel() {
             }}
           >
             <Flex
-              style={{ fontFamily: "WooriDaum", fontSize: "30px" }}
+              style={{ fontFamily: "WooriDaumR", fontSize: "30px" }}
               align="center"
               direction="column"
             >
