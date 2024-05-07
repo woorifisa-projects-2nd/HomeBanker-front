@@ -45,7 +45,7 @@ export default function Header() {
             transition: "transform .15s ease-in",
           }}
         >
-          <img src={logo} onClick={goMainPage}></img>
+          <img src={logo} onClick={goMainPage} alt="우리집은행"></img>
         </Box>
         {/* <img src={logo} onClick={goMainPage}></img> */}
         <Spacer />
@@ -60,11 +60,13 @@ export default function Header() {
               <Button leftIcon={<MdLogout />} onClick={handleLogout}>
                 {" "}
                 로그아웃
+                <span class="blind">로그아웃</span>
               </Button>
             ) : (
               <Button leftIcon={<MdLogin />} onClick={goLoginPage}>
                 {" "}
                 로그인
+                <span class="blind">로그인</span>
               </Button>
             )}
             {user ? (
@@ -72,6 +74,7 @@ export default function Header() {
                 <Button leftIcon={<FaHouseUser />} onClick={goMyPage}>
                   {" "}
                   내 정보
+                  <span class="blind">내 정보</span>
                 </Button>
               ) : null
             ) : null}

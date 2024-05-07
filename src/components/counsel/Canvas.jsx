@@ -5,8 +5,8 @@ import { Button, ButtonGroup, Box } from "@chakra-ui/react";
 import { ModalContext } from "./modal/ModalProvider";
 
 const Canvas = () => {
-  const [width, setWidth] = useState(940);
-  const [height, setHeight] = useState(300);
+  const [width, setWidth] = useState(940); //940
+  const [height, setHeight] = useState(200); //300
 
   const { signAction, signImg, signImgAction } = useContext(ModalContext);
   const { setIsSigned } = signAction;
@@ -58,11 +58,13 @@ const Canvas = () => {
           backgroundColor={"#FAFAFA"}
           clearOnResize={false}
         />
+        <span class="blind">서명을 해주세요</span>
       </Box>
 
       <ButtonGroup variant="outline" spacing="6">
         <Button colorScheme="blue" size="md" onClick={clearSignature}>
           초기화
+          <span class="blind">초기화</span>
         </Button>
       </ButtonGroup>
     </div>

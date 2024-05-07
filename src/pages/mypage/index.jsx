@@ -39,6 +39,7 @@ export default function MyPage() {
             }}
           >
             나의 프로필
+            <span class="blind">나의 프로필</span>
           </Tab>
           <Tab
             style={{
@@ -52,6 +53,7 @@ export default function MyPage() {
             data-cy="my-products"
           >
             나의 상품가입
+            <span class="blind">나의 상품가입</span>
           </Tab>
         </TabList>
         <TabIndicator
