@@ -120,6 +120,7 @@ export default function Board() {
         }}
       >
         고객 상담게시판
+        <span class="blind">고객 상담게시판</span>
       </Text>
       <Flex
         alignItems="center"
@@ -136,6 +137,9 @@ export default function Board() {
           }}
         >
           문의하실 내용을 작성하시면 유선상으로 3일 이내에 답변 드리겠습니다.
+          <span class="blind">
+            문의하실 내용을 작성하시면 유선상으로 3일 이내에 답변 드리겠습니다.
+          </span>
         </Text>
         <Button
           size="lg"
@@ -148,6 +152,7 @@ export default function Board() {
         >
           <TfiWrite size="24px" color="white" style={{ marginRight: "8px" }} />
           문의 작성
+          <span class="blind">문의 작성</span>
         </Button>
       </Flex>
       <BoardsTab displayChangeStatus={false} />
@@ -160,8 +165,12 @@ export default function Board() {
         successAction={createBoard}
       >
         <Flex justify="space-between">
-          <Button onClick={resetTranscript}>초기화</Button>
-          <Button onClick={onModalClose}>X</Button>
+          <Button onClick={resetTranscript}>
+            초기화<span class="blind">초기화</span>
+          </Button>
+          <Button onClick={onModalClose}>
+            X<span class="blind">X</span>
+          </Button>
         </Flex>
         <Flex
           direction="column"
