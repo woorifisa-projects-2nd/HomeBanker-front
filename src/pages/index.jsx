@@ -73,9 +73,7 @@ export default function Index() {
         <Flex direction="column" alignItems="baseline">
           <Text fontSize="5xl" color="#0083CA">
             우리집은행 화상상담 창구
-            <span class="blind">우리집은행 화상상담 창구</span>
           </Text>
-
           <Spacer />
           <Stack spacing={8} direction="row" align="center" margin="30px">
             <Button
@@ -91,14 +89,10 @@ export default function Index() {
                   color="black"
                 >
                   예/적금 상담
-                  <span class="blind">예/적금 상담</span>
                 </Text>
 
                 <Text style={{ float: "left" }} color="#909090" fontSize="lg">
                   화상 상담을 통해 예/적금 상품을 가입할 수 있습니다
-                  <span class="blind">
-                    화상 상담을 통해 예/적금 상품을 가입할 수 있습니다
-                  </span>
                 </Text>
               </div>
             </Button>
@@ -115,14 +109,10 @@ export default function Index() {
                   color="black"
                 >
                   카드 상담
-                  <span class="blind">카드 상담</span>
                 </Text>
 
                 <Text style={{ float: "left" }} color="#909090" fontSize="lg">
                   화상 상담을 통해 카드 상품을 가입할 수 있습니다
-                  <span class="blind">
-                    화상 상담을 통해 카드 상품을 가입할 수 있습니다
-                  </span>
                 </Text>
               </div>
             </Button>
@@ -141,14 +131,10 @@ export default function Index() {
                   color="black"
                 >
                   대출 상담
-                  <span class="blind">대출 상담</span>
                 </Text>
 
                 <Text style={{ float: "left" }} color="#909090" fontSize="lg">
                   화상 상담을 통해 대출 상품을 가입할 수 있습니다
-                  <span class="blind">
-                    화상 상담을 통해 대출 상품을 가입할 수 있습니다
-                  </span>
                 </Text>
               </div>
             </Button>
@@ -169,12 +155,10 @@ export default function Index() {
                   color="black"
                 >
                   문의 게시판
-                  <span class="blind">문의 게시판</span>
                 </Text>
 
                 <Text style={{ float: "left" }} color="#909090" fontSize="lg">
                   문의 글을 작성할 수 있습니다
-                  <span class="blind">문의 글을 작성할 수 있습니다</span>
                 </Text>
               </Flex>
             </Button>

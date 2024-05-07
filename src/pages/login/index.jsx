@@ -100,12 +100,13 @@ export default function Login() {
           }}
         >
           집에서 만나는 금융상담 서비스
-          <span class="blind">집에서 만나는 금융상담 서비스</span>
         </Text>
         <VStack spacing={4} align="flex-start" w="800px">
+
           <Text style={{ ...loginText, fontSize: "24px" }}>
             아이디<span class="blind">아이디</span>
           </Text>
+
           <InputGroup size="lg">
             <InputLeftElement pointerEvents="none" fontSize="28px" h="100%">
               <MdOutlineEmail color="gray.300" />
@@ -166,7 +167,6 @@ export default function Login() {
           }}
         >
           로그인하기
-          <span class="blind">로그인하기</span>
         </Button>
         <Button
           colorScheme="blue"
@@ -175,7 +175,6 @@ export default function Login() {
           style={{ ...loginText, marginBottom: "20px" }}
         >
           회원가입하시겠어요?
-          <span class="blind">회원가입하시겠어요?</span>
         </Button>
       </Flex>
     </>

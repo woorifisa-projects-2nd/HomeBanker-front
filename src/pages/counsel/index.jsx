@@ -79,7 +79,7 @@ export default function Counsel() {
 
   const [mySessionId, setMySessionId] = useState(SESSION_ID_LIST[0]);
   const [myUserName, setMyUserName] = useState(
-    `Participant${Math.floor(Math.random() * 100)}`
+    `Participant${Math.floor(Math.random() * 100)}`,
   );
   const [session, setSession] = useState(undefined);
   const [publisher, setPublisher] = useState(undefined);
@@ -188,7 +188,7 @@ export default function Counsel() {
       {},
       {
         headers: { "Content-Type": "application/json" },
-      }
+      },
     );
 
     const signalOptions = {
@@ -274,7 +274,7 @@ export default function Counsel() {
         { customSessionId: SESSION_ID_LIST[i], role: role },
         {
           headers: { "Content-Type": "application/json" },
-        }
+        },
       );
       if (response.data !== "full") {
         setMySessionId(SESSION_ID_LIST[i]);
@@ -297,7 +297,7 @@ export default function Counsel() {
       {},
       {
         headers: { "Content-Type": "application/json" },
-      }
+      },
     );
     return response.data; // The token
   };
@@ -331,7 +331,7 @@ export default function Counsel() {
           console.log(
             "There was an error connecting to the session:",
             error.code,
-            error.message
+            error.message,
           );
         }
       });
@@ -366,22 +366,22 @@ export default function Counsel() {
       console.log(isModalDisplayed);
 
       const receivedData = JSON.parse(e.data);
-      // console.log(receivedData.product);
-      // console.log("상품 이름 :", receivedData.product.productName);
-      // console.log("상품 코드 :", receivedData.product.productId);
-      // console.log("상품 설명 :", receivedData.product.productDescription);
-      // console.log("상품 금액 :", receivedData.amount);
-      // console.log("가입 기간 :", receivedData.period);
-      // console.log("은행원 ID :", receivedData.bankerId);
-      // setProductName(receivedData.product.productName);
+      console.log(receivedData.product);
+      console.log("상품 이름 :", receivedData.product.productName);
+      console.log("상품 코드 :", receivedData.product.productId);
+      console.log("상품 설명 :", receivedData.product.productDescription);
+      console.log("상품 금액 :", receivedData.amount);
+      console.log("가입 기간 :", receivedData.period);
+      console.log("은행원 ID :", receivedData.bankerId);
+      setProductName(receivedData.product.productName);
       setProductId(receivedData.product.productId);
       setProductDescription(receivedData.product.productDescription);
       setAmount(receivedData.amount);
       setPeriod(receivedData.period);
       setBankerId(receivedData.bankerId);
       setIsModalDisplayed(true);
-      // console.log(isModalDisplayed);
-      // console.log("은행원-ID :", bankerId);
+      console.log(isModalDisplayed);
+      console.log("은행원-ID :", bankerId);
     });
   }
 
@@ -400,7 +400,7 @@ export default function Counsel() {
         setIsModalDisplayed(false);
         setModalMODE(receivedData.nextModal);
       } else if (role == "ROLE_ADMIN") setModalMODE(receivedData.nextModal);
-      // console.log(receivedData.nextModal);
+      console.log(receivedData.nextModal);
     });
   }
 
@@ -492,9 +492,7 @@ export default function Counsel() {
             {/* 여기 안에서 탭 관리 */}
             <Tabs ref={tabRef} position={"relative"} height="100vh">
               <TabList>
-                <Tab>
-                  채팅<span class="blind">채팅</span>
-                </Tab>
+                <Tab>채팅</Tab>
                 {getUserRole() === "ROLE_ADMIN" ? <Tab>상품</Tab> : null}
               </TabList>
 
@@ -541,10 +539,7 @@ export default function Counsel() {
               direction="column"
             >
               <img src={logoLogin} alt="NoImage" style={{ margin: "20px" }} />
-              <Text>
-                웃는 얼굴로 고객을 맞아주세요
-                <span class="blind">웃는 얼굴로 고객을 맞아주세요</span>
-              </Text>
+              <Text>웃는 얼굴로 고객을 맞아주세요</Text>
               <div style={{ height: "50px" }}></div>
               <Button
                 size="lg"
@@ -557,7 +552,6 @@ export default function Counsel() {
                 }}
               >
                 화상 상담 시작
-                <span class="blind">화상 상담 시작</span>
               </Button>
             </Flex>
           </div>
