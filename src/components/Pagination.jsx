@@ -39,7 +39,10 @@ export default function Pagination({ pagination, setPagination }) {
                 onClick={() =>
                   setPagination({ ...pagination, currentPage: page })
                 }
-                bgColor={currentPage === page ? "blue.400" : "white"}
+                bgColor={currentPage === page ? "#CFCFCF" : "white"}
+                textDecoration={currentPage === page ? 'underline' : 'none'}
+                textDecorationThickness={currentPage === page ? "2px" : '0'}
+                textUnderlineOffset={currentPage === page ? "4px" : '0'}
               >
                 {page + 1}
               </Button>
@@ -59,6 +62,6 @@ export default function Pagination({ pagination, setPagination }) {
           disabled={noNext}
         ></Button>
       </Flex>
-    </Flex>
+    </Flex >
   );
 }

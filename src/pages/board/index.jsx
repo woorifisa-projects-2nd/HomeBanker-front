@@ -13,6 +13,8 @@ import {
   Flex,
   Text,
   Alert,
+  ModalCloseButton,
+  Stack,
 } from "@chakra-ui/react";
 import CustomModal from "../../components/Modal";
 import Mic from "../../assets/icon/mic.svg?react";
@@ -108,114 +110,156 @@ export default function Board() {
   return (
     <>
       <Header />
-      <Text
-        style={{
-          ...commonCellStyle,
-          fontWeight: 600,
-          width: "300px",
-          height: "25px",
-          padding: "20px",
-          paddingBottom: "30px",
-          borderBottom: "5px solid #3686DF",
-        }}
-      >
-        고객 상담게시판
-      </Text>
-      <Flex
-        alignItems="center"
-        justifyContent="space-between"
-        style={{
-          ...commonCellStyle,
-          marginTop: "-20px",
-        }}
-      >
+      <Box ml={14} mr={14} mt={20}>
         <Text
           style={{
-            fontWeight: 200,
-            fontSize: "25px",
+            textDecor: "underline",
+            ...commonCellStyle,
+            fontWeight: 600,
+            // padding: "20px",
+            textDecoration: "underline",
+            textDecorationColor: "#3686DF",
+            textDecorationThickness: "6px",
+            textUnderlineOffset: "18px",
+
           }}
         >
-          문의하실 내용을 작성하시면 유선상으로 3일 이내에 답변 드리겠습니다.
+          고객 상담게시판
         </Text>
-        <Button
-          size="lg"
-          bg="#17CC8B"
-          _hover={{
-            bg: "#15b481",
+        <Flex
+          alignItems="center"
+          justifyContent="space-between"
+          style={{
+            ...commonCellStyle,
           }}
-          onClick={onOpen}
-          style={{ color: "white", fontSize: "1.5rem", marginRight: "30px" }}
         >
-          <TfiWrite size="24px" color="white" style={{ marginRight: "8px" }} />
-          문의 작성
-        </Button>
-      </Flex>
-      <BoardsTab displayChangeStatus={false} />
+          <Text
+            style={{
+              fontWeight: 200,
+              fontSize: "25px",
+            }}
+          >
+            문의하실 내용을 작성하시면 유선상으로 3일 이내에 답변 드리겠습니다.
+          </Text>
+          <Button
+            size="lg"
+            bg="#17CC8B"
+            // _hover={{
+            //   bg: "#15b481",
+            // }}
+            height={"fit-content"}
+            paddingBottom="15px"
+            paddingTop="15px"
+            _hover={{
+              textDecor: "underline",
+              textDecorationThickness: "3px",
+              textUnderlineOffset: "12px",
+              textDecorationColor: "white",
+
+            }}
+            onClick={onOpen}
+          // style={{ color: "white", fontSize: "1.5rem", marginRight: "30px" }}
+          >
+            {/* <TfiWrite size="24px" color="white" style={{ marginRight: "8px" }} /> */}
+            <Text
+              color="white"
+              fontSize="30px"
+            >
+              문의 작성
+            </Text>
+          </Button>
+        </Flex>
+        <BoardsTab displayChangeStatus={false} />
+      </Box>
       <CustomModal
-        title={"문의 작성"}
+
         isOpen={isOpen}
         onClose={onModalClose}
         size={"xl"}
-        successMessage={"작성 완료"}
-        successAction={createBoard}
+      // successMessage={"작성 완료"}
+      // successAction={createBoard}
       >
-        <Flex justify="space-between">
-          <Button onClick={resetTranscript}>초기화</Button>
-          <Button onClick={onModalClose}>X</Button>
-        </Flex>
-        <Flex
-          direction="column"
-          minHeight={500}
-          justifyContent="center"
-          alignItems="bottom"
-        >
-          <Box
-            style={{
-              padding: "20px",
-              border: "solid black",
-              borderRadius: "10px",
-              marginBottom: "35px",
-            }}
-          >
-            <Textarea
-              focus="none"
-              value={transcript}
-              border="none"
-              onChange={() => {}}
-              style={{ fontSize: "27px", height: "220px" }}
-            ></Textarea>
-          </Box>
 
-          {/* 음성인식 버튼 */}
-          <Flex width="size='68px">
-            <Tooltip
-              label={listening ? "음성 인식 중지하기" : "음성 인식하기"}
-              fontSize="md"
-              color="white"
+        <Stack spacing={10} ml={14} mr={14}>
+          <Text fontSize="30px" fontWeight={'bold'}>문의 작성</Text>
+          <Button width={'fit-content'} onClick={resetTranscript}>초기화</Button>
+          <ModalCloseButton onClick={onModalClose}></ModalCloseButton>
+          <Flex
+            direction="column"
+            minHeight={500}
+            justifyContent="center"
+            alignItems="bottom"
+          >
+            <Box
+              style={{
+                padding: "20px",
+                border: "solid black",
+                borderRadius: "10px",
+                marginBottom: "35px",
+              }}
             >
-              <Box
-                margin="auto"
-                justifyContent="center"
-                alignItems="center"
-                onClick={toggleListening}
+              <Textarea
+                focus="none"
+                value={transcript}
+                border="none"
+                onChange={() => { }}
+                style={{ fontSize: "27px", height: "220px" }}
+              ></Textarea>
+            </Box>
+
+            {/* 음성인식 버튼 */}
+            <Flex width="size='68px">
+              <Tooltip
+                label={listening ? "음성 인식 중지하기" : "음성 인식하기"}
+                fontSize="md"
+                color="white"
               >
-                <Circle
-                  cursor="pointer"
-                  size="140px"
-                  bg={listening ? "green" : "#D9D9D9"}
-                  opacity="100%"
+                <Box
+                  margin="auto"
+                  justifyContent="center"
+                  alignItems="center"
+                  onClick={toggleListening}
                 >
-                  <Mic
-                    width="80"
-                    height="80"
-                    fill={listening ? "white" : "black"}
-                  />
-                </Circle>
-              </Box>
-            </Tooltip>
+                  <Circle
+                    cursor="pointer"
+                    size="140px"
+                    bg={listening ? "green" : "#D9D9D9"}
+                    opacity="100%"
+                  >
+                    <Mic
+                      width="80"
+                      height="80"
+                      fill={listening ? "white" : "black"}
+                    />
+                  </Circle>
+                </Box>
+              </Tooltip>
+            </Flex>
+
+
+
+            <Button
+              alignSelf={"flex-end"}
+              onClick={createBoard}
+              width={"fit-content"}
+              bg="#3686DF"
+              color="white"
+              pl={6} pr={6} pt={8} pb={8}
+              fontSize={"30px"}
+              mb={16}
+              onClick={onClose}
+              _hover={{
+                textDecor: "underline",
+                textDecorationThickness: "2px",
+                textUnderlineOffset: "8px"
+              }}
+            >
+              작성완료
+            </Button>
           </Flex>
-        </Flex>
-      </CustomModal>
+        </Stack>
+
+      </CustomModal >
     </>
   );
 }

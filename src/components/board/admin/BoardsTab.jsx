@@ -57,7 +57,8 @@ export default function BoardsTab({ displayChangeStatus = true }) {
 
   const { isOpen, onOpen, onClose } = useDisclosure();
   // 상담 처리 완료 API
-  const changeBoardStatus = (boardId) => {
+  const changeBoardStatus = (event, boardId) => {
+    event.stopPropagation()
     api.put(`/api/banker/board/${boardId}`).then(() => {
       refetchBoards();
       toast({
@@ -117,106 +118,125 @@ export default function BoardsTab({ displayChangeStatus = true }) {
         <Spinner />
       ) : (
         <>
-          {boards && (
-            <TableContainer
-              style={{
-                ...commonCellStyle,
-                marginLeft: "50px",
-                marginRight: "50px",
-              }}
-            >
-              <Table variant="simple">
-                <Thead>
-                  <Tr bg="#dcecff">
-                    <Th style={{ ...commonCellStyle, paddingLeft: "50px" }}>
-                      내용
-                    </Th>
-                    <Th style={{ ...commonCellStyle, textAlign: "center" }}>
-                      등록일
-                    </Th>
-                    <Th style={{ ...commonCellStyle, textAlign: "center" }}>
-                      유선 회신 여부
-                    </Th>
-                    {displayChangeStatus ? (
-                      <Th style={{ ...commonCellStyle, textAlign: "center" }}>
-                        고객 이름
-                      </Th>
-                    ) : (
-                      <Th style={{ ...commonCellStyle, textAlign: "center" }}>
-                        담당자 이름
-                      </Th>
-                    )}
-                    <Th style={{ ...commonCellStyle, textAlign: "center" }}>
-                      처리일
-                    </Th>
-                    {displayChangeStatus && (
-                      <Th style={{ ...commonCellStyle, textAlign: "center" }}>
-                        관리
-                      </Th>
-                    )}
-                  </Tr>
-                </Thead>
-                <Tbody>
-                  {boards.map((item) => (
+          <Box >
+            {boards && (
+              <TableContainer
+                style={{
+                  ...commonCellStyle,
+                  marginLeft: "50px",
+                  marginRight: "50px",
+                }}
+                borderRadius={"12px"}
+                border="1.5px solid #CFCFCF"
+              >
+                <Table variant='unstyled' >
+                  <Thead borderBottom={"1.5px solid #CFCFCF"} >
                     <Tr
-                      key={item.boardId}
-                      onClick={() => openDetailModal(item)}
+                      bg="#dcecff"
+
                     >
-                      <Td style={{ paddingLeft: "50px" }}>
-                        {truncateString(item.content, 15)}
-                      </Td>
-                      <Td style={{ textAlign: "center" }}>{item.createdAt}</Td>
-                      <Td>
-                        <div
-                          style={{ display: "flex", justifyContent: "center" }}
-                        >
-                          {item.replyYN === "Y" ? (
-                            <img src={YesReply} alt="Yes" />
-                          ) : (
-                            <img src={NoReply} alt="No" />
-                          )}
-                        </div>
-                      </Td>
-                      <Td style={{ textAlign: "center" }}>
-                        {displayChangeStatus
-                          ? item.customerName
-                          : item.banker.bankerName}
-                      </Td>
-                      <Td style={{ textAlign: "center" }}>{item.updatedAt}</Td>
+                      <Th style={{ ...commonCellStyle, paddingTop: "20px", paddingBottom: "20px", paddingLeft: "50px" }}>
+                        내용
+                      </Th>
+                      <Th style={{ ...commonCellStyle, paddingTop: "20px", paddingBottom: "20px", textAlign: "center" }}>
+                        등록일
+                      </Th>
+                      <Th style={{ ...commonCellStyle, paddingTop: "20px", paddingBottom: "20px", textAlign: "center" }}>
+                        유선 회신 여부
+                      </Th>
+                      {displayChangeStatus ? (
+                        <Th style={{ ...commonCellStyle, paddingTop: "20px", paddingBottom: "20px", textAlign: "center" }}>
+                          고객 이름
+                        </Th>
+                      ) : (
+                        <Th style={{ ...commonCellStyle, paddingTop: "20px", paddingBottom: "20px", textAlign: "center" }}>
+                          담당자 이름
+                        </Th>
+                      )}
+                      <Th style={{ ...commonCellStyle, paddingTop: "20px", paddingBottom: "20px", textAlign: "center" }}>
+                        처리일
+                      </Th>
                       {displayChangeStatus && (
-                        <Td style={{ textAlign: "center" }}>
-                          <Button
-                            bgColor={item.replyYN === "Y" ? "gray" : "blue"}
-                            onClick={() => changeBoardStatus(item.boardId)}
-                            isDisabled={item.replyYN === "Y"}
-                            w="120px"
-                            h="50px"
-                            borderRadius="20px"
-                            backgroundColor="#DBF6CC"
-                            color="#006B3A"
-                            marginRight="10px"
-                          >
-                            처리완료
-                          </Button>
-                          <Button
-                            bgColor="red"
-                            onClick={() => deleteBoard(item.boardId)}
-                            w="120px"
-                            h="50px"
-                            borderRadius="20px"
-                            backgroundColor="#FDE2E2"
-                            color="#BD1818"
-                          >
-                            삭제
-                          </Button>
-                        </Td>
+                        <Th style={{ ...commonCellStyle, paddingTop: "20px", paddingBottom: "20px", textAlign: "center" }}>
+                          관리
+                        </Th>
                       )}
                     </Tr>
-                  ))}
-                </Tbody>
-              </Table>
-            </TableContainer>
-          )}
+                  </Thead>
+                  <Tbody >
+                    {boards.map((item, idx) => (
+                      <Tr
+                        key={item.boardId}
+                        onClick={() => openDetailModal(item)}
+
+                        borderBottom={idx === boards.length - 1 ? "none" : "1.5px solid #CFCFCF"}
+                      >
+                        <Td style={{ paddingLeft: "50px" }}>
+                          {truncateString(item.content, 15)}
+                        </Td>
+                        <Td style={{ textAlign: "center" }}>{item.createdAt}</Td>
+                        <Td>
+                          <div
+                            style={{ display: "flex", justifyContent: "center" }}
+                          >
+                            {item.replyYN === "Y" ? (
+                              <img src={YesReply} alt="Yes" />
+                            ) : (
+                              <img src={NoReply} alt="No" />
+                            )}
+                          </div>
+                        </Td>
+                        <Td style={{ textAlign: "center" }}>
+                          {displayChangeStatus
+                            ? item.customerName
+                            : item.banker.bankerName}
+                        </Td>
+                        <Td style={{ textAlign: "center" }}>{item.updatedAt}</Td>
+                        {displayChangeStatus && (
+                          <Td style={{ textAlign: "center" }}>
+                            <Button
+                              bgColor={item.replyYN === "Y" ? "gray" : "blue"}
+                              onClick={(e) => changeBoardStatus(e, item.boardId)}
+                              isDisabled={item.replyYN === "Y"}
+                              w="120px"
+                              h="50px"
+                              borderRadius="20px"
+                              backgroundColor="#DBF6CC"
+                              color="#006B3A"
+                              marginRight="10px"
+                              _hover={{
+                                textDecor: "underline",
+                                textDecorationThickness: "2px",
+                                textUnderlineOffset: "8px"
+                              }}
+                            >
+                              처리완료
+                            </Button>
+                            <Button
+                              bgColor="red"
+                              onClick={() => deleteBoard(item.boardId)}
+                              w="120px"
+                              h="50px"
+                              borderRadius="20px"
+                              backgroundColor="#FDE2E2"
+                              color="#BD1818"
+                              _hover={{
+                                textDecor: "underline",
+                                textDecorationThickness: "2px",
+                                textUnderlineOffset: "8px"
+                              }}
+                            >
+                              삭제
+                            </Button>
+                          </Td>
+                        )}
+                      </Tr>
+                    ))}
+                  </Tbody>
+                </Table>
+              </TableContainer>
+            )}
+          </Box>
           <div style={{ marginTop: "30px" }}>
             {pagination.totalItems > 0 && (
               <Pagination
