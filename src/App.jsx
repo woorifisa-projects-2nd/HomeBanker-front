@@ -34,7 +34,7 @@ const router = createBrowserRouter(
     ...rest,
     element: <Element />,
     ...(ErrorBoundary && { errorElement: <ErrorBoundary /> }),
-  }))
+  })),
 );
 
 function App() {

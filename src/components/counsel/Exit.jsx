@@ -33,17 +33,9 @@ const Exit = ({ time }) => {
             align="center"
             style={{ width: "max-content" }}
           >
-            <Text>
-              {time}초후에 상담이 종료됩니다.
-              <span class="blind">{time}초후에 상담이 종료됩니다.</span>
-            </Text>
+            <Text>{time}초후에 상담이 종료됩니다.</Text>
             <Spacer />
-            <Text>
-              우리집은행 화상상담을 이용해주셔서 감사합니다.
-              <span class="blind">
-                우리집은행 화상상담을 이용해주셔서 감사합니다.
-              </span>
-            </Text>
+            <Text>우리집은행 화상상담을 이용해주셔서 감사합니다.</Text>
           </Flex>
         </div>
       </div>

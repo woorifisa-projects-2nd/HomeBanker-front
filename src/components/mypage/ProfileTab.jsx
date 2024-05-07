@@ -113,27 +113,22 @@ export default function ProfileTab() {
         <Flex as={FormControl} alignItems="center" gap="4" marginBottom="20px">
           <FormLabel htmlFor="name" mb="0" w="100px" sx={commonCellStyle}>
             이름
-            <span class="blind">이름</span>
           </FormLabel>
           <Text id="name" w="800px" sx={commonCellStyle}>
             {userInfo.name}
-            <span class="blind">{userInfo.name}</span>
           </Text>
         </Flex>
         <Flex as={FormControl} alignItems="center" gap="4" marginBottom="20px">
           <FormLabel mb="0" w="100px" sx={commonCellStyle}>
             가입일
-            <span class="blind">가입일</span>
           </FormLabel>
           <Text w="800px" sx={commonCellStyle}>
             {formattedJoinDate}
-            <span class="blind">{formattedJoinDate}</span>
           </Text>
         </Flex>
         <Flex as={FormControl} alignItems="center" gap="4" marginBottom="20px">
           <FormLabel htmlFor="phone" mb="0" w="100px" sx={commonCellStyle}>
             전화번호
-            <span class="blind">전화번호</span>
           </FormLabel>
           <Input
             id="phone"
@@ -146,7 +141,6 @@ export default function ProfileTab() {
         <Flex as={FormControl} alignItems="center" gap="4" marginBottom="20px">
           <FormLabel htmlFor="address" mb="0" w="115px" sx={commonCellStyle}>
             주소
-            <span class="blind">주소</span>
           </FormLabel>
           <InputGroup>
             <Input
@@ -159,7 +153,6 @@ export default function ProfileTab() {
             <InputRightElement width="4.5rem" marginRight="30px" height="100%">
               <Button h="1.75rem" size="sm" onClick={onOpen}>
                 주소찾기
-                <span class="blind">주소찾기</span>
               </Button>
             </InputRightElement>
           </InputGroup>
@@ -167,9 +160,7 @@ export default function ProfileTab() {
         <Modal isOpen={isOpen} onClose={onClose}>
           <ModalOverlay />
           <ModalContent>
-            <ModalHeader>
-              주소 검색<span class="blind">주소 검색</span>
-            </ModalHeader>
+            <ModalHeader>주소 검색</ModalHeader>
             <ModalCloseButton />
             <DaumPostcode onComplete={handleAddress} />
           </ModalContent>
@@ -181,7 +172,6 @@ export default function ProfileTab() {
           style={{ background: "#3686DF", width: "800px", fontSize: "30px" }}
         >
           편집하기
-          <span class="blind">편집하기</span>
         </Button>
       </VStack>
     </Flex>

@@ -125,9 +125,7 @@ export default function ChatComponent({ user }) {
             id="sendButton"
             onClick={sendMessage}
           >
-            <Text color={!message ? "black" : "white"}>
-              보내기<span class="blind">보내기</span>
-            </Text>
+            <Text color={!message ? "black" : "white"}>보내기</Text>
           </Button>
         </Stack>
       </GridItem>

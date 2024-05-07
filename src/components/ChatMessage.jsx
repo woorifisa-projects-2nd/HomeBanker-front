@@ -19,7 +19,6 @@ const ChatMessage = ({ message, sender }) => {
         >
           <Text color={"white"} fontSize={"42px"}>
             {message}
-            <span class="blind">{message}</span>
           </Text>
         </Box>
       ) : (
@@ -36,10 +35,7 @@ const ChatMessage = ({ message, sender }) => {
             padding: "15px",
           }}
         >
-          <Text fontSize={"42px"}>
-            {message}
-            <span class="blind">{message}</span>
-          </Text>
+          <Text fontSize={"42px"}>{message}</Text>
         </Box>
       )}
     </>
