@@ -111,7 +111,7 @@ export default function ProfileTab() {
       <VStack spacing={4}>
         <Image src={logo} alt="logo" marginBottom="30px" marginTop="100px" />
         <Flex as={FormControl} alignItems="center" gap="4" marginBottom="20px">
-          <FormLabel htmlFor="name" mb="0" w="100px" sx={commonCellStyle}>
+          <FormLabel htmlFor="name" mb="0" w="130px" sx={commonCellStyle}>
             이름 <span class="blind">이름</span>
           </FormLabel>
           <Text id="name" w="800px" sx={commonCellStyle}>
@@ -120,7 +120,7 @@ export default function ProfileTab() {
           </Text>
         </Flex>
         <Flex as={FormControl} alignItems="center" gap="4" marginBottom="20px">
-          <FormLabel mb="0" w="100px" sx={commonCellStyle}>
+          <FormLabel mb="0" w="130px" sx={commonCellStyle}>
             가입일<span class="blind">가입일</span>
           </FormLabel>
           <Text w="800px" sx={commonCellStyle}>
@@ -129,7 +129,7 @@ export default function ProfileTab() {
           </Text>
         </Flex>
         <Flex as={FormControl} alignItems="center" gap="4" marginBottom="20px">
-          <FormLabel htmlFor="phone" mb="0" w="100px" sx={commonCellStyle}>
+          <FormLabel htmlFor="phone" mb="0" w="110px" sx={commonCellStyle}>
             전화번호<span class="blind">전화번호</span>
           </FormLabel>
           <Input
@@ -141,7 +141,7 @@ export default function ProfileTab() {
           />
         </Flex>
         <Flex as={FormControl} alignItems="center" gap="4" marginBottom="20px">
-          <FormLabel htmlFor="address" mb="0" w="115px" sx={commonCellStyle}>
+          <FormLabel htmlFor="address" mb="0" w="130px" sx={commonCellStyle}>
             주소<span class="blind">주소</span>
           </FormLabel>
           <InputGroup>
