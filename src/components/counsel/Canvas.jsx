@@ -58,11 +58,12 @@ const Canvas = () => {
           backgroundColor={"#FAFAFA"}
           clearOnResize={false}
         />
+        <span class="blind">서명을 해주세요</span>
       </Box>
 
       <ButtonGroup variant="outline" spacing="6">
         <Button colorScheme="blue" size="md" onClick={clearSignature}>
-          초기화
+          초기화<span class="blind">초기화</span>
         </Button>
       </ButtonGroup>
     </div>
