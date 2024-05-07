@@ -36,7 +36,7 @@ export default function Board() {
 
   const [boardsData, isLoading, refetchBoards] = useBoardsQuery(
     BOARD_PAGINATION_SIZE,
-    pagination.currentPage,
+    pagination.currentPage
   );
 
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -110,9 +110,7 @@ export default function Board() {
   return (
     <>
       <Header />
-
       <Box ml={14} mr={14} mt={20}>
-
         <Text
           style={{
             textDecor: "underline",
@@ -123,12 +121,9 @@ export default function Board() {
             textDecorationColor: "#3686DF",
             textDecorationThickness: "6px",
             textUnderlineOffset: "18px",
-
           }}
         >
-
           고객 상담게시판
-          <span class="blind">고객 상담게시판</span>
         </Text>
         <Flex
           alignItems="center"
@@ -137,8 +132,6 @@ export default function Board() {
             ...commonCellStyle,
           }}
         >
-
-
           <Text
             style={{
               fontWeight: 200,
@@ -147,8 +140,9 @@ export default function Board() {
           >
             문의하실 내용을 작성하시면 유선상으로 3일 이내에 답변 드리겠습니다.
             <span class="blind">
-            문의하실 내용을 작성하시면 유선상으로 3일 이내에 답변 드리겠습니다.
-          </span>
+              문의하실 내용을 작성하시면 유선상으로 3일 이내에 답변
+              드리겠습니다.
+            </span>
           </Text>
           <Button
             size="lg"
@@ -164,16 +158,12 @@ export default function Board() {
               textDecorationThickness: "3px",
               textUnderlineOffset: "12px",
               textDecorationColor: "white",
-
             }}
             onClick={onOpen}
-          // style={{ color: "white", fontSize: "1.5rem", marginRight: "30px" }}
+            // style={{ color: "white", fontSize: "1.5rem", marginRight: "30px" }}
           >
             {/* <TfiWrite size="24px" color="white" style={{ marginRight: "8px" }} /> */}
-            <Text
-              color="white"
-              fontSize="30px"
-            >
+            <Text color="white" fontSize="30px">
               문의 작성
               <span class="blind">문의 작성</span>
             </Text>
@@ -181,27 +171,28 @@ export default function Board() {
         </Flex>
         <BoardsTab displayChangeStatus={false} />
       </Box>
-
       <CustomModal
-
         isOpen={isOpen}
         onClose={onModalClose}
         size={"xl"}
-      // successMessage={"작성 완료"}
-      // successAction={createBoard}
+        // successMessage={"작성 완료"}
+        // successAction={createBoard}
       >
-
-
         <Stack spacing={10} ml={14} mr={14}>
-          <Text fontSize="30px" fontWeight={'bold'}>문의 작성<span class="blind">문의 작성</span></Text>
-          <Button width={'fit-content'} onClick={resetTranscript}>초기화<span class="blind">초기화</span></Button>
+          <Text fontSize="30px" fontWeight={"bold"}>
+            문의 작성
+            <span class="blind">문의 작성</span>
+          </Text>
+          <Button width={"fit-content"} onClick={resetTranscript}>
+            초기화
+            <span class="blind">초기화</span>
+          </Button>
           <ModalCloseButton onClick={onModalClose}></ModalCloseButton>
           <Flex
             direction="column"
             minHeight={500}
             justifyContent="center"
             alignItems="bottom"
-
           >
             <Box
               style={{
@@ -215,7 +206,7 @@ export default function Board() {
                 focus="none"
                 value={transcript}
                 border="none"
-                onChange={() => { }}
+                onChange={() => {}}
                 style={{ fontSize: "27px", height: "220px" }}
               ></Textarea>
             </Box>
@@ -249,30 +240,32 @@ export default function Board() {
               </Tooltip>
             </Flex>
 
-
-
             <Button
               alignSelf={"flex-end"}
-              onClick={createBoard}
+              onClick={() => {
+                createBoard();
+                onClose();
+              }}
               width={"fit-content"}
               bg="#3686DF"
               color="white"
-              pl={6} pr={6} pt={8} pb={8}
+              pl={6}
+              pr={6}
+              pt={8}
+              pb={8}
               fontSize={"30px"}
               mb={16}
-              onClick={onClose}
               _hover={{
                 textDecor: "underline",
                 textDecorationThickness: "2px",
-                textUnderlineOffset: "8px"
+                textUnderlineOffset: "8px",
               }}
             >
               작성완료
             </Button>
           </Flex>
         </Stack>
-
-      </CustomModal >
+      </CustomModal>
     </>
   );
 }

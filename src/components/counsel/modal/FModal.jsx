@@ -87,11 +87,7 @@ export const FModal = ({
       <CustomModal
         isOpen={isModalDisplayed}
         onClose={onClose}
-        title={
-          <Text fontSize="4xl">
-            고객 신청사항<span class="blind">고객 신청사항</span>
-          </Text>
-        }
+        title={<Text fontSize="4xl">고객 신청사항</Text>}
         size={size}
         successMessage={successMessage}
         successAction={() => {
@@ -105,39 +101,20 @@ export const FModal = ({
               <Table variant="simple" size="lg">
                 <Tbody>
                   <Tr>
-                    <Td>
-                      상품명<span class="blind">상품명</span>
-                    </Td>
-                    <Td>
-                      {productName}
-                      <span class="blind">{productName}</span>
-                    </Td>
+                    <Td>상품명</Td>
+                    <Td>{productName}</Td>
                   </Tr>
                   <Tr>
-                    <Td>
-                      상품 설명<span class="blind">상품 설명</span>
-                    </Td>
-                    <Td>
-                      {productDescription}
-                      <span class="blind">{productDescription}</span>
-                    </Td>
+                    <Td>상품 설명</Td>
+                    <Td>{productDescription}</Td>
                   </Tr>
                   <Tr>
-                    <Td>
-                      금액<span class="blind">금액</span>
-                    </Td>
-                    <Td>
-                      {numberToKoreanMoney(amount)}
-                      <span class="blind">{numberToKoreanMoney(amount)}</span>
-                    </Td>
+                    <Td>금액</Td>
+                    <Td>{numberToKoreanMoney(amount)}</Td>
                   </Tr>
                   <Tr>
-                    <Td>
-                      가입기간<span class="blind">가입기간</span>
-                    </Td>
-                    <Td>
-                      {period}개월<span class="blind">{period}개월</span>
-                    </Td>
+                    <Td>가입기간</Td>
+                    <Td>{period}개월</Td>
                   </Tr>
                 </Tbody>
               </Table>
@@ -150,10 +127,7 @@ export const FModal = ({
             spacing={[1, 5]}
             direction={["column", "row"]}
           >
-            <Text fontSize="4xl">
-              ※ 위의 신청내용을 확인합니다.
-              <span class="blind">※ 위의 신청내용을 확인합니다.</span>
-            </Text>
+            <Text fontSize="4xl">※ 위의 신청내용을 확인합니다. </Text>
           </Stack>
         </>
       </CustomModal>
