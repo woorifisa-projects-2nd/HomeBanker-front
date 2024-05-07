@@ -104,7 +104,7 @@ export default function ProductsTab({
         <Spinner />
       ) : (
         <>
-          <Box borderBottom={"1px solid #CFCFCF"}>
+          <Box borderBottom={isBoxStyle ? "1px solid #CFCFCF" : "none"}>
             <Select
               focusBorderColor="#CFCFCF"
               onChange={(e) => {
@@ -133,7 +133,7 @@ export default function ProductsTab({
                     onClick={() => handleProductClick(item)}
                     bgColor={
                       selectedProduct != undefined &&
-                      item.productId == selectedProduct.productId
+                        item.productId == selectedProduct.productId
                         ? "gray.100"
                         : "white"
                     }
@@ -148,11 +148,13 @@ export default function ProductsTab({
                 marginLeft: "50px",
                 marginRight: "50px",
               }}
+              borderRadius={"12px"}
+              border="1.5px solid #CFCFCF"
             >
-              <Table variant="simple">
-                <Thead>
+              <Table variant='unstyled'>
+                <Thead borderBottom={"1.5px solid #CFCFCF"}>
                   <Tr bg="#dcecff">
-                    <Th style={{ ...commonCellStyle, textAlign: "center" }}>
+                    <Th style={{ ...commonCellStyle, paddingTop: "20px", paddingBottom: "20px", textAlign: "center" }}>
                       상품 분류
                     </Th>
                     <Th style={{ ...commonCellStyle, textAlign: "center" }}>
@@ -172,15 +174,17 @@ export default function ProductsTab({
                   </Tr>
                 </Thead>
                 <Tbody>
-                  {products.map((item) => {
+                  {products.map((item, idx) => {
                     return (
                       <Tr
+                        borderBottom={idx === products.length - 1 ? "none" : "1.5px solid #CFCFCF"}
+
                         key={item.productId}
                         onClick={() => handleProductClick(item)}
                         cursor="pointer"
                         backgroundColor={
                           selectedProduct != undefined &&
-                          item.productId == selectedProduct.productId
+                            item.productId == selectedProduct.productId
                             ? "gray.100"
                             : "white"
                         }

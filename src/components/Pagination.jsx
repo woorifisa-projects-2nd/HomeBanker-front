@@ -32,16 +32,20 @@ export default function Pagination({ pagination, setPagination }) {
         <HStack>
           {Array.from(
             { length: endPage - startPage },
-            (_, i) => startPage + i,
+            (_, i) => startPage + i
           ).map((page) => (
             <Fragment key={page}>
               <Button
                 onClick={() =>
                   setPagination({ ...pagination, currentPage: page })
                 }
-                bgColor={currentPage === page ? "blue.400" : "white"}
+                bgColor={currentPage === page ? "#CFCFCF" : "white"}
+                textDecoration={currentPage === page ? 'underline' : 'none'}
+                textDecorationThickness={currentPage === page ? "2px" : '0'}
+                textUnderlineOffset={currentPage === page ? "4px" : '0'}
               >
                 {page + 1}
+                <span class="blind">{page + 1}</span>
               </Button>
             </Fragment>
           ))}
@@ -59,6 +63,6 @@ export default function Pagination({ pagination, setPagination }) {
           disabled={noNext}
         ></Button>
       </Flex>
-    </Flex>
+    </Flex >
   );
 }
