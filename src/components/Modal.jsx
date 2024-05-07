@@ -43,7 +43,10 @@ export default function CustomModal({
         <ModalBody>{children}</ModalBody>
         {successAction && (
           <ModalFooter>
-            <Button onClick={successAction}>{successMessage}</Button>
+            <Button onClick={successAction}>
+              {successMessage}
+              <span class="blind">{successMessage}</span>
+            </Button>
           </ModalFooter>
         )}
       </ModalContent>

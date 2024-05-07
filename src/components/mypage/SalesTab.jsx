@@ -24,7 +24,7 @@ export default function SalesTab() {
   });
   const [salesData, isLoading, refetchSales] = useSalesQuery(
     SALE_PAGINATION_SIZE,
-    pagination.currentPage,
+    pagination.currentPage
   );
   useEffect(() => {
     if (salesData) {
@@ -80,19 +80,19 @@ export default function SalesTab() {
                 <Thead>
                   <Tr bg="#dcecff">
                     <Th sx={commonCellStyle} textAlign="center">
-                      상품 이름
+                      상품 이름<span class="blind">상품 이름</span>
                     </Th>
                     <Th sx={commonCellStyle} textAlign="center">
-                      상품 설명
+                      상품 설명<span class="blind">상품 설명</span>
                     </Th>
                     <Th sx={commonCellStyle} textAlign="center">
-                      가입 날짜
+                      가입 날짜<span class="blind">가입 날짜</span>
                     </Th>
                     <Th sx={commonCellStyle} textAlign="center">
-                      상품 금액 (원)
+                      상품 금액 (원)<span class="blind">상품 금액 (원)</span>
                     </Th>
                     <Th sx={commonCellStyle} textAlign="center">
-                      상품 기간 (달)
+                      상품 기간 (달)<span class="blind">상품 기간 (달)</span>
                     </Th>
                   </Tr>
                 </Thead>
@@ -101,18 +101,23 @@ export default function SalesTab() {
                     <Tr key={item.saleId}>
                       <Td sx={commonCellStyle} textAlign="center">
                         {item.productName}
+                        <span class="blind">{item.productName}</span>
                       </Td>
                       <Td sx={commonCellStyle} textAlign="center">
-                        {item.productDescription}
+                        {item.productDescription}{" "}
+                        <span class="blind">{item.productDescription}</span>
                       </Td>
                       <Td sx={commonCellStyle} textAlign="center">
                         {formatDate(item.createdAt)}
+                        <span class="blind">{formatDate(item.createdAt)}</span>
                       </Td>
                       <Td sx={commonCellStyle} textAlign="center">
-                        {item.saleAmount}
+                        {item.saleAmount}{" "}
+                        <span class="blind">{item.saleAmount}</span>
                       </Td>
                       <Td sx={commonCellStyle} textAlign="center">
                         {item.saleMonth}
+                        <span class="blind">{item.saleMonth}</span>
                       </Td>
                     </Tr>
                   ))}
@@ -121,7 +126,10 @@ export default function SalesTab() {
             </TableContainer>
           ) : (
             <Box textAlign="center" marginTop="50px">
-              <p style={{ ...commonCellStyle }}>가입한 상품이 없습니다.</p>
+              <p style={{ ...commonCellStyle }}>
+                가입한 상품이 없습니다.
+                <span class="blind">가입한 상품이 없습니다.</span>
+              </p>
             </Box>
           )}
 

@@ -72,7 +72,11 @@ export const SModal = ({
       <CustomModal
         isOpen={isModalDisplayed}
         onClose={onClose}
-        title={<Text fontSize="4xl">일괄 기명 및 서명</Text>}
+        title={
+          <Text fontSize="4xl">
+            일괄 기명 및 서명<span class="blind">일괄 기명 및 서명</span>
+          </Text>
+        }
         size={size}
         successMessage={successMessage}
         successAction={() => {
@@ -91,18 +95,33 @@ export const SModal = ({
                 본인은 디지털 서식을 이용하여 은행거래를 진행함에 있어 ‘일괄
                 기명 및 서명’ 방식에 동의하며, 전산으로 입력된 정보가 본인의
                 의사와 틀림없음을 확인합니다.
+                <span class="blind">
+                  본인은 디지털 서식을 이용하여 은행거래를 진행함에 있어 ‘일괄
+                  기명 및 서명’ 방식에 동의하며, 전산으로 입력된 정보가 본인의
+                  의사와 틀림없음을 확인합니다.
+                </span>
               </ListItem>
               <ListItem>
                 <ListIcon as={TbSquareRoundedFilled} color="blue.600" />
                 본인은 ‘일괄 기명 및 서명’ 방식의 내용에 대해 충분한 설명을 듣고
                 이해하였으며, 이는 본인의 의사에 기한 것으로 이에 대해 이의
                 없음을 확인합니다.
+                <span class="blind">
+                  본인은 ‘일괄 기명 및 서명’ 방식의 내용에 대해 충분한 설명을
+                  듣고 이해하였으며, 이는 본인의 의사에 기한 것으로 이에 대해
+                  이의 없음을 확인합니다.
+                </span>
               </ListItem>
               <ListItem>
                 <ListIcon as={TbSquareRoundedFilled} color="blue.600" />
                 상품의 주요 내용, 투자위험, 원금손실 가능성 등 투자상품 가입 시
                 유의사항을 충분히 숙지하고 이해하였음을 확인하는 항목에 기명 및
                 서명을 사용하는 것에 대하여 동의합니다.
+                <span class="blind">
+                  상품의 주요 내용, 투자위험, 원금손실 가능성 등 투자상품 가입
+                  시 유의사항을 충분히 숙지하고 이해하였음을 확인하는 항목에
+                  기명 및 서명을 사용하는 것에 대하여 동의합니다.
+                </span>
               </ListItem>
 
               <ListItem>
@@ -119,9 +138,15 @@ export const SModal = ({
             direction={["column", "row"]}
           >
             {role == "ROLE_ADMIN" ? (
-              <Text fontSize="4xl">※ 고객님에게 서명하도록 안내하세요. </Text>
+              <Text fontSize="4xl">
+                ※ 고객님에게 서명하도록 안내하세요.
+                <span class="blind">※ 고객님에게 서명하도록 안내하세요.</span>
+              </Text>
             ) : (
-              <Text fontSize="4xl">※ 위 내용에 대하여 동의합니다. </Text>
+              <Text fontSize="4xl">
+                ※ 위 내용에 대하여 동의합니다.
+                <span class="blind">※ 위 내용에 대하여 동의합니다.</span>
+              </Text>
             )}
           </Stack>
           {role == "ROLE_ADMIN" ? null : <Canvas></Canvas>}
