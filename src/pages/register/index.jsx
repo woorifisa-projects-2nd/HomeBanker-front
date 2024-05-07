@@ -184,7 +184,7 @@ function SignupPage() {
         marginTop="30px"
       >
         <img src={logoLogin} alt="NoImage" />
-        <Text color="red" sx={{ marginLeft: "900px", fontSize: "20px" }}>
+        <Text color="red" sx={{ marginLeft: "780px", fontSize: "28px" }}>
           * 표시는 필수 입력 사항입니다.
         </Text>
         <Flex
