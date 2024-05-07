@@ -122,6 +122,39 @@ export default function Counsel() {
 
   const [subtileText, setSubtileText] = useState("");
 
+  // NOTE : 세션 시작시 서로 정보 교환하여 저장
+  // useEffect(() => {
+  //   if (session !== undefined && publisher !== undefined) {
+  //     let signalOptions = {}
+  //     if (role === "ROLE_ADMIN") {
+  //       signalOptions = {
+  //         type: "register",
+  //         data: JSON.stringify({
+  //           role: role,
+  //           adminId: loginId,
+  //         }),
+  //       };
+  //     } else {
+  //       signalOptions = {
+  //         type: "register",
+  //         data: JSON.stringify({
+  //           role: role,
+  //           customerId: loginId,
+  //           type: localStorage.getItem("counselType")
+  //         }),
+  //       };
+  //     }
+
+  //     session
+  //       .signal(signalOptions)
+  //       .then(() => {
+  //       })
+  //       .catch((error) => {
+  //         console.error(error);
+  //       });
+  //   }
+  // }, [session, publisher])
+
 
 
   useEffect(() => {
@@ -247,12 +280,16 @@ export default function Counsel() {
 
     setSession(mySession);
     localStorage.setItem("startedAt", formatDate(new Date()));
+
   }, [mySessionId]);
 
   /**
    * 세션 나가기
    */
   const leaveSession = useCallback(() => {
+    // 여기서 실행
+    console.log("leave------------------------------------------------->")
+
     const signalOptions = {
       type: "exit",
       data: JSON.stringify("exit"),
