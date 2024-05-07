@@ -16,6 +16,7 @@ import {
   Flex,
   InputGroup,
   InputRightElement,
+  Text,
 } from "@chakra-ui/react";
 import { api } from "../../api/api";
 import DaumPostcode from "react-daum-postcode";
@@ -24,6 +25,8 @@ import logoLogin from "../../assets/icon/logoLogin.svg";
 function SignupPage() {
   const navigate = useNavigate();
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [passwordErrorMessage, setPasswordErrorMessage] = useState("");
+  const [passwordMatchError, setPasswordMatchError] = useState("");
 
   const [formData, setFormData] = useState({
     name: "",
@@ -83,6 +86,40 @@ function SignupPage() {
     }));
   };
 
+  const handlePasswordChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+
+    const passwordRegex =
+      /^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,}$/;
+
+    if (name === "loginPw" && !passwordRegex.test(value)) {
+      setPasswordErrorMessage(
+        "비밀번호는 최소 8자 이상이어야 하며, 영문자, 숫자, 특수문자가 모두 포함되어야 합니다."
+      );
+    } else {
+      setPasswordErrorMessage("");
+    }
+  };
+
+  const handleConfirmPasswordChange = (e) => {
+    const { value } = e.target;
+
+    if (value !== formData.loginPw) {
+      setPasswordMatchError("비밀번호가 일치하지 않습니다.");
+    } else {
+      setPasswordMatchError("");
+    }
+
+    setFormData((prevState) => ({
+      ...prevState,
+      confirmPassword: value,
+    }));
+  };
+
   const handleIdentificationNumChange = (e) => {
     const value = e.target.value;
     let formattedValue = value;
@@ -112,7 +149,7 @@ function SignupPage() {
     e.preventDefault();
 
     for (const key in formData) {
-      if (formData[key].trim() === "") {
+      if (key !== "address" && formData[key].trim() === "") {
         alert("모든 항목을 입력해주세요.");
         return;
       }
@@ -147,6 +184,9 @@ function SignupPage() {
         marginTop="30px"
       >
         <img src={logoLogin} alt="NoImage" />
+        <Text color="red" sx={{ marginLeft: "900px", fontSize: "20px" }}>
+          * 표시는 필수 입력 사항입니다.
+        </Text>
         <Flex
           direction="column"
           alignItems="center"
@@ -161,8 +201,8 @@ function SignupPage() {
                 gap="4"
                 marginBottom="20px"
               >
-                <FormLabel htmlFor="name" mb="0" w="190px" sx={commonCellStyle}>
-                  이름
+                <FormLabel htmlFor="name" mb="0" w="245px" sx={commonCellStyle}>
+                  * 이름
                 </FormLabel>
                 <Input
                   id="name"
@@ -182,13 +222,14 @@ function SignupPage() {
                 <FormLabel
                   htmlFor="birth"
                   mb="0"
-                  w="190px"
+                  w="245px"
                   sx={commonCellStyle}
                 >
-                  생년월일
+                  * 생년월일
                 </FormLabel>
                 <Input
                   type="date"
+                  id="birth"
                   name="birth"
                   value={formData.birth}
                   max={new Date().toISOString().split("T")[0]}
@@ -205,13 +246,14 @@ function SignupPage() {
                 <FormLabel
                   htmlFor="phone"
                   mb="0"
-                  w="190px"
+                  w="245px"
                   sx={commonCellStyle}
                 >
-                  전화번호
+                  * 전화번호
                 </FormLabel>
                 <Input
                   type="tel"
+                  id="phone"
                   name="phone"
                   value={formData.phone}
                   sx={commonCellStyle}
@@ -227,7 +269,7 @@ function SignupPage() {
                 <FormLabel
                   htmlFor="address"
                   mb="0"
-                  w="190px"
+                  w="245px"
                   sx={commonCellStyle}
                 >
                   주소
@@ -235,6 +277,7 @@ function SignupPage() {
                 <InputGroup>
                   <Input
                     id="address"
+                    name="address"
                     value={formData.address}
                     w="900px"
                     sx={commonCellStyle}
@@ -244,7 +287,7 @@ function SignupPage() {
                       })
                     }
                   />
-                  <InputRightElement width="100px" marginRight="25px">
+                  <InputRightElement width="100px" marginRight="41px">
                     <Button size="sm" onClick={onOpen}>
                       주소찾기
                     </Button>
@@ -268,15 +311,16 @@ function SignupPage() {
                 marginBottom="20px"
               >
                 <FormLabel
-                  htmlFor="address"
+                  htmlFor="loginId"
                   mb="0"
-                  w="190px"
+                  w="245px"
                   sx={commonCellStyle}
                 >
-                  아이디
+                  * 아이디
                 </FormLabel>
                 <Input
                   type="text"
+                  id="loginId"
                   name="loginId"
                   value={formData.loginId}
                   sx={commonCellStyle}
@@ -292,19 +336,25 @@ function SignupPage() {
                 <FormLabel
                   htmlFor="loginPw"
                   mb="0"
-                  w="190px"
+                  w="245px"
                   sx={commonCellStyle}
                 >
-                  패스워드
+                  * 패스워드
                 </FormLabel>
                 <Input
                   type="password"
                   name="loginPw"
                   value={formData.loginPw}
                   sx={commonCellStyle}
-                  onChange={handleChange}
+                  onChange={handlePasswordChange}
                 />
               </Flex>
+              {passwordErrorMessage && (
+                <Text color="red" sx={{ marginRight: "100px" }}>
+                  {passwordErrorMessage}
+                </Text>
+              )}
+
               <Flex
                 as={FormControl}
                 alignItems="center"
@@ -314,19 +364,25 @@ function SignupPage() {
                 <FormLabel
                   htmlFor="confirmPassword"
                   mb="0"
-                  w="190px"
+                  w="245px"
                   sx={commonCellStyle}
                 >
-                  패스워드 확인
+                  * 패스워드 확인
                 </FormLabel>
                 <Input
                   type="password"
                   name="confirmPassword"
                   value={formData.confirmPassword}
                   sx={commonCellStyle}
-                  onChange={handleChange}
+                  onChange={handleConfirmPasswordChange}
                 />
               </Flex>
+              {passwordMatchError && (
+                <Text color="red" sx={{ marginRight: "490px" }}>
+                  {passwordMatchError}
+                </Text>
+              )}
+
               <Flex
                 as={FormControl}
                 alignItems="center"
@@ -334,15 +390,16 @@ function SignupPage() {
                 marginBottom="20px"
               >
                 <FormLabel
-                  htmlFor="confirmPassword"
+                  htmlFor="identificationNum"
                   mb="0"
-                  w="190px"
+                  w="245px"
                   sx={commonCellStyle}
                 >
-                  주민등록번호
+                  * 주민등록번호
                 </FormLabel>
                 <Input
                   type="text"
+                  id="identificationNum"
                   name="identificationNum"
                   value={formData.identificationNum}
                   sx={commonCellStyle}
