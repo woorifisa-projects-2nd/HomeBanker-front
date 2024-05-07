@@ -52,13 +52,13 @@ export default function BoardsTab({ displayChangeStatus = true }) {
   });
   const [boardsData, isLoading, refetchBoards] = useBoardsQuery(
     BOARD_PAGINATION_SIZE,
-    pagination.currentPage,
+    pagination.currentPage
   );
 
   const { isOpen, onOpen, onClose } = useDisclosure();
   // 상담 처리 완료 API
   const changeBoardStatus = (event, boardId) => {
-    event.stopPropagation()
+    event.stopPropagation();
     api.put(`/api/banker/board/${boardId}`).then(() => {
       refetchBoards();
       toast({
@@ -118,7 +118,7 @@ export default function BoardsTab({ displayChangeStatus = true }) {
         <Spinner />
       ) : (
         <>
-          <Box >
+          <Box>
             {boards && (
               <TableContainer
                 style={{
@@ -129,55 +129,113 @@ export default function BoardsTab({ displayChangeStatus = true }) {
                 borderRadius={"12px"}
                 border="1.5px solid #CFCFCF"
               >
-                <Table variant='unstyled' >
-                  <Thead borderBottom={"1.5px solid #CFCFCF"} >
-                    <Tr
-                      bg="#dcecff"
-
-                    >
-                      <Th style={{ ...commonCellStyle, paddingTop: "20px", paddingBottom: "20px", paddingLeft: "50px" }}>
-                        내용
+                <Table variant="unstyled">
+                  <Thead borderBottom={"1.5px solid #CFCFCF"}>
+                    <Tr bg="#dcecff">
+                      <Th
+                        style={{
+                          ...commonCellStyle,
+                          paddingTop: "20px",
+                          paddingBottom: "20px",
+                          paddingLeft: "50px",
+                        }}
+                      >
+                        내용<span class="blind">내용</span>
                       </Th>
-                      <Th style={{ ...commonCellStyle, paddingTop: "20px", paddingBottom: "20px", textAlign: "center" }}>
-                        등록일
+                      <Th
+                        style={{
+                          ...commonCellStyle,
+                          paddingTop: "20px",
+                          paddingBottom: "20px",
+                          textAlign: "center",
+                        }}
+                      >
+                        등록일<span class="blind">등록일</span>
                       </Th>
-                      <Th style={{ ...commonCellStyle, paddingTop: "20px", paddingBottom: "20px", textAlign: "center" }}>
-                        유선 회신 여부
+                      <Th
+                        style={{
+                          ...commonCellStyle,
+                          paddingTop: "20px",
+                          paddingBottom: "20px",
+                          textAlign: "center",
+                        }}
+                      >
+                        유선 회신 여부<span class="blind">유선 회신 여부</span>
                       </Th>
                       {displayChangeStatus ? (
-                        <Th style={{ ...commonCellStyle, paddingTop: "20px", paddingBottom: "20px", textAlign: "center" }}>
-                          고객 이름
+                        <Th
+                          style={{
+                            ...commonCellStyle,
+                            paddingTop: "20px",
+                            paddingBottom: "20px",
+                            textAlign: "center",
+                          }}
+                        >
+                          고객 이름<span class="blind">고객 이름</span>
                         </Th>
                       ) : (
-                        <Th style={{ ...commonCellStyle, paddingTop: "20px", paddingBottom: "20px", textAlign: "center" }}>
-                          담당자 이름
+                        <Th
+                          style={{
+                            ...commonCellStyle,
+                            paddingTop: "20px",
+                            paddingBottom: "20px",
+                            textAlign: "center",
+                          }}
+                        >
+                          담당자 이름<span class="blind">담당자 이름</span>
                         </Th>
                       )}
-                      <Th style={{ ...commonCellStyle, paddingTop: "20px", paddingBottom: "20px", textAlign: "center" }}>
-                        처리일
+                      <Th
+                        style={{
+                          ...commonCellStyle,
+                          paddingTop: "20px",
+                          paddingBottom: "20px",
+                          textAlign: "center",
+                        }}
+                      >
+                        처리일<span class="blind">처리일</span>
                       </Th>
                       {displayChangeStatus && (
-                        <Th style={{ ...commonCellStyle, paddingTop: "20px", paddingBottom: "20px", textAlign: "center" }}>
-                          관리
+                        <Th
+                          style={{
+                            ...commonCellStyle,
+                            paddingTop: "20px",
+                            paddingBottom: "20px",
+                            textAlign: "center",
+                          }}
+                        >
+                          관리<span class="blind">관리</span>
                         </Th>
                       )}
                     </Tr>
                   </Thead>
-                  <Tbody >
+                  <Tbody>
                     {boards.map((item, idx) => (
                       <Tr
                         key={item.boardId}
                         onClick={() => openDetailModal(item)}
-
-                        borderBottom={idx === boards.length - 1 ? "none" : "1.5px solid #CFCFCF"}
+                        borderBottom={
+                          idx === boards.length - 1
+                            ? "none"
+                            : "1.5px solid #CFCFCF"
+                        }
                       >
                         <Td style={{ paddingLeft: "50px" }}>
                           {truncateString(item.content, 15)}
+                          <span class="blind">
+                            {truncateString(item.content, 15)}
+                          </span>
                         </Td>
-                        <Td style={{ textAlign: "center" }}>{item.createdAt}</Td>
+                        <Td style={{ textAlign: "center" }}>
+                          {item.createdAt}
+                          <span class="blind">{item.createdAt}</span>
+                        </Td>
                         <Td>
                           <div
-                            style={{ display: "flex", justifyContent: "center" }}
+                            style={{
+                              display: "flex",
+                              justifyContent: "center",
+                            }}
                           >
                             {item.replyYN === "Y" ? (
                               <img src={YesReply} alt="Yes" />
@@ -190,13 +248,23 @@ export default function BoardsTab({ displayChangeStatus = true }) {
                           {displayChangeStatus
                             ? item.customerName
                             : item.banker.bankerName}
+                          <span class="blind">
+                            {displayChangeStatus
+                              ? item.customerName
+                              : item.banker.bankerName}
+                          </span>
                         </Td>
-                        <Td style={{ textAlign: "center" }}>{item.updatedAt}</Td>
+                        <Td style={{ textAlign: "center" }}>
+                          {item.updatedAt}
+                          <span class="blind">{item.updatedAt}</span>
+                        </Td>
                         {displayChangeStatus && (
                           <Td style={{ textAlign: "center" }}>
                             <Button
                               bgColor={item.replyYN === "Y" ? "gray" : "blue"}
-                              onClick={(e) => changeBoardStatus(e, item.boardId)}
+                              onClick={(e) =>
+                                changeBoardStatus(e, item.boardId)
+                              }
                               isDisabled={item.replyYN === "Y"}
                               w="120px"
                               h="50px"
@@ -207,10 +275,11 @@ export default function BoardsTab({ displayChangeStatus = true }) {
                               _hover={{
                                 textDecor: "underline",
                                 textDecorationThickness: "2px",
-                                textUnderlineOffset: "8px"
+                                textUnderlineOffset: "8px",
                               }}
                             >
                               처리완료
+                              <span class="blind">처리완료</span>
                             </Button>
                             <Button
                               bgColor="red"
@@ -223,10 +292,11 @@ export default function BoardsTab({ displayChangeStatus = true }) {
                               _hover={{
                                 textDecor: "underline",
                                 textDecorationThickness: "2px",
-                                textUnderlineOffset: "8px"
+                                textUnderlineOffset: "8px",
                               }}
                             >
                               삭제
+                              <span class="blind">삭제</span>
                             </Button>
                           </Td>
                         )}

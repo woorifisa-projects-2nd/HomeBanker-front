@@ -6,7 +6,8 @@ import {
   Tab,
   TabPanel,
   Text,
-  TabIndicator, Box
+  TabIndicator,
+  Box,
 } from "@chakra-ui/react";
 import ProductsTab from "../../../components/board/admin/ProductsTab";
 import BoardsTab from "../../../components/board/admin/BoardsTab";
@@ -24,9 +25,7 @@ export default function Board() {
   return (
     <>
       <Header />
-      <Box
-        mt={10}
-      >
+      <Box mt={10}>
         <Tabs>
           <TabList>
             <Tab
@@ -40,6 +39,7 @@ export default function Board() {
               }}
             >
               상담 게시판
+              <span class="blind">상담 게시판</span>
             </Tab>
             <Tab
               data-cy="products"
@@ -53,6 +53,7 @@ export default function Board() {
               }}
             >
               상품 관리
+              <span class="blind">상품 관리</span>
             </Tab>
           </TabList>
           <TabIndicator
@@ -64,7 +65,7 @@ export default function Board() {
               border: "3px solid #3686DF",
             }}
           />
-          <TabPanels >
+          <TabPanels>
             <TabPanel mt={16}>
               <BoardsTab />
             </TabPanel>
