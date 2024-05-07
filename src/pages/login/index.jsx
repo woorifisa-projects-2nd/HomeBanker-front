@@ -104,7 +104,7 @@ export default function Login() {
         </Text>
         <VStack spacing={4} align="flex-start" w="800px">
           <Text style={{ ...loginText, fontSize: "24px" }}>
-            아이디<span calss="blind">아이디</span>
+            아이디<span class="blind">아이디</span>
           </Text>
           <InputGroup size="lg">
             <InputLeftElement pointerEvents="none" fontSize="28px" h="100%">
@@ -121,7 +121,7 @@ export default function Login() {
         <VStack spacing={4} align="flex-start" w="800px">
           <Text style={{ ...loginText, fontSize: "24px", marginTop: "20px" }}>
             비밀번호
-            <span calss="blind">비밀번호</span>
+            <span class="blind">비밀번호</span>
           </Text>
           <InputGroup size="lg">
             <InputLeftElement pointerEvents="none" fontSize="28px" h="100%">
