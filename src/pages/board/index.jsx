@@ -110,9 +110,7 @@ export default function Board() {
   return (
     <>
       <Header />
-
       <Box ml={14} mr={14} mt={20}>
-
         <Text
           style={{
             textDecor: "underline",
@@ -126,9 +124,7 @@ export default function Board() {
 
           }}
         >
-
           고객 상담게시판
-          <span class="blind">고객 상담게시판</span>
         </Text>
         <Flex
           alignItems="center"
@@ -137,8 +133,6 @@ export default function Board() {
             ...commonCellStyle,
           }}
         >
-
-
           <Text
             style={{
               fontWeight: 200,
@@ -146,9 +140,6 @@ export default function Board() {
             }}
           >
             문의하실 내용을 작성하시면 유선상으로 3일 이내에 답변 드리겠습니다.
-            <span class="blind">
-            문의하실 내용을 작성하시면 유선상으로 3일 이내에 답변 드리겠습니다.
-          </span>
           </Text>
           <Button
             size="lg"
@@ -175,13 +166,11 @@ export default function Board() {
               fontSize="30px"
             >
               문의 작성
-              <span class="blind">문의 작성</span>
             </Text>
           </Button>
         </Flex>
         <BoardsTab displayChangeStatus={false} />
       </Box>
-
       <CustomModal
 
         isOpen={isOpen}
@@ -191,17 +180,15 @@ export default function Board() {
       // successAction={createBoard}
       >
 
-
         <Stack spacing={10} ml={14} mr={14}>
-          <Text fontSize="30px" fontWeight={'bold'}>문의 작성<span class="blind">문의 작성</span></Text>
-          <Button width={'fit-content'} onClick={resetTranscript}>초기화<span class="blind">초기화</span></Button>
+          <Text fontSize="30px" fontWeight={'bold'}>문의 작성</Text>
+          <Button width={'fit-content'} onClick={resetTranscript}>초기화</Button>
           <ModalCloseButton onClick={onModalClose}></ModalCloseButton>
           <Flex
             direction="column"
             minHeight={500}
             justifyContent="center"
             alignItems="bottom"
-
           >
             <Box
               style={{
