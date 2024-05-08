@@ -52,7 +52,7 @@ export default function BoardsTab({ displayChangeStatus = true }) {
   });
   const [boardsData, isLoading, refetchBoards] = useBoardsQuery(
     BOARD_PAGINATION_SIZE,
-    pagination.currentPage
+    pagination.currentPage,
   );
 
   const { isOpen, onOpen, onClose } = useDisclosure();

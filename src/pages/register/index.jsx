@@ -98,7 +98,7 @@ function SignupPage() {
 
     if (name === "loginPw" && !passwordRegex.test(value)) {
       setPasswordErrorMessage(
-        "비밀번호는 최소 8자 이상이어야 하며, 영문자, 숫자, 특수문자가 모두 포함되어야 합니다."
+        "비밀번호는 최소 8자 이상이어야 하며, 영문자, 숫자, 특수문자가 모두 포함되어야 합니다.",
       );
     } else {
       setPasswordErrorMessage("");

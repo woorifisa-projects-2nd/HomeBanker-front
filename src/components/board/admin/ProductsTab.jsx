@@ -133,7 +133,7 @@ export default function ProductsTab({
                     onClick={() => handleProductClick(item)}
                     bgColor={
                       selectedProduct != undefined &&
-                        item.productId == selectedProduct.productId
+                      item.productId == selectedProduct.productId
                         ? "gray.100"
                         : "white"
                     }
@@ -151,10 +151,17 @@ export default function ProductsTab({
               borderRadius={"12px"}
               border="1.5px solid #CFCFCF"
             >
-              <Table variant='unstyled'>
+              <Table variant="unstyled">
                 <Thead borderBottom={"1.5px solid #CFCFCF"}>
                   <Tr bg="#dcecff">
-                    <Th style={{ ...commonCellStyle, paddingTop: "20px", paddingBottom: "20px", textAlign: "center" }}>
+                    <Th
+                      style={{
+                        ...commonCellStyle,
+                        paddingTop: "20px",
+                        paddingBottom: "20px",
+                        textAlign: "center",
+                      }}
+                    >
                       상품 분류
                     </Th>
                     <Th style={{ ...commonCellStyle, textAlign: "center" }}>
@@ -177,14 +184,17 @@ export default function ProductsTab({
                   {products.map((item, idx) => {
                     return (
                       <Tr
-                        borderBottom={idx === products.length - 1 ? "none" : "1.5px solid #CFCFCF"}
-
+                        borderBottom={
+                          idx === products.length - 1
+                            ? "none"
+                            : "1.5px solid #CFCFCF"
+                        }
                         key={item.productId}
                         onClick={() => handleProductClick(item)}
                         cursor="pointer"
                         backgroundColor={
                           selectedProduct != undefined &&
-                            item.productId == selectedProduct.productId
+                          item.productId == selectedProduct.productId
                             ? "gray.100"
                             : "white"
                         }
