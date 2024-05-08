@@ -27,7 +27,9 @@ export default function Pagination({ pagination, setPagination }) {
             }
           }}
           disabled={noPrev}
-        ></Button>
+        >
+          <span class="blind">previous</span>
+        </Button>
 
         <HStack>
           {Array.from(
@@ -61,7 +63,9 @@ export default function Pagination({ pagination, setPagination }) {
             }
           }}
           disabled={noNext}
-        ></Button>
+        >
+          <span class="blind">next</span>
+        </Button>
       </Flex>
     </Flex>
   );
