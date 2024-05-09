@@ -1,6 +1,14 @@
 import React from "react";
-import { Flex, Box, Button, Spacer, Text, Stack, HStack } from "@chakra-ui/react";
-import { formatPhoneNumber } from '../../util/counsel';
+import {
+  Flex,
+  Box,
+  Button,
+  Spacer,
+  Text,
+  Stack,
+  HStack,
+} from "@chakra-ui/react";
+import { formatPhoneNumber } from "../../util/counsel";
 
 const BoardDetail = ({ selected, onClose }) => {
   // 공통으로 사용할 스타일 객체 정의
@@ -32,7 +40,6 @@ const BoardDetail = ({ selected, onClose }) => {
             <Text>{formatPhoneNumber(selected.telephone)}</Text>
           </HStack>
 
-
           <HStack>
             <Text style={{ fontWeight: "700" }}>처리 완료 여부 : </Text>
             <Text>{selected.replyYN === "Y" ? "완료" : "미완료"}</Text>
@@ -48,7 +55,6 @@ const BoardDetail = ({ selected, onClose }) => {
                 <Text style={{ fontWeight: "700" }}>처리 담당자 : </Text>
                 <Text>{selected.banker.bankerName}</Text>
               </HStack>
-
             </>
           ) : null}
           <Box
@@ -58,17 +64,11 @@ const BoardDetail = ({ selected, onClose }) => {
               padding: "10px",
               border: "solid black",
               borderRadius: "5px",
-
             }}
           >
             {selected.content}{" "}
           </Box>
-
-
         </Stack>
-
-
-
       </Flex>
       <Flex justify="end">
         <Button
@@ -76,14 +76,17 @@ const BoardDetail = ({ selected, onClose }) => {
           color="white"
           mr={3}
           mt={12}
-          pl={6} pr={6} pt={8} pb={8}
+          pl={6}
+          pr={6}
+          pt={8}
+          pb={8}
           fontSize={"30px"}
           onClick={onClose}
           style={{ marginBottom: "30px" }}
           _hover={{
             textDecor: "underline",
             textDecorationThickness: "2px",
-            textUnderlineOffset: "8px"
+            textUnderlineOffset: "8px",
           }}
         >
           닫기

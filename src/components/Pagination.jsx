@@ -34,7 +34,7 @@ export default function Pagination({ pagination, setPagination }) {
         <HStack>
           {Array.from(
             { length: endPage - startPage },
-            (_, i) => startPage + i
+            (_, i) => startPage + i,
           ).map((page) => (
             <Fragment key={page}>
               <Button

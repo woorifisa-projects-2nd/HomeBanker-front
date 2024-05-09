@@ -24,7 +24,7 @@ export default function SalesTab() {
   });
   const [salesData, isLoading, refetchSales] = useSalesQuery(
     SALE_PAGINATION_SIZE,
-    pagination.currentPage
+    pagination.currentPage,
   );
   useEffect(() => {
     if (salesData) {

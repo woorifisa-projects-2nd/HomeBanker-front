@@ -102,7 +102,6 @@ export default function Login() {
           집에서 만나는 금융상담 서비스
         </Text>
         <VStack spacing={4} align="flex-start" w="800px">
-
           <Text style={{ ...loginText, fontSize: "24px" }}>
             아이디<span class="blind">아이디</span>
           </Text>
